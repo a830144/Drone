@@ -15,3 +15,9 @@ Apache Tomcat : 8.5.37
 
 recommend Java
 1.8.0-191
+
+recommend Mysql
+5.5
+
+Mysql workbench
+6.3
