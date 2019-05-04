@@ -13,6 +13,9 @@
 				}
 			},
 			close : function() {
+				$("#dialog-view-form-1").find("#check").button().unbind("click");
+				$("#dialog-view-form-1").find("#approve").button().unbind("click");
+				$("#dialog-view-form-1").find("#reject").button().unbind("click");
 				$( "#single-view-table-2-1").unbind( "select" );
 				var table2 = $('#single-view-table-2-1').DataTable();
 				table2.destroy();
