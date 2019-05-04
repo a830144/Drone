@@ -5,23 +5,38 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Embeddable
 public class EquipmentFlow {
-	private Date sendDate;
+	
 	@Override
 	public String toString() {
 		return "EquipmentFlow [sendDate=" + sendDate + ", sendId=" + sendId + ", checkDate=" + checkDate + ", checkId="
 				+ checkId + ", approveDate=" + approveDate + ", approveId=" + approveId + "]";
 	}
-
+	private Date sendDate;
 	private Integer sendId;
 	private Date checkDate;
 	private Integer checkId;
 	private Date approveDate;
 	private Integer approveId;
+	private stateMachine.States state;
+	
+	
+	@Column(name = "state")
+	@Enumerated(value = EnumType.STRING)
+	public stateMachine.States getState() {
+		return state;
+	}
+
+	public void setState(stateMachine.States state) {
+		this.state = state;
+	}
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "Send_Date", length = 19)
 	public Date getSendDate() {

@@ -13,7 +13,7 @@ public class Person {
 	private String mobilePhone;
 	private String fax;
 	private String address;
-	private String EMail;
+	private String email;
 	private byte[] recentPhoto;
 	private byte[] investigation;
 	private Character status;
@@ -77,11 +77,12 @@ public class Person {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	public String getEMail() {
-		return EMail;
+	
+	public String getEmail() {
+		return email;
 	}
-	public void setEMail(String eMail) {
-		EMail = eMail;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	public byte[] getRecentPhoto() {
 		return recentPhoto;

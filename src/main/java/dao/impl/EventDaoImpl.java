@@ -57,6 +57,7 @@ public class EventDaoImpl implements EventDao{
         }
     }
 
+    @SuppressWarnings("unchecked")
 	@Override
 	public Events findByName(String name) {
 		String hql = "FROM Events as E where E.name='" + name +"'";
@@ -71,6 +72,17 @@ public class EventDaoImpl implements EventDao{
 	public void deleteById(Integer id) {
 		Events Events = findById(id);
 		delete(Events);
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Events> findByNameWildcard(String name) {
+		String hql = "FROM Events as E where E.name like :searchField";
+		Session session = this.sessionFactory.getCurrentSession();
+		Query<Events> query = session.createQuery(hql); 
+		query.setParameter("searchField","%"+name+"%");
+		
+		List<Events> results = query.list();
+		return results;
 	}
 
 	

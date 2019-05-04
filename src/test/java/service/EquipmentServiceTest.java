@@ -12,7 +12,6 @@ import com.google.gson.JsonArray;
 
 import entity.Equipments;
 import junit.framework.TestCase;
-import service.impl.ConcreteEquipmentServiceDecorator;
 import service.impl.EquipmentServiceImpl;
 import vo.MaintainEquipment;
 import vo.ModifyEquipment;
@@ -123,7 +122,7 @@ public class EquipmentServiceTest extends TestCase {
 		
 		Object myClassInstance = ctx.getBean("concreteEquipmentServiceDecorator");
 		Object obj=AopProxyUtils.getSingletonTarget(myClassInstance);
-		ConcreteEquipmentServiceDecorator concreteEquipmentServiceDecorator=(ConcreteEquipmentServiceDecorator)obj;
+		//ConcreteEquipmentServiceDecorator concreteEquipmentServiceDecorator=(ConcreteEquipmentServiceDecorator)obj;
 		/*ConcreteEquipmentServiceDecorator concreteEquipmentServiceDecorator;
 		try {
 			concreteEquipmentServiceDecorator = (ConcreteEquipmentServiceDecorator)clazz.newInstance();

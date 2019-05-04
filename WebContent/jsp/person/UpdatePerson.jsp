@@ -4,7 +4,7 @@
 	$(function() {
 		$("#dialog-update-form").dialog({
 			autoOpen : false,
-			height : 400,
+			height : 500,
 			width : 800,
 			modal : true,
 			buttons : {
@@ -35,6 +35,7 @@
 
 					}
 				});
+		$("#update-form").find("#dateOfBirth").datepicker();
 	});
 	function updatePerson(id) {
 		$("#update-form").find("select").val("");
@@ -58,11 +59,11 @@
 		$("#dialog-update-form").dialog("open");
 	}
 </script>
-<div id="dialog-update-form" title="修改設備資料">
+<div id="dialog-update-form" title="修改人員資料">
 	<form id="update-form">
 		<table id="single-update-table-1">
 			<tr>
-				<td>ID</td>
+				<td>人員內部ID</td>
 				<td><input type="text" name="personId" id="personId"
 					class="text ui-widget-content ui-corner-all"></td>
 				<td>姓名</td>
@@ -119,6 +120,8 @@
 				<td>半身 最近照片</td>
 				<td><input type="file" name="recentPhoto" id="recentPhoto"
 					class="text ui-widget-content ui-corner-all"></td>
+			</tr>
+			<tr>
 				<td>最近體檢資料</td>
 				<td><input type="file" name="investigation" id="investigation"
 					class="text ui-widget-content ui-corner-all"></td>

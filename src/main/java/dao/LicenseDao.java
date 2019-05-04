@@ -16,7 +16,7 @@ public interface LicenseDao{
      
     public Licenses findById(Integer id);
     
-    public Licenses findByType(String type,String subType);
+    public Licenses findByType(String type);
      
     public void delete(Licenses entity);
      

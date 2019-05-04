@@ -17,6 +17,8 @@ public interface TrainingDao{
     public Trainings findById(Integer id);
     
     public Trainings findByName(String name);
+    
+    public List<Trainings> findByNameWildcard(String name);
      
     public void delete(Trainings entity);
      

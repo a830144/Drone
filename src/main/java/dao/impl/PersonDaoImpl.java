@@ -8,11 +8,15 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import dao.PersonDao;
+import entity.Certificates;
+import entity.Participations;
 import entity.Persons;
+import entity.PersonsLicenses;
 
 public class PersonDaoImpl implements PersonDao{
  
-    public PersonDaoImpl() {
+    
+	public PersonDaoImpl() {
     }      
     private SessionFactory sessionFactory;
 
@@ -73,6 +77,39 @@ public class PersonDaoImpl implements PersonDao{
 		delete(Persons);
 	}
 
+	@Override
+	public PersonsLicenses findLicenseInfo(Integer personId, Integer licenseId) {
+		String hql = "FROM PersonsLicenses as E where E.persons.personId = :searchField1 and E.licenses.licenseId = :searchField2 ";
+		Session session = this.sessionFactory.getCurrentSession();
+		Query<PersonsLicenses> query = session.createQuery(hql); 
+		query.setParameter("searchField1",personId);
+		query.setParameter("searchField2",licenseId);
+		
+		List<PersonsLicenses> results = query.list();
+		return results.get(0);
+		
+	}
+	@Override
+	public Certificates findTrainingInfo(Integer personId, Integer trainingId) {
+		String hql = "FROM Certificates as E where E.persons.personId = :searchField1 and E.trainings.trainingId = :searchField2 ";
+		Session session = this.sessionFactory.getCurrentSession();
+		Query<Certificates> query = session.createQuery(hql); 
+		query.setParameter("searchField1",personId);
+		query.setParameter("searchField2",trainingId);
+		
+		List<Certificates> results = query.list();
+		return results.get(0);
+	}
+	@Override
+	public Participations findEventInfo(Integer personId, Integer eventId) {
+		String hql = "FROM Participations as E where E.persons.personId = :searchField1 and E.events.eventId = :searchField2 ";
+		Session session = this.sessionFactory.getCurrentSession();
+		Query<Participations> query = session.createQuery(hql); 
+		query.setParameter("searchField1",personId);
+		query.setParameter("searchField2",eventId);
+		
+		List<Participations> results = query.list();
+		return results.get(0);
+	}
 	
-
 }

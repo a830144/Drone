@@ -1,15 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 <script>
-
-	$(function() {
-		$("#dialog-view-form").tabs();
-	});
-	$(function() {
+	function prepareViewDomAction(){
 		$("#dialog-view-form").dialog({
 			autoOpen : false,
-			height : 400,
-			width : 1050,
+			height : 600,
+			width : 1250,
 			modal : true,
 			buttons : {
 				"關閉" : function() {
@@ -17,94 +13,83 @@
 				}
 			},
 			close : function() {
-				var table2 = $('#single-view-table-2').DataTable();
+				$( "#single-view-table-2-1").unbind( "select" );
+				var table2 = $('#single-view-table-2-1').DataTable();
 				table2.destroy();
-				var table3 = $('#single-view-table-3').DataTable();
+				$( "#single-view-table-3-1").unbind( "select" );
+				var table3 = $('#single-view-table-3-1').DataTable();
 				table3.destroy();
-				var table4 = $('#single-view-table-4').DataTable();
+				$( "#single-view-table-4-1").unbind( "select" );
+				var table4 = $('#single-view-table-4-1').DataTable();
 				table4.destroy();
 			}
 		});
-	});
-	function viewPerson(id) {
-		$( "#view-form" ).find("select").val("");
-		$( "#view-form" ).find("input").val("");
-		$.post("/Drone/person/ViewPersonProcess", {
-			id : id
-		}, function(data, status) {
-			if (status == 'success') {
+		$.ajax({
+			url : "/Drone/other/QueryCodes",
+			type : "POST",
+			data : {
+				type : 'License_type',
+				code : ''
+			},
+			success : function(tag) {  
+				$("#view-form-2-2").find("#type").append(tag);
+            }
+		});
+		$("#dialog-view-form").tabs({
+			  activate: function( event, ui ) {
+				  $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
+			  }
+		});
+	}
+	function viewDomFinishState(id){
+		$("#view-form-1").find("select").val("");
+		$("#view-form-1").find("input").val("");
+		$("#view-form-2-2").find("select").val("");
+		$("#view-form-2-2").find("input").val("");
+		$("#view-form-3-2").find("select").val("");
+		$("#view-form-3-2").find("input").val("");
+		$("#view-form-4-2").find("select").val("");
+		$("#view-form-4-2").find("input").val("");
+		window.viewId = id;
+		
+	}
+	function transferPersonMainFormViewAction(){
+		$.ajax({
+			  url:"/Drone/person/ViewPersonProcess",
+			  type:"POST",
+			  data:{"id" : window.viewId},
+			  dataType: "json",
+			  success: function(data){				  
 				var obj = data;
-				var form = $("#view-form");
-				$.each(obj, function(key, value){
-				    $("#view-form").find("#"+key).val(value);
-				});
-				
-				$( "#view-form" ).find("select").prop( "disabled", true );
-				$( "#view-form" ).find("input").prop( "disabled", true );
+				var form = $("#view-form-1");
+				$.each(obj, function(key, value) {
+					$("#view-form-1").find("#" + key).val(value);
+					$("#view-form-2-2").find("#" + key).val(value);
+					$("#view-form-3-2").find("#" + key).val(value);
+					$("#view-form-4-2").find("#" + key).val(value);
+				});				
+				id = $("#view-form-1").find("#personId").val();				
+				//stateMachine("#view-form-1");	
+				//registerStateMachineEvent();
 			}
-
-		});
-		
-		var table = $('#single-view-table-2').DataTable( {
-			"ajax": {  
-				"type": "POST",
-			    "url": "/Drone/person/ViewLicense",  
-			    "data": {  
-			        "id": id  
-			    }, 
-			    "dataSrc": function ( json ) {
-			    	var myarray=new Array(json.length);
-			    	for (i=0; i <json.length; i++){
-			    	    myarray[i]=new Array(3);
-			    	}
-			    	for(i=0;i<json.length;i++){
-		        		var obj = $.parseJSON(json[i]);
-		        		myarray[i][0]=obj.hasOwnProperty("licenseId")?obj.licenseId:'';
-		        		myarray[i][1]=obj.hasOwnProperty("gotDate")?obj.gotDate:'';
-		        		myarray[i][2]=obj.hasOwnProperty("type")?obj.type:'';
-		        	}
-			        return myarray;
-			      }
-			    ,
-		        dataType: 'json'
-			}
-
-		});
-		
-		var table = $('#single-view-table-3').DataTable( {
+		})
+	}
+	function transferLicenseListViewAction(){
+		var singleviewtable21 = $('#single-view-table-2-1').DataTable(  {
+			columnDefs: [
+				{	
+				    className: 'dt-center',
+				    targets: '_all'
+				}],
+			"select":true,
+	        "order": [[ 1, 'asc' ]],
+			"scrollY": "100px",
+	        "scrollCollapse": true,		
 			"ajax": {
 				"type": "POST",
-			    "url": "/Drone/person/ViewTraining",  
+			    "url": "/Drone/person/QueryLicenses",  
 			    "data": {  
-			        "id": id  
-			    }, 
-			    "dataSrc": function ( json ) {
-			    	var myarray=new Array(json.length);
-			    	for (i=0; i <json.length; i++){
-			    	    myarray[i]=new Array(5);
-			    	}
-			    	for(i=0;i<json.length;i++){
-		        		var obj = $.parseJSON(json[i]);
-		        		myarray[i][0]=obj.hasOwnProperty("name")?obj.name:'';
-		        		myarray[i][1]=obj.hasOwnProperty("unit")?obj.unit:'';
-		        		myarray[i][2]=obj.hasOwnProperty("startDate")?obj.startDate:'';
-		        		myarray[i][3]=obj.hasOwnProperty("hours")?obj.hours:'';
-		        		myarray[i][4]=obj.hasOwnProperty("trainingType")?obj.trainingType:'';		   
-		        	}
-			        return myarray;
-			      }
-			    ,
-		        dataType: 'json'
-			}
-
-		});
-		
-		var table = $('#single-view-table-4').DataTable( {
-			"ajax": {
-				"type": "POST",
-			    "url": "/Drone/person/ViewEvent",  
-			    "data": {  
-			        "id": id  
+			        "id": window.viewId  
 			    }, 
 			    "dataSrc": function ( json ) {
 			    	var myarray=new Array(json.length);
@@ -113,11 +98,12 @@
 			    	}
 			    	for(i=0;i<json.length;i++){
 		        		var obj = $.parseJSON(json[i]);
-		        		myarray[i][0]=obj.hasOwnProperty("name")?obj.name:'';
-		        		myarray[i][1]=obj.hasOwnProperty("name")?obj.name:'';
-		        		myarray[i][2]=obj.hasOwnProperty("startDate")?obj.startDate:'';
-		        		myarray[i][3]=obj.hasOwnProperty("description")?obj.description:'';
+		        		myarray[i][0]='';
+		        		myarray[i][1]=obj.hasOwnProperty("licenseId")?obj.licenseId:'';
+		        		myarray[i][2]=obj.hasOwnProperty("gotDate")?obj.gotDate:'';
+		        		myarray[i][3]=obj.hasOwnProperty("type")?obj.type:'';
 		        	}
+			    	registerLicenseListViewEvent();
 			        return myarray;
 			      }
 			    ,
@@ -125,9 +111,217 @@
 			}
 
 		});
+		
+	}
+	function registerLicenseListViewEvent(){
+		var singleviewtable21 = $('#single-view-table-2-1').DataTable();
+		singleviewtable21.on( 'select', function ( e, dt, type, indexes ) {
+			var cell = singleviewtable21.cell( indexes ,1);
+			var licenseId = cell.data();
+			alert('您選取了證照編號 :'+ licenseId);
+			$.ajax({
+			  url:"/Drone/person/ViewLicenseInfo",
+			  type:"POST",
+			  data:{
+				  "personId" : window.viewId,
+				  "licenseId" : licenseId
+			  },
+			  dataType: "json",
+			  success: function(data){				  
+				var obj = data;
+				var form = $("#view-form-2-2");
+				$("#view-form-2-2").find("#licenseIdTD").empty().append("<input type='text' name='licenseId' id='licenseId' class='text ui-widget-content ui-corner-all ui-state-disabled'>");
+				$.each(obj, function(key, value) {
+					$("#view-form-2-2").find("#" + key).val(value);	
+					$("#view-form-2-2").find("input[name='" + key +"']").val(value);
+				});
+			}})
+		});
+		singleviewtable21.on( 'deselect', function ( e, dt, type, indexes ) {
+			if ( type === 'row' ) {				
+				initializeLicenseMainFormViewState();
+		    }
+		});
+	}
+	function transferTrainingListViewAction(){		
+		var singleviewtable31 = $('#single-view-table-3-1').DataTable({
+			columnDefs: [
+				{	
+				    className: 'dt-center',
+				    targets: '_all'
+				}],			
+			"select":true,
+			"order": [[ 1, 'asc' ]],
+			"scrollY": "100px",
+			"scrollCollapse": true,	
+			"ajax" : {
+				"type": "POST",
+				"url" : "/Drone/person/QueryTrainings",
+				"data" : {
+					"id" : window.viewId
+				},
+				"dataSrc" : function(json) {
+					var myarray=new Array(json.length);
+			    	for (i=0; i <json.length; i++){
+			    	    myarray[i]=new Array(6);
+			    	}
+			    	for(i=0;i<json.length;i++){
+		        		var obj = $.parseJSON(json[i]);
+		        		myarray[i][0]='';
+		        		myarray[i][1]=obj.hasOwnProperty("trainingId")?obj.trainingId:'';
+		        		myarray[i][2]=obj.hasOwnProperty("trainingName")?obj.trainingName:'';
+		        		myarray[i][3]=obj.hasOwnProperty("unit")?obj.unit:'';
+		        		myarray[i][4]=obj.startDate+'~'+obj.endDate;
+		        		myarray[i][5]=obj.hasOwnProperty("hours")?obj.hours:'';
+		        		myarray[i][6]=obj.hasOwnProperty("trainingType")?obj.trainingType:'';		   
+		        	}
+			    	registerTrainingListViewEvent();
+			        return myarray;
+				},
+				dataType : 'json'
+			}
+		});
+	}
+	function registerTrainingListViewEvent(){
+		var singleviewtable31 = $('#single-view-table-3-1').DataTable();
+		singleviewtable31.on( 'select', function ( e, dt, type, indexes ) {
+			var cell = singleviewtable31.cell( indexes ,1);
+			var trainingId = cell.data();
+			alert('您選取了訓練紀錄編號 :'+ trainingId);
+			$.ajax({
+			  url:"/Drone/person/ViewTrainingInfo",
+			  type:"POST",
+			  data:{
+				  "personId" : window.viewId,
+				  "trainingId" : trainingId
+			  },
+			  dataType: "json",
+			  success: function(data){				  
+				var obj = data;
+				var form = $("#view-form-3-2");
+				$("#view-form-3-2").find("#trainingIdTD").empty().append("<input type='text' name='trainingId' id='trainingId' class='text ui-widget-content ui-corner-all ui-state-disabled'>");
+				$.each(obj, function(key, value) {
+					$("#view-form-3-2").find("#" + key).val(value);	
+					$("#view-form-3-2").find("input[name='" + key +"']").val(value);
+				});
+			}})
+		});
+		singleviewtable31.on( 'deselect', function ( e, dt, type, indexes ) {
+			if ( type === 'row' ) {				
+				initializeTrainingMainFormViewState();
+		    }
+		});
+	}
+	function transferEventListViewAction(){
+		var singleviewtable41 = $('#single-view-table-4-1').DataTable({
+			columnDefs: [
+				{	
+				    className: 'dt-center',
+				    targets: '_all'
+				}],		
+			"select":true,
+			"order": [[ 1, 'asc' ]],
+			"scrollY": "100px",
+			"scrollCollapse": true,	
+			"ajax" : {
+				"type": "POST",
+				"url" : "/Drone/person/QueryEvents",
+				"data" : {
+					"id" : window.viewId
+				},
+				"dataSrc" : function(json) {
+					var myarray=new Array(json.length);
+			    	for (i=0; i <json.length; i++){
+			    	    myarray[i]=new Array(5);
+			    	}
+			    	for(i=0;i<json.length;i++){
+		        		var obj = $.parseJSON(json[i]);
+		        		myarray[i][0]='';
+		        		myarray[i][1]=obj.hasOwnProperty("eventId")?obj.eventId:'';
+		        		myarray[i][2]=obj.hasOwnProperty("eventName")?obj.eventName:'';
+		        		myarray[i][3]=obj.hasOwnProperty("eventName")?obj.eventName:'';
+		        		myarray[i][4]=obj.startDate+'~'+obj.endDate;
+		        		myarray[i][5]=obj.hasOwnProperty("description")?obj.description:'';
+		        	}		    	
+			    	registerEventListViewEvent();
+			        return myarray;
+				},
+				dataType : 'json'
+			}
+		});
+	}
+	function registerEventListViewEvent(){
+		var singleviewtable41 = $('#single-view-table-4-1').DataTable();
+		singleviewtable41.on( 'select', function ( e, dt, type, indexes ) {
+			var cell = singleviewtable41.cell( indexes ,1);
+			var eventId = cell.data();
+			alert('您選取了事件編號 :'+ eventId);
+			$.ajax({
+			  url:"/Drone/person/ViewEventInfo",
+			  type:"POST",
+			  data:{
+				  "personId" : window.viewId,
+				  "eventId" : eventId
+			  },
+			  dataType: "json",
+			  success: function(data){				  
+				var obj = data;
+				var form = $("#view-form-4-2");
+				$("#view-form-4-2").find("#eventIdIdTD").empty().append("<input type='text' name='eventId' id='eventId' class='text ui-widget-content ui-corner-all ui-state-disabled'>");
+				$.each(obj, function(key, value) {
+					$("#view-form-4-2").find("#" + key).val(value);	
+					$("#view-form-4-2").find("input[name='" + key +"']").val(value);
+				});
+			}})
+		});
+		singleviewtable41.on( 'deselect', function ( e, dt, type, indexes ) {
+			if ( type === 'row' ) {				
+				initializeEventMainFormViewState();
+		    }
+		});
+	}
+	function initializePersonMainFormViewState(){
+		$("#view-form-1").find("select").prop("disabled", true).addClass("ui-state-disabled");
+		$("#view-form-1").find("input").prop("disabled", true).addClass("ui-state-disabled");
+	}
+	function initializeLicenseListViewState(){
+		
+	}
+	function initializeLicenseMainFormViewState(){
+		
+	}
+	function initializeTrainingListViewState(){
+		
+	}
+	function initializeTrainingMainFormViewState(){
+		
+	}
+	function initializeEventListViewState(){
+		
+	}
+	function initializeEventMainFormViewState(){
+		
+	}
+	$(function() {
+		prepareViewDomAction();
+	});
 
+	function viewPerson(id) {
+		viewDomFinishState(id);	
+		transferPersonMainFormViewAction();
+		transferLicenseListViewAction();
+		transferTrainingListViewAction();
+		transferEventListViewAction();
+		initializePersonMainFormViewState();		
+		initializeLicenseListViewState();
+		initializeLicenseMainFormViewState();				
+		initializeTrainingListViewState();		
+		initializeTrainingMainFormViewState();	
+		initializeEventListViewState();		
+		initializeEventMainFormViewState();
 		$("#dialog-view-form").dialog("open");
 	}
+
 </script>
 <div id="dialog-view-form" title="檢視設備資料">
 	<ul>
@@ -137,110 +331,40 @@
 		<li><a href="#dialog-view-form-4">特殊事蹟資訊</a></li>
 	</ul>
 	<div id="dialog-view-form-1">
-		<form id="view-form">
+		<form id="view-form-1">
 			<table id="single-view-table-1">
-			<tr>
-				<td>ID</td>
-				<td><input type="text" name="personId" id="personId"
-					class="text ui-widget-content ui-corner-all"></td>
-				<td>姓名</td>
-				<td><input type="text" name="name" id="name"
-					class="text ui-widget-content ui-corner-all"></td>
-			</tr>
-			<tr>
-				<td>性別</td>
-				<td><select name="sex" id="sex"
-					class="text ui-widget-content ui-corner-all">
-						<option value="1">男</option>
-						<option value="2">女</option>
-						<option value="3">其他</option>
-				</select></td>
-			</tr>
-
-			<tr>
-				<td>國籍</td>
-				<td><input type="text" name="nationality" id="nationality"
-					class="text ui-widget-content ui-corner-all"></td>
-			
-				<td>身分證號碼</td>
-				<td><input type="text" name="idNumber" id="idNumber"
-					class="text ui-widget-content ui-corner-all"></td>
-			</tr>
-
-			<tr>
-				<td>出身日期</td>
-				<td><input type="text" name="dateOfBirth" id="dateOfBirth"
-					class="text ui-widget-content ui-corner-all"></td>
-			
-				<td>辦公電話</td>
-				<td><input type="text" name="telephone" id="telephone"
-					class="text ui-widget-content ui-corner-all"></td>
-			</tr>
-			<tr></tr>
-			<tr>
-				<td>傳真</td>
-				<td><input type="text" name="fax" id="fax"
-					class="text ui-widget-content ui-corner-all"></td>
-			
-				<td>通訊處</td>
-				<td><input type="text" name="address" id="address"
-					class="text ui-widget-content ui-corner-all"></td>
-			</tr>
-			<tr></tr>
-			<tr>
-				<td>電子郵件</td>
-				<td><input type="text" name="email" id="email"
-					class="text ui-widget-content ui-corner-all"></td>
-			
-			</tr>
-			<tr>
-				<td>半身 最近照片</td>
-				<td><input type="file" name="recentPhoto" id="recentPhoto"
-					class="text ui-widget-content ui-corner-all"></td>
-				<td>最近體檢資料</td>
-				<td><input type="file" name="investigation" id="investigation"
-					class="text ui-widget-content ui-corner-all"></td>
-			</tr>
+				<%@ include file="./pages/Person_main_form.jsp" %>
 		</table>
 		</form>
 	</div>
 	<div id="dialog-view-form-2">
-		<table id="single-view-table-2" class="display" style="width: 100%">
-			<thead>
-				<tr>
-					<th>操作證編號</th>
-					<th>操作證取得日期</th>
-					<th>操作證類別</th>
-				</tr>
-			</thead>
-
+		<table id="single-view-table-2-1" class="display" style="width: 100%">	
+			<%@ include file="./pages/LicenseInPerson_list.jsp" %>		
 		</table>
+		<form id="view-form-2-2">
+			<table id="single-view-table-2-2">	
+				<%@ include file="./pages/LicenseInPerson_main_form.jsp" %>			
+			</table>
+		</form>
 	</div>
 	<div id="dialog-view-form-3">
-		<table id="single-view-table-3" class="display" style="width: 100%">
-			<thead>
-				<tr>
-					<th>訓練名稱</th>
-					<th>訓練單位</th>
-					<th>訓練日期</th>
-					<th>訓練時數</th>
-					<th>訓練類型</th>
-				</tr>
-			</thead>
-
+		<table id="single-view-table-3-1" class="display" style="width: 100%">	
+			<%@ include file="./pages/TrainingInPerson_list.jsp" %>		
 		</table>
+		<form id="view-form-3-2">
+			<table id="single-view-table-3-2">		
+				<%@ include file="./pages/TrainingInPerson_main_form.jsp" %>	
+			</table>
+		</form>
 	</div>
 	<div id="dialog-view-form-4">
-		<table id="single-view-table-4" class="display" style="width: 100%">
-			<thead>
-				<tr>
-					<th>事蹟名稱</th>
-					<th>事蹟證明單位</th>
-					<th>發生特殊事蹟日期</th>
-					<th>事蹟說明</th>
-				</tr>
-			</thead>
-
+		<table id="single-view-table-4-1" class="display" style="width: 100%">	
+			<%@ include file="./pages/EventInPerson_list.jsp" %>		
 		</table>
+		<form id="view-form-4-2">
+			<table id="single-view-table-4-2">		
+				<%@ include file="./pages/EventInPerson_main_form.jsp" %>	
+			</table>
+		</form>
 	</div>
 </div>

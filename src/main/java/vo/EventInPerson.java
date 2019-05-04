@@ -3,6 +3,11 @@ package vo;
 import java.util.Date;
 
 public class EventInPerson extends Person{
+	private Integer eventId;
+	private String eventName;
+	private Date startDate;
+	private Date endDate;
+	private String description;
 	
 	
 	private byte[] photo;
@@ -19,11 +24,11 @@ public class EventInPerson extends Person{
 	public void setEventId(Integer eventId) {
 		this.eventId = eventId;
 	}
-	public String getName() {
-		return name;
+	public String getEventName() {
+		return eventName;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setEventName(String eventName) {
+		this.eventName = eventName;
 	}
 	public Date getStartDate() {
 		return startDate;
@@ -43,9 +48,5 @@ public class EventInPerson extends Person{
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	private Integer eventId;
-	private String name;
-	private Date startDate;
-	private Date endDate;
-	private String description;
+	
 }

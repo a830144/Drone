@@ -18,9 +18,9 @@ public interface EquipmentService {
 	
 	public void modifyEquipment(String jsonString);
 	
-	public void delete(Equipments entity);
+	public void updateMaintainEquipment(String jsonString);
 	
-	public void deleteAll();
+	public void updateModifyEquipment(String jsonString);
 
 	public String queryEquipmentById(Integer id);	
 	
@@ -30,4 +30,15 @@ public interface EquipmentService {
 	
 	public JsonArray queryModificationsById(Integer id);
 	
+	public String queryMaintenanceByMaintenanceId(Integer id);
+	
+	public String queryModificationByModificationId(Integer id);
+	
+	public void check(Integer id);
+	
+	public void approve(Integer id);
+	
+	public void reject(Integer id);
+	
+	public void delete(Integer id);
 }

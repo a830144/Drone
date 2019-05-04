@@ -31,11 +31,32 @@ public class EquipmentController {
 		equipmentService.persist(data);		
 	}
 	
-	@RequestMapping(value="/equipment/ModifyEquipmentProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/equipment/CheckEquipmentProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public void modifyEquipment(String data) {
-		System.out.println("ModifyEquipment");
-		equipmentService.modifyEquipment(data);		
+	public void checkEquipment(Integer id) {
+		System.out.println("CheckEquipment");
+		equipmentService.check(id);		
+	}
+	
+	@RequestMapping(value="/equipment/ApproveEquipmentProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public void approveEquipment(Integer id) {
+		System.out.println("ApproveEquipment");
+		equipmentService.approve(id);	
+	}
+	
+	@RequestMapping(value="/equipment/RejectEquipmentProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public void rejectEquipment(Integer id) {
+		System.out.println("RejectEquipment");
+		equipmentService.reject(id);	
+	}
+	
+	@RequestMapping(value="/equipment/DeleteEquipmentProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public void deleteEquipment(Integer id) {
+		System.out.println("DeleteEquipment");
+		equipmentService.delete(id);	
 	}
 	
 	@RequestMapping(value="/equipment/MaintainEquipmentProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
@@ -45,11 +66,32 @@ public class EquipmentController {
 		equipmentService.maintainEquipment(data);		
 	}
 	
+	@RequestMapping(value="/equipment/ModifyEquipmentProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public void modifyEquipment(String data) {
+		System.out.println("ModifyEquipment");
+		equipmentService.modifyEquipment(data);		
+	}
+	
 	@RequestMapping(value="/equipment/UpdateEquipmentProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
 	public void updateEquipment(String data) {
 		System.out.println("UpdateEquipment");
 		equipmentService.updateEquipment(data);		
+	}
+	
+	@RequestMapping(value="/equipment/UpdateMaintainEquipmentProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public void updateMaintainEquipment(String data) {
+		System.out.println("UpdateMaintainEquipment");
+		equipmentService.updateMaintainEquipment(data);		
+	}
+	
+	@RequestMapping(value="/equipment/UpdateModifyEquipmentProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public void updateModifyEquipment(String data) {
+		System.out.println("UpdateModifyEquipment");
+		equipmentService.updateModifyEquipment(data);		
 	}
 	
 	@RequestMapping(value="/equipment/ViewEquipmentProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
@@ -59,7 +101,7 @@ public class EquipmentController {
 		String jsonString = equipmentService.queryEquipmentById(new Integer(Integer.parseInt(id)));	
 		return jsonString;
 	}
-	
+	//view maintenance by equipmentId
 	@RequestMapping(value="/equipment/ViewMaintenance" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
 	public String viewMaintenance(String id) {
@@ -68,7 +110,24 @@ public class EquipmentController {
 		String jsonString =jsonArray.toString();
 		return jsonString;
 	}
+	//view maintenance by maintenanceId
+	@RequestMapping(value = "/equipment/ViewMaintenanceByMaintenanceId", method = {RequestMethod.POST }, produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public String viewMaintenanceByMaintenanceId(String id) {
+		String jsonString = equipmentService.queryMaintenanceByMaintenanceId(new Integer(Integer.parseInt(id)));
+		System.out.println("ViewMaintenanceByMaintenanceId::" + jsonString);
+		return jsonString;
+	}
+	//view Modification by ModificationId
+	@RequestMapping(value = "/equipment/ViewModificationByModificationId", method = {RequestMethod.POST }, produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public String viewModificationByModificationId(String id) {
+		String jsonString = equipmentService.queryModificationByModificationId(new Integer(Integer.parseInt(id)));
+		System.out.println("ViewModificationByModificationId::" + jsonString);
+		return jsonString;
+	}
 	
+	//view modification by equipmentId
 	@RequestMapping(value="/equipment/ViewModification" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
 	public String viewModification(String id) {

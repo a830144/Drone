@@ -4,7 +4,7 @@
 	$(function() {
 		$("#dialog-update-form").dialog({
 			autoOpen : false,
-			height : 400,
+			height : 500,
 			width : 800,
 			modal : true,
 			buttons : {
@@ -12,6 +12,7 @@
 							$("#update-form").find("#equipmentId").prop("disabled", false);
 							$("#update-form").find("#productName").prop("disabled", false);
 							$("#update-form").find("#constructionType").prop("disabled",false);
+							$("#update-form").find("#state").prop("disabled",false);
 							var myJson = JSON.stringify($("#update-form").serializeObject());
 							$.ajax({
 								url : "/Drone/equipment/UpdateEquipmentProcess",
@@ -21,11 +22,11 @@
 								},
 								success : function() {
 									alert('修改成功');
+									reloadQueryEquipmentAction();
 								}
-							})
-
+							})	
+							reloadQueryEquipmentAction();
 							$(this).dialog("close");
-
 						},
 
 						"關閉" : function() {
@@ -51,13 +52,11 @@
 				$.each(obj, function(key, value) {
 					$("#update-form").find("#" + key).val(value);
 				});
-				if ($("#update-form").find("#constructionType").val() == 'A') {
-					$("#update-form").find('#div-aircraft').show();
-				} else {
-					$("#update-form").find('#div-aircraft').hide();
-				}
-				$("#update-form").find("select").prop("disabled", true);
-				$("#update-form").find("input").prop("disabled", true);
+				
+				$("#update-form").find("#equipmentId").prop("disabled", true);
+				$("#update-form").find("#productName").prop("disabled", true);
+				$("#update-form").find("#constructionType").prop("disabled",true);
+				$("#update-form").find("#state").prop("disabled",true);
 			}
 		})
 
@@ -68,7 +67,7 @@
 	<form id="update-form">
 		<table id="single-update-table-1">
 			<tr>
-				<td>ID</td>
+				<td>設備ID</td>
 				<td><input type="text" name="equipmentId" id="equipmentId"
 					class="text ui-widget-content ui-corner-all"></td>
 			</tr>
@@ -148,6 +147,11 @@
 				<td>其他附註</td>
 				<td><textarea name="note" id="note" rows="2" cols="40" 
 					class="text ui-widget-content ui-corner-all"></textarea></td>
+			</tr>
+			<tr>
+				<td>資料狀態</td>
+				<td><input type="text" name="state" id="state"
+					class="text ui-widget-content ui-corner-all"></td>
 			</tr>
 		</table>
 	</form>

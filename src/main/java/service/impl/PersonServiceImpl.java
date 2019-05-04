@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.json.JSONObject;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -34,6 +33,8 @@ public class PersonServiceImpl implements PersonService {
 	private LicenseDao licenseDao;
 	private TrainingDao trainingDao;
 	private EventDao eventDao;
+	
+	private Gson gson = new GsonBuilder().setDateFormat("MM/dd/yyyy").create();
 
 	public PersonServiceImpl() {
 	}
@@ -71,15 +72,13 @@ public class PersonServiceImpl implements PersonService {
 	}
 
 	@Override
-	public void persist(String jsonString) {
-		Gson gson = new GsonBuilder().setDateFormat("MM/dd/yyyy").create();
+	public void persist(String jsonString) {		
 		Persons entity = gson.fromJson(jsonString, Persons.class);
 		personDao.persist(entity);
 	}
 
 	@Override
 	public void updatePerson(String jsonString) {
-		Gson gson = new Gson();
 		Persons vo = gson.fromJson(jsonString, Persons.class);
 		Persons entity = personDao.findById(vo.getPersonId());
 		try {
@@ -95,8 +94,6 @@ public class PersonServiceImpl implements PersonService {
 	@Override
 	public String queryPersonById(Integer id) {
 		Persons entity_persons = personDao.findById(id);
-		//sessionFactory.getCurrentSession().evict(persons);
-		// get through the result set
 		Person vo = new Person();
 		try {
 			BeanUtils.copyProperties(vo, entity_persons);
@@ -107,9 +104,7 @@ public class PersonServiceImpl implements PersonService {
 			e.printStackTrace();
 		}
 		String jsonString = "";
-
-		JSONObject jsonObj = new JSONObject(vo);
-		jsonString = jsonObj.toString();
+		jsonString = gson.toJson(vo);
 
 		return jsonString;
 	}
@@ -129,8 +124,6 @@ public class PersonServiceImpl implements PersonService {
 			personsList = personDao.findByName(ename);
 		}
 		return personsList;
-		//tx.commit();
-		// get through the result set
 	}
 
 	@Override
@@ -141,12 +134,12 @@ public class PersonServiceImpl implements PersonService {
 
 	@Override
 	public void licenseInPerson(String jsonString) {
-		Gson gson = new GsonBuilder().setDateFormat("MM/dd/yyyy").create();
 		LicenseInPerson vo = gson.fromJson(jsonString, LicenseInPerson.class);
-
+		System.out.println("vo.getPersonId()::"+vo.getPersonId());
 		Persons entity_persons = personDao.findById(vo.getPersonId());
 		PersonsLicenses entity_personsLicenses = new PersonsLicenses();
-		Licenses entity_licenses = licenseDao.findByType(vo.getType(), vo.getSubType());
+		System.out.println(vo.getType());
+		Licenses entity_licenses = licenseDao.findByType(vo.getType());
 		try {
 			BeanUtils.copyProperties(entity_personsLicenses, vo);
 		} catch (IllegalAccessException e) {
@@ -166,12 +159,11 @@ public class PersonServiceImpl implements PersonService {
 
 	@Override
 	public void trainingInPerson(String jsonString) {
-		Gson gson = new GsonBuilder().setDateFormat("MM/dd/yyyy").create();
 		TrainingInPerson vo = gson.fromJson(jsonString, TrainingInPerson.class);
 
 		Persons entity_persons = personDao.findById(vo.getPersonId());
 		Certificates entity_certificates = new Certificates();
-		Trainings entity_trainings = trainingDao.findByName(vo.getName());
+		Trainings entity_trainings = trainingDao.findById(vo.getTrainingId());
 		try {
 			BeanUtils.copyProperties(entity_certificates, vo);
 		} catch (IllegalAccessException e) {
@@ -191,12 +183,11 @@ public class PersonServiceImpl implements PersonService {
 
 	@Override
 	public void eventInPerson(String jsonString) {
-		Gson gson = new GsonBuilder().setDateFormat("MM/dd/yyyy").create();
 		EventInPerson vo = gson.fromJson(jsonString, EventInPerson.class);
 
 		Persons entity_persons = personDao.findById(vo.getPersonId());
 		Participations entity_participations = new Participations();
-		Events entity_events = eventDao.findByName(vo.getName());
+		Events entity_events = eventDao.findById(vo.getEventId());
 		try {
 			BeanUtils.copyProperties(entity_participations, vo);
 		} catch (IllegalAccessException e) {
@@ -231,8 +222,8 @@ public class PersonServiceImpl implements PersonService {
 			} catch (InvocationTargetException e) {
 				e.printStackTrace();
 			}
-			JSONObject jsonObj = new JSONObject(vo);
-			jsonArray.add(jsonObj.toString());
+
+			jsonArray.add(gson.toJson(vo));
 
 		}
 		return jsonArray;
@@ -255,8 +246,8 @@ public class PersonServiceImpl implements PersonService {
 			} catch (InvocationTargetException e) {
 				e.printStackTrace();
 			}
-			JSONObject jsonObj = new JSONObject(vo);
-			jsonArray.add(jsonObj.toString());
+			vo.setShowTrainingType();
+			jsonArray.add(gson.toJson(vo));
 
 		}
 		return jsonArray;
@@ -279,11 +270,68 @@ public class PersonServiceImpl implements PersonService {
 			} catch (InvocationTargetException e) {
 				e.printStackTrace();
 			}
-			JSONObject jsonObj = new JSONObject(vo);
-			jsonArray.add(jsonObj.toString());
+			
+			jsonArray.add(gson.toJson(vo));
 
 		}
 		return jsonArray;
 	}
+
+	@Override
+	public String queryLicenseInfo(Integer personId, Integer licenseId) {
+		PersonsLicenses entity_personLicenses = personDao.findLicenseInfo(personId,licenseId);
+		LicenseInPerson vo = new LicenseInPerson();
+		try {
+			BeanUtils.copyProperties(vo, entity_personLicenses);
+			BeanUtils.copyProperties(vo, entity_personLicenses.getPersons());
+			BeanUtils.copyProperties(vo, entity_personLicenses.getLicenses());			
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		String jsonString = "";
+		jsonString = gson.toJson(vo);
+		return jsonString;
+	}
+
+	@Override
+	public String queryTrainingInfo(Integer personId, Integer trainingId) {
+		Certificates entity_certificates = personDao.findTrainingInfo(personId,trainingId);
+		TrainingInPerson vo = new TrainingInPerson();
+		try {
+			BeanUtils.copyProperties(vo, entity_certificates);
+			BeanUtils.copyProperties(vo, entity_certificates.getPersons());
+			BeanUtils.copyProperties(vo, entity_certificates.getTrainings());			
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		String jsonString = "";
+		jsonString = gson.toJson(vo);
+		System.out.println("jsonString::"+jsonString);
+		return jsonString;
+	}
+
+	@Override
+	public String queryEventInfo(Integer personId, Integer eventId) {
+		Participations entity_participations = personDao.findEventInfo(personId, eventId);
+		EventInPerson vo = new EventInPerson();
+		try {
+			BeanUtils.copyProperties(vo, entity_participations);
+			BeanUtils.copyProperties(vo, entity_participations.getPersons());
+			BeanUtils.copyProperties(vo, entity_participations.getEvents());
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		String jsonString = "";
+		jsonString = gson.toJson(vo);
+		return jsonString;
+	}
+
+	
 
 }

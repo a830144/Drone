@@ -1,265 +1,205 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
+
 <script>
-
-	function radioValue() {
-		if (document.getElementsByName('airframe_radio')[0].checked) {
-			$("#airframe").val('N');
-		}
-		if (document.getElementsByName('airframe_radio')[1].checked) {
-			$("#airframe").val('M');
-		}
-		if (document.getElementsByName('propulsion_radio')[0].checked) {
-			$("#propulsion").val('N');
-		}
-		if (document.getElementsByName('propulsion_radio')[1].checked) {
-			$("#propulsion").val('M');
-		}
-		if (document.getElementsByName('battery_radio')[0].checked) {
-			$("#battery").val('N');
-		}
-		if (document.getElementsByName('battery_radio')[1].checked) {
-			$("#battery").val('M');
-		}
-		if (document.getElementsByName('controller_radio')[0].checked) {
-			$("#controller").val('N');
-		}
-		if (document.getElementsByName('controller_radio')[1].checked) {
-			$("#controller").val('M');
-		}
-		if (document.getElementsByName('payload_radio')[0].checked) {
-			$("#payload").val('N');
-		}
-		if (document.getElementsByName('payload_radio')[1].checked) {
-			$("#payload").val('M');
-		}
-	}
-	$(function() {
-		$("#modificationDate").datepicker();
-		$("[name='airframe_radio']").checkboxradio({
-			icon : false
-		});
-		$("[name='propulsion_radio']").checkboxradio({
-			icon : false
-		});
-		$("[name='battery_radio']").checkboxradio({
-			icon : false
-		});
-		$("[name='controller_radio']").checkboxradio({
-			icon : false
-		});
-		$("[name='payload_radio']").checkboxradio({
-			icon : false
-		});
-	});
-	$(function() {
-		$("#dialog-modify-form").dialog(
-				{
-					autoOpen : false,
-					height : 400,
-					width : 1050,
-					modal : true,
-					buttons : {
-						"改裝設備" : function() {
-							$("#modify-form").find("#equipmentId").prop("disabled", false);
-							$("#modify-form").find("#manufactoryName").prop("disabled",false);
-							$("#modify-form").find("#constructionType").prop("disabled", false);
-							radioValue();
-							var myJson = JSON.stringify($("#modify-form").serializeObject());
-							$.ajax({
-								url : "/Drone/equipment/ModifyEquipmentProcess",
-								type : "POST",
-								data : {
+	function prepareModifyDomAction(){
+		$("#dialog-modify-form").dialog({
+			autoOpen : false,
+			height : 600,
+			width : 1250,
+			modal : true,
+			buttons : [
+						{
+						  text: "修改改裝資料",
+				          icon: "ui-icon-pencil",
+				          id: "updateModificationBtn",
+				          click: function() {
+				    	      $("#modify-form-2").find("#equipmentId").prop("disabled", false);
+							  $("#modify-form-2").find("#manufactoryName").prop("disabled", false);
+							  $("#modify-form-2").find("#constructionType").prop("disabled",false);
+							  radioValue('#modify-form-2');							
+							  var myJson = JSON.stringify($("#modify-form-2").serializeObject());
+							  $.ajax({
+								 url : "/Drone/equipment/UpdateModifyEquipmentProcess",
+								 type : "POST",
+								 data : {
 									"data" : myJson
-								},
-								success : function() {
-									alert('新增改裝資料成功');
-								}
-							})
-
-							$(this).dialog("close");
-
-						},
-
-						"關閉" : function() {
-							$(this).dialog("close");
-						}
-					},
-					close : function() {
+								 },
+								 success : function() {
+									alert('修改改裝紀錄成功');
+								  }
+							   })
+							   $(this).dialog("close");
+				           }			 
+			 		    },
+			    		{
+			      		  text: "新增改裝資料",
+			              icon: "ui-icon-plus",
+			              id: "addModificationBtn",
+			              click: function() {
+			    	         $("#modify-form-2").find("#equipmentId").prop("disabled", false);
+						     $("#modify-form-2").find("#manufactoryName").prop("disabled", false);
+						     $("#modify-form-2").find("#constructionType").prop("disabled",false);
+						     radioValue('#modify-form-2');							
+						     var myJson = JSON.stringify($("#modify-form-2").serializeObject());
+						     $.ajax({
+							    url : "/Drone/equipment/ModifyEquipmentProcess",
+							    type : "POST",
+							    data : {
+								  "data" : myJson
+							    },
+							    success : function() {
+								  alert('新增改裝紀錄成功');
+							    }
+						    })
+						    $(this).dialog("close");
+			              }
+			            },
+					    {
+				          text: "關閉",
+				          icon: "ui-icon-closethick",
+				          click: function() {
+				             $( this ).dialog( "close" );
+				          }
+				 
+				 		}],
+			close : function() {
+						$( "#single-modify-table-1").unbind( "select" );
 						var table1 = $('#single-modify-table-1').DataTable();
 						table1.destroy();
-					}
-				});
-	});
-	function modifyEquipment(id) {
-		$("#modify-form").find("select").val("");
-		$("#modify-form").find("input").val("");
-		$.ajax({
-			  url:"/Drone/equipment/ViewEquipmentProcess",
+			}		
+		});
+		$("#modify-form-2").find("#modificationDate").datepicker();
+		$("#modify-form-2").find("input[name*='radio']").checkboxradio();
+	}
+	function modifyDomFinishState(id){
+		window.equipmentId = id;
+	}	
+	function transferModifyListAction(){
+		var singlemodifytable1 = $('#single-modify-table-1').DataTable({
+			columnDefs: [
+				{	
+				    className: 'dt-center',
+				    targets: '_all'
+				}],			
+			"select":true,
+			"order": [[ 1, 'asc' ]],
+			"scrollY": "100px",
+			"scrollCollapse": true,	
+			"ajax" : {
+				"type": "POST",
+				"url" : "/Drone/equipment/ViewModification",
+				"data" : {
+					"id" : window.equipmentId
+				},
+				"dataSrc" : function(json) {
+					var myarray=new Array(json.length);
+			    	for (i=0; i <json.length; i++){
+			    	    myarray[i]=new Array(10);
+			    	}
+			    	for(i=0;i<json.length;i++){
+		        		var obj = $.parseJSON(json[i]);
+		        		myarray[i][0]='';		        		
+		        		myarray[i][1]=obj.hasOwnProperty("modificationId")?obj.modificationId:'';
+		        		myarray[i][2]=obj.hasOwnProperty("modificationDate")?obj.modificationDate:'';
+		        		myarray[i][3]=obj.hasOwnProperty("modificationPerson")?obj.modificationPerson:'';
+		        		myarray[i][4]=obj.hasOwnProperty("airframe")?obj.airframe:'';
+		        		myarray[i][5]=obj.hasOwnProperty("propulsion")?obj.propulsion:'';
+		        		myarray[i][6]=obj.hasOwnProperty("battery")?obj.battery:'';
+		        		myarray[i][7]=obj.hasOwnProperty("controller")?obj.controller:'';
+		        		myarray[i][8]=obj.hasOwnProperty("payload")?obj.payload:'';
+		        		myarray[i][9]=obj.hasOwnProperty("others")?obj.others:'';
+		        	}
+			    	registerModifyListEvent();
+			        return myarray;
+				},
+				dataType : 'json'
+			}
+
+		});
+		
+	}
+	function registerModifyListEvent(){
+		var singlemodifytable1 = $('#single-modify-table-1').DataTable();
+		singlemodifytable1.on( 'select', function ( e, dt, type, indexes ) {
+			var cell = singlemodifytable1.cell( indexes ,1);
+			var modificationId = cell.data();
+			alert('您選取了改裝編號 :'+ modificationId);
+			$.ajax({
+			  url:"/Drone/equipment/ViewModificationByModificationId",
 			  type:"POST",
-			  data:{"id" : id},
+			  data:{"id" : modificationId},
 			  dataType: "json",
 			  success: function(data){				  
 				var obj = data;
-				var form = $("#modify-form");
+				var form = $("#modify-form-2");
+				$("#modify-form-2").find("#modificationIdTD").empty().append("<input type='text' name='modificationId' id='modificationId' class='text ui-widget-content ui-corner-all ui-state-disabled'>");
 				$.each(obj, function(key, value) {
-					$("#modify-form").find("#" + key).val(value);
+					$("#modify-form-2").find("#" + key).val(value);	
+					$("#modify-form-2").find("input[name='" + key +"']").val(value);
 				});
-				if ($("#modify-form").find("#constructionType").val() == 'A') {
-					$("#modify-form").find('#div-aircraft').show();
-				} else {
-					$("#modify-form").find('#div-aircraft').hide();
-				}
-				$("#modify-form").find("select").prop("disabled", true);
-				$("#modify-form").find("input").prop("disabled", true);
+				reverseRadioValue("#modify-form-2","mo");
+				$("#addModificationBtn").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
+				$("#updateModificationBtn").prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
+			}})
+		});
+		singlemodifytable1.on( 'deselect', function ( e, dt, type, indexes ) {
+			if ( type === 'row' ) {				
+				initializeModifyMainFormState();
+		    }
+		});
+	}
+	function transferModifyMainFormAction(){
+		$.ajax({
+			  url:"/Drone/equipment/ViewEquipmentProcess",
+			  type:"POST",
+			  data:{"id" : window.equipmentId},
+			  dataType: "json",
+			  success: function(data){				  
+				var obj = data;
+				var form = $("#modify-form-2");
+				$.each(obj, function(key, value) {
+					$("#modify-form-2").find("#" + key).val(value);
+				});
 			}
 		})
+	}
+	function initializeModifyListState(){
+		
+	}
+	function initializeModifyMainFormState(){
+		$("#modify-form-2").find("#modificationIdTD").empty();
+		$("#modify-form-2").find("#modificationIdDate").val("");
+		$("#modify-form-2").find("#modificationIdPerson").val("");
+		$("#modify-form-2").find("input[id*='clean']").prop("checked", true );
+		$("#modify-form-2").find("input[name*='radio']").button("enable").button("refresh");
+		$("#modify-form-2").find("input[name*='comment']").val("");
+		$("#addModificationBtn").prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
+		$("#updateModificationBtn").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
+	}
+	$(function() {
+		prepareModifyDomAction();
+	});
 
-		var table = $('#single-modify-table-1').DataTable(
-						{
-							"scrollY":        "100px",
-					        "scrollCollapse": true,
-							"ajax" : {
-								"type": "POST",
-								"url" : "/Drone/equipment/ViewModification",
-								"data" : {
-									"id" : id
-								},
-								"dataSrc" : function(json) {
-									var myarray=new Array(json.length);
-							    	for (i=0; i <json.length; i++){
-							    	    myarray[i]=new Array(8);
-							    	}
-							    	for(i=0;i<json.length;i++){
-						        		var obj = $.parseJSON(json[i]);
-						        		var obj = $.parseJSON(json[i]);
-						        		myarray[i][0]=obj.hasOwnProperty("modificationDate")?obj.modificationDate:'';
-						        		myarray[i][1]=obj.hasOwnProperty("modificationPerson")?obj.modificationPerson:'';
-						        		myarray[i][2]=obj.hasOwnProperty("airframe")?obj.airframe:'';
-						        		myarray[i][3]=obj.hasOwnProperty("propulsion")?obj.propulsion:'';
-						        		myarray[i][4]=obj.hasOwnProperty("battery")?obj.battery:'';
-						        		myarray[i][5]=obj.hasOwnProperty("controller")?obj.controller:'';
-						        		myarray[i][6]=obj.hasOwnProperty("payload")?obj.payload:'';
-						        		myarray[i][7]=obj.hasOwnProperty("others")?obj.others:'';
-						        	}
-							        return myarray;
-								},
-								dataType : 'json'
-							}
-
-						});
-
+	function modifyEquipment(id) {
+		modifyDomFinishState(id);
+		transferModifyListAction();
+		transferModifyMainFormAction();
+		initializeModifyListState();
+		initializeModifyMainFormState();
 		$("#dialog-modify-form").dialog("open");
 	}
 </script>
 <div id="dialog-modify-form" title="改裝設備明細">
 	<div id = "dialog-modify-form-1">
 		<table id="single-modify-table-1" class="display" style="width: 100%">
-			<thead>
-				<tr>
-					<th>改裝日期</th>
-					<th>改裝人員</th>
-					<th>結構系統</th>
-					<th>推進系統</th>
-					<th>動力系統</th>
-					<th>飛控系統</th>
-					<th>酬載裝置</th>
-					<th>其他</th>
-				</tr>
-			</thead>
-
+			<%@ include file="./pages/ModifyEquipment_list.jsp" %>
 		</table>
 	</div>
 	<div id = "dialog-modify-form-2">
-		<form id="modify-form">
+		<form id="modify-form-2">
 			<table id="single-modify-table-2">
-			<tr>
-				<td>ID</td>
-				<td><input type="text" name="equipmentId" id="equipmentId"
-					class="text ui-widget-content ui-corner-all"></td>
-				<td>製造廠名稱</td>
-				<td><input type="text" name="manufactoryName" id="manufactoryName"
-					class="text ui-widget-content ui-corner-all"></td>
-				<td>型式名稱</td>
-				<td><input type="text" name="productName" id="productName"
-					class="text ui-widget-content ui-corner-all"></td>
-				
-			</tr>
-
-			<tr>
-				<td>改裝日期</td>
-				<td><input type="text" name="modificationDate"
-					id="modificationDate" class="text ui-widget-content ui-corner-all"></td>
-				<td>改裝人員</td>
-				<td><input type="text" name="modificationPerson"
-					id="modificationPerson" class="text ui-widget-content ui-corner-all"></td>
-			</tr>
-
-			
-
-			<tr>
-				<td>結構系統(airframe)</td>
-				<td>
-				<fieldset>
-				<label for="airframe-none">none</label>
-    			<input type="radio" name="airframe_radio" id="airframe-none" value="N" checked>
-    			<label for="airframe-modified">modify</label>
-    			<input type="radio" name="airframe_radio" id="airframe-modified" value="M">
-    			<input type="hidden" name="airframe" id="airframe">
-				</fieldset>				 					
-				</td>
-			
-				<td>推進系統(engine, motor, propeller)</td>
-				<td>
-				<fieldset>
-				<label for="propulsion-none">none</label>
-    			<input type="radio" name="propulsion_radio" id="propulsion-none" value="N" checked>
-    			<label for="propulsion-modified">modify</label>
-    			<input type="radio" name="propulsion_radio" id="propulsion-modified" value="M">
-    			<input type="hidden" name="propulsion" id="propulsion">
-				</fieldset>
-				</td>
-					
-				<td>動力系統(battery)</td>
-				<td>
-				<fieldset>
-				<label for="battery-none">none</label>
-    			<input type="radio" name="battery_radio" id="battery-none" value="N" checked>
-    			<label for="battery-modified">modify</label>
-    			<input type="radio" name="battery_radio" id="battery-modified" value="M">
-    			<input type="hidden" name="battery" id="battery">
-				</fieldset>
-				</td>
-					
-			</tr>
-			<tr>
-				<td>飛控系統(controller)</td>
-				<td>
-				<fieldset>
-				<label for="controller-none">none</label>
-    			<input type="radio" name="controller_radio" id="controller-none" value="N" checked>
-    			<label for="controller-modified">modify</label>
-    			<input type="radio" name="controller_radio" id="controller-modified" value="M">
-    			<input type="hidden" name="controller" id="controller">
-				</fieldset>
-				</td>
-				
-				<td>酬載裝置(payload) </td>
-				<td>
-				<fieldset>
-				<label for="payload-none">none</label>
-    			<input type="radio" name="payload_radio" id="payload-none" value="N" checked>
-    			<label for="payload-modified">modify</label>
-    			<input type="radio" name="payload_radio" id="payload-modified" value="M">
-    			<input type="hidden" name="payload" id="payload">
-				</fieldset>
-				</td>
-		
-				<td>其他(others)</td>
-				<td><input type="text" name="others" id="others"
-					class="text ui-widget-content ui-corner-all"></td>
-				
-			</tr>
+				<%@ include file="./pages/ModifyEquipment_main_form.jsp" %>				
 			</table>
 		</form>
 	</div>

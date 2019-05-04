@@ -9,6 +9,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -38,8 +39,19 @@ public class Maintenances implements java.io.Serializable {
 	private Date maintenanceDate;
 	private String maintenancePerson;
 	private Set<MaintenanceDetail> maintenanceDetails = new HashSet<MaintenanceDetail>(0);
+	
+	private MaintenanceFlow maintenanceFlow;
 
 	public Maintenances() {
+	}
+	
+	@Embedded
+	public MaintenanceFlow getMaintenanceFlow() {
+		return maintenanceFlow;
+	}
+
+	public void setMaintenanceFlow(MaintenanceFlow maintenanceFlow) {
+		this.maintenanceFlow = maintenanceFlow;
 	}
 
 	public Maintenances(Equipments equipments, String maintenanceType, Date maintenanceDate, String maintenancePerson,

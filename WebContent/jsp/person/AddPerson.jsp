@@ -1,83 +1,87 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
+
 <script>
-	$(function() {
-		$("#dateOfBirth").datepicker();
-	});
-	$(function() {
-		
-		var name = $("#name"), email = $("#email"), password = $("#password"), allFields = $(
-				[]).add(name).add(email).add(password), tips = $(".validateTips");
 
-		function updateTips(t) {
-			tips.text(t).addClass("ui-state-highlight");
-			setTimeout(function() {
-				tips.removeClass("ui-state-highlight", 1500);
-			}, 500);
+	var tips = $(".validateTips");
+
+	function updateTips(t) {
+		tips.text(t).addClass("ui-state-highlight");
+		setTimeout(function() {
+			tips.removeClass("ui-state-highlight", 1500);
+		}, 500);
+	}
+
+	function checkLength(o, n, min, max) {
+		if (o.val().length > max || o.val().length < min) {
+			o.addClass("ui-state-error");
+			updateTips("" + n + " 的長度必須在 " + min + " 和 " + max + " 之間。");
+			return false;
+		} else {
+			return true;
 		}
+	}
 
-		function checkLength(o, n, min, max) {
-			if (o.val().length > max || o.val().length < min) {
-				o.addClass("ui-state-error");
-				updateTips("" + n + " 的長度必須在 " + min + " 和 " + max + " 之間。");
-				return false;
-			} else {
-				return true;
-			}
+	function checkRegexp(o, regexp, n) {
+		if (!(regexp.test(o.val()))) {
+			o.addClass("ui-state-error");
+			updateTips(n);
+			return false;
+		} else {
+			return true;
 		}
-
-		function checkRegexp(o, regexp, n) {
-			if (!(regexp.test(o.val()))) {
-				o.addClass("ui-state-error");
-				updateTips(n);
-				return false;
-			} else {
-				return true;
-			}
-		}
-
-		$("#dialog-add-form")
-				.dialog(
-						{
-							autoOpen : false,
-							height : 400,
-							width : 800,
-							modal : true,
-							buttons : {
-								"新增人員" : function() {
-									var bValid = true;
-									allFields.removeClass("ui-state-error");
-
-									bValid = bValid
-											&& checkLength(name, "name", 3, 16);
-
-									if (bValid) {
-										var myJson = JSON.stringify($("#add-form").serializeObject());
-										$.ajax({
-											  url:"/Drone/person/AddPersonProcess",
-											  type:"POST",
-											  data:{"data" : myJson},
-											  success: function(){
-												  alert('新增成功');
-											  }
+	}
+	function prepareQueryDomAction(){
+		$("#dialog-add-form").dialog({
+					autoOpen : false,
+					height : 500,
+					width : 800,
+					modal : true,
+					buttons : {
+						"新增人員" : function() {
+							var bValid = true;
+							if (bValid) {
+								var myJson = JSON.stringify($("#add-form").serializeObject());
+								$.ajax({
+											url : "/Drone/person/AddPersonProcess",
+											type : "POST",
+											data : {
+												"data" : myJson
+											},
+											success : function() {
+												alert('新增成功');
+												reloadQueryEquipment();
+											}
 										})
-																			
-										$(this).dialog("close");
-									}
-								},
-								"取消" : function() {
-									$(this).dialog("close");
-								}
-							},
-							close : function() {
-								allFields.val("").removeClass("ui-state-error");
-							}
-						});
 
-		$("#add").button().click(function() {
-			$("#dialog-add-form").dialog("open");
-		});
+								$(this).dialog("close");
+							}
+						},
+						"取消" : function() {
+							$(this).dialog("close");
+						}
+					},
+					close : function() {
+					}
+				});
+		$("#add-form").find("#dateOfBirth").datepicker();
+	}
+	
+	function queryDomFinishState() {
+
+	}
+	function initializeAddFormState() {
+
+	}
+	$(function() {
+		prepareQueryDomAction();
 	});
+	function addPerson() {
+		queryDomFinishState();
+		initializeAddFormState();
+		$("#dialog-add-form").dialog("open");
+	}
+
 </script>
 <div id="dialog-add-form" title="新增設備">
 	<p class="validateTips">*代表必填</p>
@@ -141,6 +145,10 @@
 				<td>半身 最近照片</td>
 				<td><input type="file" name="recentPhoto" id="recentPhoto"
 					class="text ui-widget-content ui-corner-all"></td>
+				
+			</tr>
+			<tr>
+
 				<td>最近體檢資料</td>
 				<td><input type="file" name="investigation" id="investigation"
 					class="text ui-widget-content ui-corner-all"></td>

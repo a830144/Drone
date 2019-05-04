@@ -1,31 +1,28 @@
 package service.impl;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import dao.AerialPlanDao;
 import dao.ProjectDao;
-import dao.impl.PersonDaoImpl;
-import dao.impl.ProjectDaoImpl;
-import entity.Equipments;
+import entity.AerialPlans;
 import entity.Operations;
-import entity.Persons;
 import entity.Projects;
 import service.OperationService;
-import util.HibernateUtil;
 
 public class OperationServiceImpl implements OperationService {
+
+	@Override
+	public List<AerialPlans> queryAerialPlans(String projectId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	private ProjectDao projectDao;
 

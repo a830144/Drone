@@ -31,4 +31,10 @@ public interface PersonService {
 	
 	public JsonArray queryEventsById(Integer id);
 	
+	public String queryLicenseInfo(Integer personId,Integer licenseId);
+	
+	public String queryTrainingInfo(Integer personId,Integer trainingId);
+	
+	public String queryEventInfo(Integer personId,Integer eventId);
+	
 }

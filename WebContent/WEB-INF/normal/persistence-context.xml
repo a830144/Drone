@@ -32,7 +32,8 @@
 				<value>entity.AerialPlans</value>
 				<value>entity.AerialActivities</value>
 				<value>entity.Areas</value>
-				<value>entity.Projects</value>				
+				<value>entity.Projects</value>
+				<value>entity.Code</value>					
 			</list>
 		</property>
 		<property name="hibernateProperties">
@@ -45,6 +46,14 @@
 	</bean>
 	<bean id="equipmentDao"
 		class="dao.impl.EquipmentDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="maintenanceDao"
+		class="dao.impl.MaintenanceDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="modificationDao"
+		class="dao.impl.ModificationDaoImpl">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	<bean id="personDao"
@@ -61,6 +70,10 @@
 	</bean>
 	<bean id="trainingDao"
 		class="dao.impl.TrainingDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="codeDao"
+		class="dao.impl.CodeDaoImpl">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	<bean id="projectDao"

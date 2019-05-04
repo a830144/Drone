@@ -6,13 +6,17 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.statemachine.recipes.persist.PersistStateMachineHandler;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 
 import dao.EquipmentDao;
+import dao.MaintenanceDao;
+import dao.ModificationDao;
 import entity.EquipmentFlow;
 import entity.EquipmentPerformance;
 import entity.Equipments;
@@ -21,14 +25,24 @@ import entity.Maintenances;
 import entity.ModificationDetail;
 import entity.Modifications;
 import service.EquipmentService;
+import stateMachine.Events;
+import stateMachine.States;
+import util.EntityConstants;
 import vo.BaseEquipmentAttachment.TempAttach;
 import vo.Equipment;
 import vo.MaintainEquipment;
 import vo.ModifyEquipment;
 
 public class EquipmentServiceImpl implements EquipmentService {
+	
+	private Gson gson = new GsonBuilder().setDateFormat("MM/dd/yyyy").create();
 
 	private EquipmentDao equipmentDao;
+	private MaintenanceDao maintenanceDao;
+	private ModificationDao modificationDao;
+
+	@Autowired
+	private PersistStateMachineHandler persistStateMachineHandler;
 
 	public EquipmentDao getEquipmentDao() {
 		return equipmentDao;
@@ -38,25 +52,39 @@ public class EquipmentServiceImpl implements EquipmentService {
 		this.equipmentDao = equipmentDao;
 	}
 
+	public MaintenanceDao getMaintenanceDao() {
+		return maintenanceDao;
+	}
+
+	public void setMaintenanceDao(MaintenanceDao maintenanceDao) {
+		this.maintenanceDao = maintenanceDao;
+	}
+
+	public ModificationDao getModificationDao() {
+		return modificationDao;
+	}
+
+	public void setModificationDao(ModificationDao modificationDao) {
+		this.modificationDao = modificationDao;
+	}
+	
 	public EquipmentServiceImpl() {
 		
 	}
 
 	@Override
 	public void persist(String jsonString) {
-		Gson gson = new Gson();
 		Equipments entity = gson.fromJson(jsonString, Equipments.class);
 		EquipmentPerformance entity_equipmentPerformance = gson.fromJson(jsonString, EquipmentPerformance.class);
 		EquipmentFlow entity_equipmentFlow = gson.fromJson(jsonString, EquipmentFlow.class);
 		entity.setEquipmentPerformance(entity_equipmentPerformance);
+		entity_equipmentFlow.setState(States.PROCESSING);
 		entity.setEquipmentFlow(entity_equipmentFlow);
 		equipmentDao.persist(entity);
 	}
 
 	@Override
 	public void updateEquipment(String jsonString) {
-
-			Gson gson = new Gson();
 			Equipment vo = gson.fromJson(jsonString, Equipment.class);
 			Equipments entity_equipments = equipmentDao.findById(vo.getEquipmentId());
 			try {
@@ -80,15 +108,69 @@ public class EquipmentServiceImpl implements EquipmentService {
 			} catch (InvocationTargetException e) {
 				e.printStackTrace();
 			}
-
+			updateState(entity_equipments, Events.UPDATE);
 			equipmentDao.update(entity_equipments);
+			
+	}
+	@Override
+	public void updateMaintainEquipment(String jsonString) {
+		MaintainEquipment vo = gson.fromJson(jsonString, MaintainEquipment.class);
+		Maintenances entity_maintenances = maintenanceDao.findById(vo.getMaintenanceId());
+		try {
+			BeanUtils.copyProperties(entity_maintenances, vo);
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		int rowcount = maintenanceDao.deleteAllDetailsByMaintenanceId(vo.getMaintenanceId());
+		System.out.println("delete detail::"+rowcount);
+		Map<String, TempAttach> map = vo.getResultHashMap();
+		Iterator<String> iterator = map.keySet().iterator();
+		int i = 0;
+		while (iterator.hasNext()) {
+			String key = iterator.next().toString();
+			TempAttach value = map.get(key);
+			MaintenanceDetail entity_maintenanceDetail = new DetailBuilder().setSeq(++i).buildMaintainDetail(value);			
+			entity_maintenances.getMaintenanceDetails().add(entity_maintenanceDetail);
+			entity_maintenanceDetail.setMaintenances(entity_maintenances);
+		}
+		maintenanceDao.update(entity_maintenances);
+		
 	}
 
+	@Override
+	public void updateModifyEquipment(String jsonString) {
+		ModifyEquipment vo = gson.fromJson(jsonString, ModifyEquipment.class);
+		Modifications entity_modifications = modificationDao.findById(vo.getModificationId());
+		try {
+			BeanUtils.copyProperties(entity_modifications, vo);
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		int rowcount = modificationDao.deleteAllDetailsByMaintenanceId(vo.getModificationId());
+		System.out.println("delete detail::"+rowcount);
+		Map<String, TempAttach> map = vo.getResultHashMap();
+		Iterator<String> iterator = map.keySet().iterator();
+		int i = 0;
+		while (iterator.hasNext()) {
+			String key = iterator.next().toString();
+			TempAttach value = map.get(key);
+			ModificationDetail entity_modificationDetail = new DetailBuilder().setSeq(++i).buildModifyDetail(value);	
+
+			entity_modifications.getModificationDetails().add(entity_modificationDetail);
+			entity_modificationDetail.setModifications(entity_modifications);
+		}
+		modificationDao.update(entity_modifications);
+		
+	}
 	
 	@Override
 	public String queryEquipmentById(Integer id) {
 		Equipments entity_equipments = equipmentDao.findById(id);
-		//sessionFactory.getCurrentSession().evict(entity_equipments);
+
 		Equipment vo = new Equipment();
 		try {
 			BeanUtils.copyProperties(vo, entity_equipments);
@@ -104,18 +186,10 @@ public class EquipmentServiceImpl implements EquipmentService {
 			e.printStackTrace();
 		}
 		String jsonString = "";
-
-		JSONObject jsonObj = new JSONObject(vo);
-		jsonString = jsonObj.toString();
+		jsonString = gson.toJson(vo);
 
 		return jsonString;
 	}
-
-	@Override
-	public void delete(Equipments entity) {
-
-	}
-
 	
 	public List<Equipments> queryEquipments(String productName) {
 		List<Equipments> equipmentsList;
@@ -128,14 +202,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 	}
 
 	@Override
-	public void deleteAll() {
-
-	}
-
-	@Override
-	public void maintainEquipment(String jsonString) {
-
-		Gson gson = new GsonBuilder().setDateFormat("MM/dd/yyyy").create();
+	public void maintainEquipment(String jsonString) {		
 		MaintainEquipment vo = gson.fromJson(jsonString, MaintainEquipment.class);
 		Equipments entity_equipments = equipmentDao.findById(vo.getEquipmentId());
 		Maintenances entity_maintenances = new Maintenances();
@@ -148,26 +215,21 @@ public class EquipmentServiceImpl implements EquipmentService {
 		}
 		entity_equipments.getMaintenanceses().add(entity_maintenances);
 		entity_maintenances.setEquipments(entity_equipments);
-
 		Map<String, TempAttach> map = vo.getResultHashMap();
 		Iterator<String> iterator = map.keySet().iterator();
 		int i = 0;
 		while (iterator.hasNext()) {
 			String key = iterator.next().toString();
 			TempAttach value = map.get(key);
-			MaintenanceDetail entity_maintenanceDetail = new DetailBuilder().setSeq(++i).buildMaintainDetail(value);
-			//entity_maintenanceDetail.setSeq(++i);
+			MaintenanceDetail entity_maintenanceDetail = new DetailBuilder().setSeq(++i).buildMaintainDetail(value);			
 			entity_maintenances.getMaintenanceDetails().add(entity_maintenanceDetail);
 			entity_maintenanceDetail.setMaintenances(entity_maintenances);
 		}
-
 		equipmentDao.persist(entity_equipments);
-
 	}
 	
 	@Override
 	public void modifyEquipment(String jsonString) {
-		Gson gson = new GsonBuilder().setDateFormat("MM/dd/yyyy").create();
 		ModifyEquipment vo = gson.fromJson(jsonString, ModifyEquipment.class);
 		Equipments entity_equipments = equipmentDao.findById(vo.getEquipmentId());
 		Modifications entity_modifications = new Modifications();
@@ -188,7 +250,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 			String key =iterator.next().toString();
 			TempAttach value = map.get(key);
 			ModificationDetail entity_modificationDetail = new DetailBuilder().setSeq(++i).buildModifyDetail(value);	
-			//entity_modificationDetail.setSeq(++i);
+
 			entity_modifications.getModificationDetails().add(entity_modificationDetail);
 			entity_modificationDetail.setModifications(entity_modifications);
 		}	
@@ -202,16 +264,21 @@ public class EquipmentServiceImpl implements EquipmentService {
 			MaintenanceDetail detail = (MaintenanceDetail) iter.next();
 			if (detail.getSeq() == 1) {
 				vo.setAirframe(detail.getStatus());
+				vo.setAirframe_comment(detail.getComment());
 			} else if (detail.getSeq() == 2) {
 				vo.setPropulsion(detail.getStatus());
+				vo.setPropulsion_comment(detail.getComment());
 			} else if (detail.getSeq() == 3) {
 				vo.setBattery(detail.getStatus());
+				vo.setBattery_comment(detail.getComment());
 			} else if (detail.getSeq() == 4) {
 				vo.setController(detail.getStatus());
+				vo.setController_comment(detail.getComment());
 			} else if (detail.getSeq() == 5) {
 				vo.setPayload(detail.getStatus());
+				vo.setPayload_comment(detail.getComment());
 			} else if (detail.getSeq() == 6) {
-				vo.setOthers(detail.getComment());
+				vo.setOthers_comment(detail.getComment());
 			}
 		}
 		return vo;
@@ -221,18 +288,23 @@ public class EquipmentServiceImpl implements EquipmentService {
 		Iterator<ModificationDetail> iter = entity_modifications.getModificationDetails().iterator();
 		while (iter.hasNext()) {
 			ModificationDetail detail = (ModificationDetail) iter.next();
-			if (detail.getDetailType() == 1) {
+			if (detail.getSeq() == 1) {
 				vo.setAirframe(detail.getStatus());
-			} else if (detail.getDetailType() == 2) {
+				vo.setAirframe_comment(detail.getComment());
+			} else if (detail.getSeq() == 2) {
 				vo.setPropulsion(detail.getStatus());
-			} else if (detail.getDetailType() == 3) {
+				vo.setPropulsion_comment(detail.getComment());
+			} else if (detail.getSeq() == 3) {
 				vo.setBattery(detail.getStatus());
-			} else if (detail.getDetailType() == 4) {
+				vo.setBattery_comment(detail.getComment());
+			} else if (detail.getSeq() == 4) {
 				vo.setController(detail.getStatus());
-			} else if (detail.getDetailType() == 5) {
+				vo.setController_comment(detail.getComment());
+			} else if (detail.getSeq() == 5) {
 				vo.setPayload(detail.getStatus());
-			} else if (detail.getDetailType() == 6) {
-				vo.setOthers(detail.getComment());
+				vo.setPayload_comment(detail.getComment());
+			} else if (detail.getSeq() == 6) {
+				vo.setOthers_comment(detail.getComment());
 			}
 		}
 		return vo;
@@ -257,11 +329,31 @@ public class EquipmentServiceImpl implements EquipmentService {
 				e.printStackTrace();
 			}
 			vo = getMaintenanceDetail(entity_maintenances, vo);
-			JSONObject jsonObj = new JSONObject(vo);
-			jsonArray.add(jsonObj.toString());
+			vo.setShowMaintenanceType();
+			jsonArray.add(gson.toJson(vo));
 
 		}
 		return jsonArray;
+	}
+	
+	@Override
+	public String queryMaintenanceByMaintenanceId(Integer id) {
+		Maintenances entity_maintenances = maintenanceDao.findById(id);
+
+		MaintainEquipment vo = new MaintainEquipment();
+		try {
+			BeanUtils.copyProperties(vo, entity_maintenances);
+			
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		vo = getMaintenanceDetail(entity_maintenances, vo);
+		String jsonString = "";
+		jsonString = gson.toJson(vo);
+
+		return jsonString;
 	}
 
 	@Override
@@ -281,11 +373,62 @@ public class EquipmentServiceImpl implements EquipmentService {
 				e.printStackTrace();
 			}
 			vo = getModifyDetail(entity_modifications, vo);
-			JSONObject jsonObj = new JSONObject(vo);
-			jsonArray.add(jsonObj.toString());
 
+			jsonArray.add(gson.toJson(vo));
 		}
 		return jsonArray;
 	}
+	@Override
+	public String queryModificationByModificationId(Integer id) {
+		Modifications entity_modifications = modificationDao.findById(id);
 
+		ModifyEquipment vo = new ModifyEquipment();
+		try {
+			BeanUtils.copyProperties(vo, entity_modifications);			
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		vo = getModifyDetail(entity_modifications, vo);
+		String jsonString = "";
+		jsonString = gson.toJson(vo);
+
+		return jsonString;
+	}
+
+	@Override
+	public void check(Integer id){
+		updateState(id, Events.CHECK);
+	}
+	
+	@Override
+	public void approve(Integer id){
+		updateState(id, Events.APPROVE);
+	}
+	
+	@Override
+	public void reject(Integer id){
+		updateState(id, Events.REJECT);
+	}
+	
+	@Override
+	public void delete(Integer id){
+		updateState(id, Events.DELETE);
+	}
+	
+	public Boolean updateState(Integer id, stateMachine.Events event) {
+		Equipments entity_equipments = equipmentDao.findById(id);
+	    return persistStateMachineHandler.handleEventWithState(
+	        MessageBuilder.withPayload(event.name()).setHeader(EntityConstants.entityHeader, entity_equipments).build(),
+	        entity_equipments.getEquipmentFlow().getState().name()
+	    );
+	  }
+	
+	public Boolean updateState(Equipments entity_equipments, stateMachine.Events event) {
+	    return persistStateMachineHandler.handleEventWithState(
+	        MessageBuilder.withPayload(event.name()).setHeader(EntityConstants.entityHeader, entity_equipments).build(),
+	        entity_equipments.getEquipmentFlow().getState().name()
+	    );
+	  }
 }

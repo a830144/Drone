@@ -61,27 +61,48 @@ public class PersonController {
 		return jsonString;
 	}
 	
-	@RequestMapping(value="/person/ViewLicense" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/person/QueryLicenses" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public String viewLicense(String id) {
+	public String queryLicenses(String id) {
 		JsonArray jsonArray = personService.queryLicensesById(new Integer(id));
 		String jsonString =jsonArray.toString();
 		return jsonString;
 	}
 	
-	@RequestMapping(value="/person/ViewTraining" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/person/ViewLicenseInfo" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public String viewTraining(String id) {
+	public String viewLicenseInfo(String personId,String licenseId) {
+		String jsonString = personService.queryLicenseInfo(new Integer(personId),new Integer(licenseId));
+		return jsonString;
+	}
+	
+	@RequestMapping(value="/person/QueryTrainings" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public String queryTrainings(String id) {
 		JsonArray jsonArray = personService.queryTrainingsById(new Integer(id));
 		String jsonString =jsonArray.toString();
 		return jsonString;
 	}
 	
-	@RequestMapping(value="/person/ViewEvent" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/person/ViewTrainingInfo" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public String viewEvent(String id) {
+	public String viewTrainingInfo(String personId,String trainingId) {
+		String jsonString = personService.queryTrainingInfo(new Integer(personId),new Integer(trainingId));
+		return jsonString;
+	}
+	
+	@RequestMapping(value="/person/QueryEvents" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public String queryEvents(String id) {
 		JsonArray jsonArray = personService.queryEventsById(new Integer(id));
 		String jsonString =jsonArray.toString();
+		return jsonString;
+	}
+	
+	@RequestMapping(value="/person/ViewEventInfo" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public String viewEventInfo(String personId,String eventId) {
+		String jsonString = personService.queryEventInfo(new Integer(personId),new Integer(eventId));
 		return jsonString;
 	}
 	
@@ -108,5 +129,19 @@ public class PersonController {
 
 		String jsonString =jsonArray.toString();	
 		return jsonString;
+	}
+	
+	@RequestMapping(value="/person/UpdateLicenseInPersonProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public void updateLicenseInPerson(String data) {
+		System.out.println("UpdateMaintainEquipment");
+		//personService.updateMaintainEquipment(data);		
+	}
+	
+	@RequestMapping(value="/person/UpdateTrainingInPersonProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public void updateTrainingInPerson(String data) {
+		System.out.println("UpdateModifyEquipment");
+		//personService.updateModifyEquipment(data);		
 	}
 }

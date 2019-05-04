@@ -21,7 +21,7 @@ body {
     background-repeat: no-repeat;
 }
 </style>
-<meta http-equiv="Content-Type" content="text/html; charset=BIG5">
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
 <title>menu</title>
 </head>
 <body>
@@ -31,7 +31,8 @@ body {
   <li><a href="./person/Person.jsp" target=_content><li><i class="fa fa-file-text-o" aria-hidden="true"></i> 人員管理</li></a></li>
   <li><a href="./equipment/Equipment.jsp" target=_content><li><i class="fa fa-file-text-o" aria-hidden="true"></i> 設備管理</li></a></li>
   <li><a href="./operation/Operation.jsp" target=_content><li><i class="fa fa-file-text-o" aria-hidden="true"></i> 作業管理</li></a></li>
-  
+  <li><a href="./other/Other.jsp" target=_content><li><i class="fa fa-file-text-o" aria-hidden="true"></i> 其他管理</li></a></li>
+  <li><a href="./test/react.jsp" target=_content><li><i class="fa fa-file-text-o" aria-hidden="true"></i> 架構測試</li></a></li>
 </ul>
 
 </body>

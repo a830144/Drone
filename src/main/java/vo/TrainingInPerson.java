@@ -4,15 +4,15 @@ import java.util.Date;
 
 public class TrainingInPerson extends Person{
 	
-	
+	private Integer trainingId;
+	private String trainingName;
+	private String unit;
+	private String trainingType;	
 	private Date startDate;
 	private Date endDate;
 	private Integer hours;
 	private byte[] photo;
 	
-	
-	
-
 	public Date getStartDate() {
 		return startDate;
 	}
@@ -43,11 +43,12 @@ public class TrainingInPerson extends Person{
 	public void setTrainingId(Integer trainingId) {
 		this.trainingId = trainingId;
 	}
-	public String getName() {
-		return name;
+	
+	public String getTrainingName() {
+		return trainingName;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setTrainingName(String trainingName) {
+		this.trainingName = trainingName;
 	}
 	public String getUnit() {
 		return unit;
@@ -61,8 +62,14 @@ public class TrainingInPerson extends Person{
 	public void setTrainingType(String trainingType) {
 		this.trainingType = trainingType;
 	}
-	private Integer trainingId;
-	private String name;
-	private String unit;
-	private String trainingType;
+	
+	public void setShowTrainingType(){
+		if("1".equals(trainingType)){
+			trainingType = "學科";
+		}else if ("2".equals(trainingType)){
+			trainingType = "術科";
+		}else{
+			trainingType = "異常資料";
+		}
+	}
 }

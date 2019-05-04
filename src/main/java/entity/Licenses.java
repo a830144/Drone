@@ -29,15 +29,13 @@ public class Licenses implements java.io.Serializable {
 	private static final long serialVersionUID = -5620711983973281481L;
 	private Integer licenseId;
 	private String type;
-	private String subType;
 	private Set<PersonsLicenses> personsLicenseses = new HashSet<PersonsLicenses>(0);
 
 	public Licenses() {
 	}
 
-	public Licenses(String type, String subType, Set<PersonsLicenses> personsLicenseses) {
+	public Licenses(String type,  Set<PersonsLicenses> personsLicenseses) {
 		this.type = type;
-		this.subType = subType;
 		this.personsLicenseses = personsLicenseses;
 	}
 
@@ -62,20 +60,13 @@ public class Licenses implements java.io.Serializable {
 		this.type = type;
 	}
 
-	@Column(name = "Sub_Type", length = 2)
-	public String getSubType() {
-		return this.subType;
-	}
 
 	@Override
 	public String toString() {
-		return "Licenses [licenseId=" + licenseId + ", type=" + type + ", subType=" + subType + ", personsLicenseses="
+		return "Licenses [licenseId=" + licenseId + ", type=" + type  + ", personsLicenseses="
 				+ personsLicenseses + "]";
 	}
 
-	public void setSubType(String subType) {
-		this.subType = subType;
-	}
 
 	@OneToMany(fetch = FetchType.LAZY,cascade=CascadeType.ALL, mappedBy = "licenses")
 	public Set<PersonsLicenses> getPersonsLicenseses() {

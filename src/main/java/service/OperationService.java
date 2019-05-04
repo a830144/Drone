@@ -2,6 +2,7 @@ package service;
 
 import java.util.List;
 
+import entity.AerialPlans;
 import entity.Operations;
 import entity.Projects;
 
@@ -17,5 +18,7 @@ public interface OperationService {
 	public String queryProjectById(Integer id);	
 	
 	public List<Projects> queryProjects(String ename);
+	
+	public List<AerialPlans> queryAerialPlans(String projectId);
 	
 }

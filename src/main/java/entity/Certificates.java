@@ -23,6 +23,10 @@ import javax.persistence.TemporalType;
 @Table(name = "certificates", catalog = "drone")
 public class Certificates implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1753396938578742822L;
 	private Integer certificateId;
 	private Persons persons;
 	private Trainings trainings;

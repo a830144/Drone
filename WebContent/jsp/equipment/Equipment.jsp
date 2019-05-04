@@ -8,12 +8,33 @@
 <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.css"/>
 <script type="text/javascript"  src=" https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
-
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.0/css/select.dataTables.min.css"/>
+<script type="text/javascript"  src="https://cdn.datatables.net/select/1.3.0/js/dataTables.select.min.js"></script>
+<style type="text/css">
+.dataTables_scroll
+{
+    overflow:auto;
+}
+</style>
 <script>
+
+	window.alert = function(message){
+		$(document.createElement('div'))
+		.attr({title: 'Alert', 'class': 'alert'})
+		.html(message)
+		.dialog({
+			buttons: {OK: function(){$(this).dialog('close');}},
+			close: function(){$(this).remove();},
+			draggable: true,
+			modal: true,
+			resizable: false,
+			width: 200
+		});
+	};	
 	$.fn.serializeObject = function() {
 		var o = {};
 		var a = this.serializeArray();
@@ -29,9 +50,21 @@
 		});
 		return o;
 	};
+	function radioValue(form){
+		$(form).find("input[name='airframe']").val($(form).find("input:radio[name='airframe_radio']:checked").val());
+		$(form).find("input[name='propulsion']").val($(form).find("input:radio[name='propulsion_radio']:checked").val());
+		$(form).find("input[name='battery']").val($(form).find("input:radio[name='battery_radio']:checked").val());
+		$(form).find("input[name='controller']").val($(form).find("input:radio[name='controller_radio']:checked").val());
+		$(form).find("input[name='payload']").val($(form).find("input:radio[name='payload_radio']:checked").val());		
+	}
+	function reverseRadioValue(form,filter){
+		var details = ['airframe', 'propulsion','battery','controller','payload'];
+		details.forEach(function(item, index, array) {
+			  $(form).find("input[name='"+item+"']").val()==="C" ? $(form).find("#"+ filter + "-"+item+"-clean").prop('checked', true):$(form).find("#"+ filter + "-"+item+"-repair").prop('checked', true);
+		});		
+		$($(form).find("input[name*='radio']")).button("enable").button("refresh");		
+	}
 	
-
-
 	$(document).ready(
 			function() {
 				$("#addDiv").load("./AddEquipment.jsp");
@@ -40,6 +73,10 @@
 				$("#updateDiv").load("./UpdateEquipment.jsp");
 				$("#maintainDiv").load("./MaintainEquipment.jsp");
 				$("#modifyDiv").load("./ModifyEquipment.jsp");
+				$("#deleteDiv").load("./DeleteEquipment.jsp");
+				$(document).on('click', '#add', function() {
+					addEquipment();	
+				});
 				$(document).on('click', '.view', function() {
 					viewEquipment(this.id);
 				});
@@ -53,17 +90,15 @@
 					modifyEquipment(this.id);
 				});
 				$(document).on('click', '.delete', function() {
-					alert("delete :" + this.id);
-				});
-				
-
+					deleteEquipment(this.id);
+				});	
 			});
 </script>
 </head>
 <body>
-	<button id="add" name="add">新增設備</button>
-	<button id="query" name="query" class="ui-button ui-corner-all ui-widget">查詢設備</button>
-	<form id="query_form">
+<button id="add" name="add" class="ui-button ui-corner-all ui-widget">新增設備</button>
+<button id="query" name="query" class="ui-button ui-corner-all ui-widget">查詢設備</button>
+	<form id="query_form">		
 		<input type="text" name="query_name" id="query_name" class="text ui-widget-content ui-corner-all">
 	</form>
 	<div id="addDiv"></div>
@@ -72,7 +107,7 @@
 	<div id="updateDiv"></div>
 	<div id="maintainDiv"></div>
 	<div id="modifyDiv"></div>
-	
+	<div id="deleteDiv"></div>
 
 </body>
 </html>

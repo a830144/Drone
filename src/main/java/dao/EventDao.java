@@ -17,6 +17,8 @@ public interface EventDao{
     public Events findById(Integer id);
     
     public Events findByName(String name);
+    
+    public List<Events> findByNameWildcard(String name);
      
     public void delete(Events entity);
      

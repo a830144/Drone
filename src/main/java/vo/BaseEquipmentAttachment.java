@@ -6,6 +6,8 @@ import java.util.HashMap;
 
 public class BaseEquipmentAttachment {
 	private Integer equipmentId;
+	private Integer maintenanceId;
+	private Integer modificationId;
 	private String productName;
 	private String manufactoryName;
 	private String constructionType;
@@ -19,6 +21,18 @@ public class BaseEquipmentAttachment {
 	}
 	public void setEquipmentId(Integer equipmentId) {
 		this.equipmentId = equipmentId;
+	}
+	public Integer getMaintenanceId() {
+		return maintenanceId;
+	}
+	public void setMaintenanceId(Integer maintenanceId) {
+		this.maintenanceId = maintenanceId;
+	}
+	public Integer getModificationId() {
+		return modificationId;
+	}
+	public void setModificationId(Integer modificationId) {
+		this.modificationId = modificationId;
 	}
 	public String getProductName() {
 		return productName;
@@ -91,6 +105,18 @@ public class BaseEquipmentAttachment {
 		detailReverseMap.put("6", "others");
 	}
 	
+	public void setShowMaintenanceType(){
+		if("W".equals(maintenanceType)){
+			maintenanceType = "周檢";
+		}else if ("M".equals(maintenanceType)){
+			maintenanceType = "月檢";
+		}else if("Q".equals(maintenanceType)){
+			maintenanceType = "季檢";
+		}else{
+			maintenanceType = "異常資料";
+		}
+	}
+	
 	
 	
 	public class TempAttach{
@@ -140,5 +166,6 @@ public class BaseEquipmentAttachment {
 			return "TempAttach [detailType=" + detailType + ", status=" + status + ", comment=" + comment
 					+ ", modificationPhoto=" + Arrays.toString(modificationPhoto) + "]";
 		}
+		
 	}
 }

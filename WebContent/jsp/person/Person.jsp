@@ -8,12 +8,38 @@
 <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.css"/>
 <script type="text/javascript"  src=" https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
-
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.0/css/select.dataTables.min.css"/>
+<script type="text/javascript"  src="https://cdn.datatables.net/select/1.3.0/js/dataTables.select.min.js"></script>
+<style type="text/css">
+table.dataTable thead th {
+	  white-space: nowrap
+}
+</style>
 <script>
+
+	window.alert = function(message) {
+		$(document.createElement('div')).attr({
+			title : 'Alert',
+			'class' : 'alert'
+		}).html(message).dialog({
+			buttons : {
+				OK : function() {
+					$(this).dialog('close');
+				}
+			},
+			close : function() {
+				$(this).remove();
+			},
+			draggable : true,
+			modal : true,
+			resizable : false,
+			width : 200
+		});
+	};
 	$.fn.serializeObject = function() {
 		var o = {};
 		var a = this.serializeArray();
@@ -29,43 +55,42 @@
 		});
 		return o;
 	};
-	
 
+	$(document).ready(function() {
+		$("#addDiv").load("./AddPerson.jsp");
+		$("#queryDiv").load("./QueryPerson.jsp");
+		$("#viewDiv").load("./ViewPerson.jsp");
+		$("#updateDiv").load("./UpdatePerson.jsp");
+		$("#licenseDiv").load("./LicenseInPerson.jsp");
+		$("#trainingDiv").load("./TrainingInPerson.jsp");
+		$("#eventDiv").load("./EventInPerson.jsp");
+		$(document).on('click', '#add', function() {
+			addPerson();
+		});
+		$(document).on('click', '.view', function() {
+			viewPerson(this.id);
+		});
+		$(document).on('click', '.update', function() {
+			updatePerson(this.id);
+		});
+		$(document).on('click', '.license', function() {
+			licenseInPerson(this.id);
+		});
+		$(document).on('click', '.training', function() {
+			trainingInPerson(this.id);
+		});
+		$(document).on('click', '.event', function() {
+			eventInPerson(this.id);
+		});
+		$(document).on('click', '.delete', function() {
+			alert("delete :" + this.id);
+		});
 
-	$(document).ready(
-			function() {
-				$("#addDiv").load("./AddPerson.jsp");
-				$("#queryDiv").load("./QueryPerson.jsp");
-				$("#viewDiv").load("./ViewPerson.jsp");
-				$("#updateDiv").load("./UpdatePerson.jsp");
-				$("#licenseDiv").load("./LicenseInPerson.jsp");
-				$("#trainingDiv").load("./TrainingInPerson.jsp");
-				$("#eventDiv").load("./EventInPerson.jsp");
-				$(document).on('click', '.view', function() {
-					viewPerson(this.id);
-				});
-				$(document).on('click', '.update', function() {
-					updatePerson(this.id);
-				});
-				$(document).on('click', '.license', function() {
-					licenseInPerson(this.id);
-				});
-				$(document).on('click', '.training', function() {
-					trainingInPerson(this.id);
-				});
-				$(document).on('click', '.event', function() {
-					eventInPerson(this.id);
-				});
-				$(document).on('click', '.delete', function() {
-					alert("delete :" + this.id);
-				});
-				
-
-			});
+	});
 </script>
 </head>
 <body>
-	<button id="add" name="add">新增人員</button>
+	<button id="add" name="add" class="ui-button ui-corner-all ui-widget">新增人員</button>
 	<button id="query" name="query" class="ui-button ui-corner-all ui-widget">查詢人員</button>
 	<form id="query_form">
 		<input type="text" name="query_name" id="query_name"

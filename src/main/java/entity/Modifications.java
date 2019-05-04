@@ -1,5 +1,7 @@
 package entity;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 // default package
 // Generated Mar 23, 2019 3:15:02 AM by Hibernate Tools 5.2.3.Final
 
@@ -9,10 +11,10 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -37,9 +39,20 @@ public class Modifications implements java.io.Serializable {
 	private Date modificationDate;
 	private String modificationPerson;
 	private Set<ModificationDetail> modificationDetails = new HashSet<ModificationDetail>(0);
-
+	
+	private ModificationFlow modificationFlow;
+	
 	public Modifications() {
 	}
+	
+	@Embedded
+	public ModificationFlow getModificationFlow() {
+		return modificationFlow;
+	}
+
+	public void setModificationFlow(ModificationFlow modificationFlow) {
+		this.modificationFlow = modificationFlow;
+	}	
 
 	public Modifications(Equipments equipments, Date modificationDate, String modificationPerson,
 			Set<ModificationDetail> modificationDetails) {

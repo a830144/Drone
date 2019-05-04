@@ -205,8 +205,8 @@ input[type=checkbox] {
 					} catch (ClassNotFoundException e) {
 						throw new RuntimeException("Cannot find the driver in the classpath!", e);
 					}
-					String url = "jdbc:mysql://autoplane.cazxgff2d5nb.us-west-2.rds.amazonaws.com:3306/drone";
-					conn = DriverManager.getConnection(url, "root", "46884688");
+					String url = "jdbc:mysql://localhost:3306/drone";
+					conn = DriverManager.getConnection(url, "root", "4688");
 
 					String sql = "SELECT user_ID, password FROM users Where username='" + id + "' and password='"
 							+ password + "'";

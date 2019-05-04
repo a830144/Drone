@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import entity.AerialPlans;
 import entity.Projects;
 import service.OperationService;
 
@@ -55,12 +56,28 @@ public class OperationController {
 			JSONObject orderedJson = new JSONObject(projects);
 			jsonArray.put(orderedJson);
 		}
-
 		if (jsonArray.length() > 0) {
 			jsonString = jsonArray.toString();
+		}		
+		return jsonString;
+	}
+	
+	@RequestMapping(value="/operation/QueryAerailPlansProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public String showQueryAerailPlans(String projectId) {
+		String jsonString = "";
+		/*List<AerialPlans> list = operationService.queryAerialPlans(projectId);
+		JSONArray jsonArray = new JSONArray();
+		String jsonString = "";
+		Iterator iterator = list.iterator();
+		while (iterator.hasNext()) {
+			Projects projects = (Projects) iterator.next();
+			JSONObject orderedJson = new JSONObject(projects);
+			jsonArray.put(orderedJson);
 		}
-
-		
+		if (jsonArray.length() > 0) {
+			jsonString = jsonArray.toString();
+		}		*/
 		return jsonString;
 	}
 }

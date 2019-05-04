@@ -1,45 +1,91 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 <script>
-$(document).ready(
-		$(function() {
-			var name = $('#query_name').val();
-			var table = $('#single-query-table-1').DataTable( {		
-				"ajax": {  					
-					 "type": "POST",
-			   		 "url": "/Drone/equipment/QueryEquipmentProcess",  
-			   		 "data": {  
-			       		 "name": name  
-			   		 }, 
-		    		 "dataSrc": function ( json ) {
-		    				var myarray=new Array(json.length);
-			    			for (i=0; i <json.length; i++){
-			    	   			 myarray[i]=new Array(5);
-			    			}
-			    			for(i=0;i<json.length;i++){
-		        				var obj = $.parseJSON(json[i]);
-		        				myarray[i][0]=obj.hasOwnProperty("equipmentId")?obj.equipmentId:'';
-		        				myarray[i][1]=obj.hasOwnProperty("productName")?obj.productName:'';		        			
-		        				myarray[i][2]=obj.hasOwnProperty("constructionType")?obj.constructionType:'';
-		        				myarray[i][3]=obj.hasOwnProperty("sendDate")?obj.sendDate:'';
-		        				myarray[i][4]=obj.hasOwnProperty("status")?obj.status:'';
-		        				var view_btn = "<button name='view"+ obj.equipmentId +"' id='" + obj.equipmentId +"' class='view' value='view'>檢視</button>";
-		        				var update_btn = "<button name='update"+ obj.equipmentId +"' id='" + obj.equipmentId +"' class='update' value='update'>修改</button>";
-		        				var maintain_btn = "<button name='maintain"+ obj.equipmentId +"' id='" + obj.equipmentId +"' class='maintain' value='maintain'>保養</button>";
-		        				var modify_btn = "<button name='modify"+ obj.equipmentId +"' id='" + obj.equipmentId +"' class='modify' value='modify'>改裝</button>";
-		        				var delete_btn = "<button name='delete"+ obj.equipmentId +"' id='" + obj.equipmentId +"' class='delete' value='delete'>刪除</button>";		        		
-		        				myarray[i][5]=view_btn+update_btn+maintain_btn+modify_btn+delete_btn;
-		        			}
-			       			 return myarray;
-			      		},
-		        	 "dataType": 'json'
-				}
+function prepareQueryDomAction(){
+	$("#query_form").find("#query").button();
+}
+function queryDomFinishState(){
+	window.queryString = $('#query_name').val();
+}
+function transferQueryListAction(){
+	var table = $('#single-query-table-1').DataTable( {	
+		columnDefs: [
+			{	
+			    className: 'dt-center',
+			    targets: '_all'
+			}],
+		"ajax": {  					
+			 "type": "POST",
+	   		 "url": "/Drone/equipment/QueryEquipmentProcess",  
+	   		 "data": {  
+	       		 "name": window.queryString  
+	   		 }, 
+    		 "dataSrc": function ( json ) {
+    				var myarray=new Array(json.length);
+	    			for (i=0; i <json.length; i++){
+	    	   			 myarray[i]=new Array(5);
+	    			}
+	    			for(i=0;i<json.length;i++){
+        				var obj = $.parseJSON(json[i]);
+        				myarray[i][0]=obj.hasOwnProperty("equipmentId")?obj.equipmentId:'';
+        				myarray[i][1]=obj.hasOwnProperty("productName")?obj.productName:'';		        			
+        				myarray[i][2]=obj.hasOwnProperty("constructionType")?obj.constructionType:'';
+        				myarray[i][3]=obj.hasOwnProperty("sendDate")?obj.sendDate:'';
+        				myarray[i][4]=obj.hasOwnProperty("state")?obj.state:'';
+        				var maintain_btn = "<button name='maintain"+ obj.equipmentId +"' id='" + obj.equipmentId +"' class='maintain ui-button ui-corner-all ui-widget' value='maintain'>保養</button>";
+        				var modify_btn = "<button name='modify"+ obj.equipmentId +"' id='" + obj.equipmentId +"' class='modify ui-button ui-corner-all ui-widget' value='modify'>改裝</button>";
+        				var view_btn = "<button name='view"+ obj.equipmentId +"' id='" + obj.equipmentId +"' class='view ui-button ui-corner-all ui-widget' value='view'>檢視</button>";
+        				var update_btn = "<button name='update"+ obj.equipmentId +"' id='" + obj.equipmentId +"' class='update ui-button ui-corner-all ui-widget' value='update'>修改</button>";            				
+        				var delete_btn = "<button name='delete"+ obj.equipmentId +"' id='" + obj.equipmentId +"' class='delete ui-button ui-corner-all ui-widget' value='delete'>刪除</button>";
+        				var buttons = stateMachineInQuery(obj);      		
+        				myarray[i][5]=buttons;
+        			}
+	       			 return myarray;
+	      		},
+        	 "dataType": 'json'
+		}
 
-		});
-		})
-)
+});
+}
+function initializeQueryListState(){
+	
+}
+function stateMachineInQuery(obj){
+	var buttons='';
+	if(obj.state=="APPROVED"){
+		var maintain_btn = "<button name='maintain"+ obj.equipmentId +"' id='" + obj.equipmentId +"' class='maintain ui-button ui-corner-all ui-widget' value='maintain'>保養</button>";
+		var modify_btn = "<button name='modify"+ obj.equipmentId +"' id='" + obj.equipmentId +"' class='modify ui-button ui-corner-all ui-widget' value='modify'>改裝</button>";
+	}else{
+		var maintain_btn = "<button name='maintain"+ obj.equipmentId +"' id='" + obj.equipmentId +"' class='maintain ui-button ui-corner-all ui-widget ui-state-disabled' value='maintain' disabled>保養</button>";
+		var modify_btn = "<button name='modify"+ obj.equipmentId +"' id='" + obj.equipmentId +"' class='modify ui-button ui-corner-all ui-widget ui-state-disabled' value='modify' disabled>改裝</button>";
+	}
+	if(obj.state=="DELETED"){
+		var view_btn = "<button name='view"+ obj.equipmentId +"' id='" + obj.equipmentId +"' class='view ui-button ui-corner-all ui-widget ui-state-disabled' value='view' disabled>檢視</button>";
+		var update_btn = "<button name='update"+ obj.equipmentId +"' id='" + obj.equipmentId +"' class='update ui-button ui-corner-all ui-widget ui-state-disabled' value='update' disabled>修改</button>";            				
+		var delete_btn = "<button name='delete"+ obj.equipmentId +"' id='" + obj.equipmentId +"' class='delete ui-button ui-corner-all ui-widget ui-state-disabled' value='delete' disabled>刪除</button>";
+	}else{
+		var view_btn = "<button name='view"+ obj.equipmentId +"' id='" + obj.equipmentId +"' class='view ui-button ui-corner-all ui-widget' value='view'>檢視</button>";
+		var update_btn = "<button name='update"+ obj.equipmentId +"' id='" + obj.equipmentId +"' class='update ui-button ui-corner-all ui-widget' value='update'>修改</button>";            				
+		var delete_btn = "<button name='delete"+ obj.equipmentId +"' id='" + obj.equipmentId +"' class='delete ui-button ui-corner-all ui-widget' value='delete'>刪除</button>";
+	}
+	buttons=view_btn+update_btn+maintain_btn+modify_btn+delete_btn;
+	return buttons;
+}
+
+function reloadQueryEquipmentAction(){
+	var table = $('#single-query-table-1').DataTable();
+	table.destroy();
+	transferQueryListAction();
+}
+
+$(function() {
+	prepareQueryDomAction();
+	queryDomFinishState();
+	transferQueryListAction();
+	initializeQueryListState();
+})
 </script>
-<div id="dialog-query-form" title="查詢">
+<div id="dialog-query-form" title="查詢">		
 	<table id="single-query-table-1" class="display" style="width: 100%">
 		<thead>
 			<tr>

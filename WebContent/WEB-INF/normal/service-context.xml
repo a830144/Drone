@@ -11,9 +11,13 @@
     http://www.springframework.org/schema/tx/spring-tx.xsd
     http://www.springframework.org/schema/aop
     http://www.springframework.org/schema/aop/spring-aop.xsd">
-    
+
+	<context:component-scan base-package="stateMachine">
+	</context:component-scan>
     <bean id="equipmentService" class="service.impl.EquipmentServiceImpl">
    		 <property name="equipmentDao" ref="equipmentDao" />
+   		 <property name="maintenanceDao" ref="maintenanceDao" />
+   		 <property name="modificationDao" ref="modificationDao" />
    	</bean>
    	
    	<bean id="personService" class="service.impl.PersonServiceImpl">
@@ -25,6 +29,13 @@
    	
    	<bean id="operationService" class="service.impl.OperationServiceImpl">
    		 <property name="projectDao" ref="projectDao" />
+   	</bean>
+   	
+   	<bean id="otherService" class="service.impl.OtherServiceImpl">
+   		 <property name="licenseDao" ref="licenseDao" />
+   		 <property name="trainingDao" ref="trainingDao" />
+   		 <property name="eventDao" ref="eventDao" />
+   		 <property name="codeDao" ref="codeDao" />
    	</bean>
 
 	<bean id="txManager"
@@ -59,4 +70,10 @@
 			expression="execution(* service.OperationService.*(..))" />
 		<aop:advisor advice-ref="txAdvice" pointcut-ref="operationServiceOperation" />
 	</aop:config>
+	<aop:config>
+		<aop:pointcut id="otherServiceOperation"
+			expression="execution(* service.OtherService.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="otherServiceOperation" />
+	</aop:config>
+	
 </beans>

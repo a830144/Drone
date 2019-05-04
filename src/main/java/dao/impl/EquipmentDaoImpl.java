@@ -44,11 +44,12 @@ public class EquipmentDaoImpl implements EquipmentDao{
     	Session session = this.sessionFactory.getCurrentSession();
     	session.delete(entity);
     }
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public List<Equipments> findAll() {
     	
 		Session session = this.sessionFactory.getCurrentSession();
-        List<Equipments> results = (List<Equipments>) session.createQuery("from Equipments e left outer join fetch e.registrations").list();
+		List<Equipments> results = (List<Equipments>) session.createQuery("from Equipments e left outer join fetch e.registrations").list();
         return results;
     }
     @Override
@@ -59,6 +60,7 @@ public class EquipmentDaoImpl implements EquipmentDao{
         }
     }
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Equipments> findByName(String name) {
 		

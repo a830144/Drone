@@ -58,8 +58,8 @@ public class LicenseDaoImpl implements LicenseDao{
     }
 
 	@Override
-	public Licenses findByType(String type,String subType) {
-		String hql = "FROM Licenses as E where E.type='" + type +"' and E.subType='"+subType+"'";
+	public Licenses findByType(String type) {
+		String hql = "FROM Licenses as E where E.type='" + type +"'";
 		Session session = this.sessionFactory.getCurrentSession();
 		Query<Licenses> query = session.createQuery(hql); 
 		//query.setParameter("searchField","%"+type+"%");

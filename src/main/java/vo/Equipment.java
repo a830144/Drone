@@ -34,6 +34,14 @@ public class Equipment {
 	private Integer checkId;
 	private Date approveDate;
 	private Integer approveId;
+	private stateMachine.States state;
+	
+	public stateMachine.States getState() {
+		return state;
+	}
+	public void setState(stateMachine.States state) {
+		this.state = state;
+	}
 	public Integer getEquipmentId() {
 		return equipmentId;
 	}

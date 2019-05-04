@@ -4,7 +4,12 @@
 $(document).ready(
 		$(function() {
 			var name = $('#query_name').val();
-			var table = $('#single-query-table-1').DataTable( {		
+			var table = $('#single-query-table-1').DataTable( {
+				columnDefs: [
+					{	
+					    className: 'dt-center',
+					    targets: '_all'
+					}],				
 				"ajax": {  					
 					 "type": "POST",
 			   		 "url": "/Drone/operation/QueryProjectProcess",  

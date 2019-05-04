@@ -28,7 +28,7 @@ public class Trainings implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = -983843516214658177L;
 	private Integer trainingId;
-	private String name;
+	private String trainingName;
 	private String unit;
 	private String trainingType;
 	private Set<Certificates> certificateses = new HashSet<Certificates>(0);
@@ -36,8 +36,8 @@ public class Trainings implements java.io.Serializable {
 	public Trainings() {
 	}
 
-	public Trainings(String name, String unit, String trainingType, Set<Certificates> certificateses) {
-		this.name = name;
+	public Trainings(String trainingName, String unit, String trainingType, Set<Certificates> certificateses) {
+		this.trainingName = trainingName;
 		this.unit = unit;
 		this.trainingType = trainingType;
 		this.certificateses = certificateses;
@@ -56,12 +56,12 @@ public class Trainings implements java.io.Serializable {
 	}
 
 	@Column(name = "Name", length = 20)
-	public String getName() {
-		return this.name;
+	public String getTrainingName() {
+		return this.trainingName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void settrainingName(String trainingName) {
+		this.trainingName = trainingName;
 	}
 
 	@Column(name = "Unit", length = 20)

@@ -1,19 +1,13 @@
 package service;
-import java.util.Date;
 import java.util.Iterator;
 
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 
 import junit.framework.TestCase;
-import service.impl.ConcretePersonServiceDecorator;
-import vo.MaintainEquipment;
-import vo.ModifyEquipment;
 
 public class PersonServiceTest extends TestCase {
 	PersonService personService;
@@ -89,7 +83,7 @@ public class PersonServiceTest extends TestCase {
 		
 		Object myClassInstance = ctx.getBean("concretePersonServiceDecorator");
 		Object obj=AopProxyUtils.getSingletonTarget(myClassInstance);
-		ConcretePersonServiceDecorator concretePersonServiceDecorator=(ConcretePersonServiceDecorator)obj;
+		//ConcretePersonServiceDecorator concretePersonServiceDecorator=(ConcretePersonServiceDecorator)obj;
 		/*ConcreteEquipmentServiceDecorator concreteEquipmentServiceDecorator;
 		try {
 			concreteEquipmentServiceDecorator = (ConcreteEquipmentServiceDecorator)clazz.newInstance();

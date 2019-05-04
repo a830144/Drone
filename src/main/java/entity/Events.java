@@ -31,7 +31,7 @@ public class Events implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = 6440099302815722487L;
 	private Integer eventId;
-	private String name;
+	private String eventName;
 	private Date startDate;
 	private Date endDate;
 	private String description;
@@ -40,8 +40,8 @@ public class Events implements java.io.Serializable {
 	public Events() {
 	}
 
-	public Events(String name, Date startDate, Date endDate, String description, Set<Participations> participationses) {
-		this.name = name;
+	public Events(String eventName, Date startDate, Date endDate, String description, Set<Participations> participationses) {
+		this.eventName = eventName;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.description = description;
@@ -61,12 +61,12 @@ public class Events implements java.io.Serializable {
 	}
 
 	@Column(name = "Name", length = 45)
-	public String getName() {
-		return this.name;
+	public String getEventName() {
+		return this.eventName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setEventName(String eventName) {
+		this.eventName = eventName;
 	}
 
 	@Temporal(TemporalType.DATE)

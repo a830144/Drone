@@ -72,6 +72,16 @@ public class TrainingDaoImpl implements TrainingDao{
 		Trainings Trainings = findById(id);
 		delete(Trainings);
 	}
+	@Override
+	public List<Trainings> findByNameWildcard(String name) {
+		String hql = "FROM Trainings as E where E.name like :searchField";
+		Session session = this.sessionFactory.getCurrentSession();
+		Query<Trainings> query = session.createQuery(hql); 
+		query.setParameter("searchField","%"+name+"%");
+		
+		List<Trainings> results = query.list();
+		return results;
+	}
 
 	
 
