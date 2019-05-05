@@ -13,9 +13,15 @@
 				}
 			},
 			close : function() {
-				$("#dialog-view-form-1").find("#check").button().unbind("click");
-				$("#dialog-view-form-1").find("#approve").button().unbind("click");
-				$("#dialog-view-form-1").find("#reject").button().unbind("click");
+				$("#dialog-view-form-1").find("#checkEquipment").button().unbind("click");
+				$("#dialog-view-form-1").find("#approveEquipment").button().unbind("click");
+				$("#dialog-view-form-1").find("#rejectEquipment").button().unbind("click");
+				$("#dialog-view-form-2").find("#checkMaintenance").button().unbind("click");
+				$("#dialog-view-form-2").find("#approveMaintenance").button().unbind("click");
+				$("#dialog-view-form-2").find("#rejectMaintenance").button().unbind("click");
+				$("#dialog-view-form-2").find("#checkModification").button().unbind("click");
+				$("#dialog-view-form-2").find("#approveModification").button().unbind("click");
+				$("#dialog-view-form-2").find("#rejectModification").button().unbind("click");
 				$( "#single-view-table-2-1").unbind( "select" );
 				var table2 = $('#single-view-table-2-1').DataTable();
 				table2.destroy();
@@ -30,13 +36,31 @@
 				  $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
 			  }
 		});
-		$("#dialog-view-form-1").find("#check").button({
+		$("#dialog-view-form-1").find("#checkEquipment").button({
 			icons: { primary: "ui-icon-play" }
 		});
-		$("#dialog-view-form-1").find("#approve").button({
+		$("#dialog-view-form-1").find("#approveEquipment").button({
 			icons: { primary: "ui-icon-check" }
 		});
-		$("#dialog-view-form-1").find("#reject").button({
+		$("#dialog-view-form-1").find("#rejectEquipment").button({
+			icons: { primary: "ui-icon-eject" }
+		});
+		$("#dialog-view-form-2").find("#checkMaintenance").button({
+			icons: { primary: "ui-icon-play" }
+		});
+		$("#dialog-view-form-2").find("#approveMaintenance").button({
+			icons: { primary: "ui-icon-check" }
+		});
+		$("#dialog-view-form-2").find("#rejectMaintenance").button({
+			icons: { primary: "ui-icon-eject" }
+		});
+		$("#dialog-view-form-2").find("#checkModification").button({
+			icons: { primary: "ui-icon-play" }
+		});
+		$("#dialog-view-form-2").find("#approveModification").button({
+			icons: { primary: "ui-icon-check" }
+		});
+		$("#dialog-view-form-2").find("#rejectModification").button({
 			icons: { primary: "ui-icon-eject" }
 		});
 		$("#single-view-table-2-2").find("input[type='radio']").checkboxradio();
@@ -67,14 +91,13 @@
 					$("#view-form-3-2").find("#" + key).val(value);
 				});				
 				id = $("#view-form-1").find("#equipmentId").val();				
-				stateMachine("#view-form-1");	
+				stateMachine();	
 				registerStateMachineEvent();
 			}
 		})
 		
 	}
-	function transferMaintainListViewAction(){
-		
+	function transferMaintainListViewAction(){		
 		var singleviewtable21 = $('#single-view-table-2-1').DataTable(  {
 			columnDefs: [
 				{	
@@ -98,7 +121,7 @@
 			    	}
 			    	for (i=0; i <json.length; i++){
 		        		var obj = $.parseJSON(json[i]);
-		        		myarray[i][0]='';		        		
+		        		myarray[i][0]=obj.hasOwnProperty("maintainState")?obj.maintainState:'';			        		
 		        		myarray[i][1]=obj.hasOwnProperty("maintenanceId")?obj.maintenanceId:'';
 		        		myarray[i][2]=obj.hasOwnProperty("maintenanceType")?obj.maintenanceType:'';
 		        		myarray[i][3]=obj.hasOwnProperty("maintenanceDate")?obj.maintenanceDate:'';
@@ -125,6 +148,7 @@
 			var cell = singleviewtable21.cell( indexes ,1);
 			var maintenanceId = cell.data();
 			alert('您選取了保養編號 :'+ maintenanceId);
+			window.maintenanceId = maintenanceId;
 			$.ajax({
 			  url:"/Drone/equipment/ViewMaintenanceByMaintenanceId",
 			  type:"POST",
@@ -134,10 +158,12 @@
 				var obj = data;
 				var form = $("#view-form-2-2");
 				$("#view-form-2-2").find("#maintenanceIdTD").empty().append("<input type='text' name='maintenanceId' id='maintenanceId' class='text ui-widget-content ui-corner-all ui-state-disabled'>");
+				$("#view-form-2-2").find("#maintainStateTD").empty().append("<input type='text' name='maintainState' id='maintainState' class='text ui-widget-content ui-corner-all ui-state-disabled'>");
 				$.each(obj, function(key, value) {
 					$("#view-form-2-2").find("#" + key).val(value);	
 					$("#view-form-2-2").find("input[name='" + key +"']").val(value);
 				});
+				stateMachineMaintenance();
 				reverseRadioValue("#view-form-2-2","ma-view");
 			}})
 		});
@@ -146,6 +172,7 @@
 				initializeMaintainMainFormViewState();
 		    }
 		});
+		
 	}
 	function transferModifyListViewAction(){
 		jQuery('#single-view-table-3-1').wrap('<div class="dataTables_scroll" />');
@@ -172,7 +199,7 @@
 			    	}
 			    	for(i=0;i<json.length;i++){
 		        		var obj = $.parseJSON(json[i]);
-		        		myarray[i][0]='';		        		
+		        		myarray[i][0]=obj.hasOwnProperty("modifyState")?obj.modifyState:'';	;		        		
 		        		myarray[i][1]=obj.hasOwnProperty("modificationId")?obj.modificationId:'';
 		        		myarray[i][2]=obj.hasOwnProperty("modificationDate")?obj.modificationDate:'';
 		        		myarray[i][3]=obj.hasOwnProperty("modificationPerson")?obj.modificationPerson:'';
@@ -197,6 +224,7 @@
 			var cell = singleviewtable31.cell( indexes ,1);
 			var modificationId = cell.data();
 			alert('您選取了改裝編號 :'+ modificationId);
+			window.modificationId = modificationId;
 			$.ajax({
 			  url:"/Drone/equipment/ViewModificationByModificationId",
 			  type:"POST",
@@ -206,10 +234,12 @@
 				var obj = data;
 				var form = $("#view-form-3-2");
 				$("#view-form-3-2").find("#modificationIdTD").empty().append("<input type='text' name='modificationId' id='modificationId' class='text ui-widget-content ui-corner-all ui-state-disabled'>");
+				$("#view-form-3-2").find("#modifyStateTD").empty().append("<input type='text' name='modifyState' id='modifyState' class='text ui-widget-content ui-corner-all ui-state-disabled'>");
 				$.each(obj, function(key, value) {
 					$("#view-form-3-2").find("#" + key).val(value);	
 					$("#view-form-3-2").find("input[name='" + key +"']").val(value);
 				});
+				stateMachineModification();
 				reverseRadioValue("#view-form-3-2","mo-view");
 			}})
 		});
@@ -220,11 +250,12 @@
 		});
 	}
 	function registerStateMachineEvent(){
-		$("#dialog-view-form-1").find("#check").button().click(function() {
+		//equipment
+		$("#dialog-view-form-1").find("#checkEquipment").button().click(function() {
 			$.ajax({
 				  url:"/Drone/equipment/CheckEquipmentProcess",
 				  type:"POST",
-				  data:{"id" : id},
+				  data:{"id" : window.viewId},
 				  success : function() {
 						alert('檢核成功');
 						$("#view-form-1").find("#state").val("CHECKED");
@@ -233,11 +264,11 @@
 			})
 		});
 
-		$("#dialog-view-form-1").find("#approve").button().click(function() {
+		$("#dialog-view-form-1").find("#approveEquipment").button().click(function() {
 			$.ajax({
 				  url:"/Drone/equipment/ApproveEquipmentProcess",
 				  type:"POST",
-				  data:{"id" : id},
+				  data:{"id" : window.viewId},
 				  success : function() {
 						alert('核可成功');
 						$("#view-form-1").find("#state").val("APPROVED");
@@ -246,15 +277,93 @@
 			})
 		});
 		
-		$("#dialog-view-form-1").find("#reject").button().click(function() {
+		$("#dialog-view-form-1").find("#rejectEquipment").button().click(function() {
 			$.ajax({
 				  url:"/Drone/equipment/RejectEquipmentProcess",
 				  type:"POST",
-				  data:{"id" : id},
+				  data:{"id" : window.viewId},
 				  success : function() {
 						alert('退回成功');
 						$("#view-form-1").find("#state").val("REJECTED");
 						stateMachine();
+				  }
+			})
+		});
+		//maintenance
+		$("#dialog-view-form-2").find("#checkMaintenance").button().click(function() {
+			$.ajax({
+				  url:"/Drone/equipment/CheckMaintenanceProcess",
+				  type:"POST",
+				  data:{"id" : window.maintenanceId},
+				  success : function() {
+						alert('檢核保養資料成功');
+						$("#view-form-2-2").find("#maintainState").val("CHECKED");
+						stateMachineMaintenance();
+				  }
+			})
+		});
+
+		$("#dialog-view-form-2").find("#approveMaintenance").button().click(function() {
+			$.ajax({
+				  url:"/Drone/equipment/ApproveMaintenanceProcess",
+				  type:"POST",
+				  data:{"id" : window.maintenanceId},
+				  success : function() {
+						alert('核可保養資料成功');
+						$("#view-form-2-2").find("#maintainState").val("APPROVED");
+						stateMachineMaintenance();
+				  }
+			})
+		});
+		
+		$("#dialog-view-form-2").find("#rejectMaintenance").button().click(function() {
+			$.ajax({
+				  url:"/Drone/equipment/RejectMaintenanceProcess",
+				  type:"POST",
+				  data:{"id" : window.maintenanceId},
+				  success : function() {
+						alert('退回保養資料成功');
+						$("#view-form-2-2").find("#maintainState").val("REJECTED");
+						stateMachineMaintenance();
+				  }
+			})
+		});
+		//modification
+		$("#dialog-view-form-3").find("#checkModification").button().click(function() {
+			$.ajax({
+				  url:"/Drone/equipment/CheckModificationProcess",
+				  type:"POST",
+				  data:{"id" : window.modificationId},
+				  success : function() {
+						alert('檢核改裝資料成功');
+						$("#view-form-3-2").find("#modifyState").val("CHECKED");
+						stateMachineModification();
+				  }
+			})
+		});
+
+		$("#dialog-view-form-3").find("#approveModification").button().click(function() {
+			$.ajax({
+				  url:"/Drone/equipment/ApproveModificationProcess",
+				  type:"POST",
+				  data:{"id" : window.modificationId},
+				  success : function() {
+						alert('核可改裝資料成功');
+						$("#view-form-3-2").find("#modifyState").val("APPROVED");
+						stateMachineModification();
+				  }
+			})
+		});
+		
+		$("#dialog-view-form-3").find("#rejectModification").button().click(function() {
+			$.ajax({
+				  url:"/Drone/equipment/RejectModificationProcess",
+				  type:"POST",
+				  data:{"id" : window.modificationId},
+				  success : function() {
+						alert('退回改裝資料成功');
+						$("#view-form-3-2").find("#modifyState").val("REJECTED");
+						stateMachineModification();
 				  }
 			})
 		});
@@ -268,6 +377,7 @@
 
 	}
 	function initializeMaintainMainFormViewState(){
+		$("#view-form-2-2").find("#maintainStateTD").empty();
 		$("#view-form-2-2").find("#maintenanceIdTD").empty().removeClass("ui-state-enabled").addClass("ui-state-disabled");
 		$("#view-form-2-2").find("#maintenanceDate").val("").removeClass("ui-state-enabled").addClass("ui-state-disabled");
 		$("#view-form-2-2").find("#maintenancePerson").val("").removeClass("ui-state-enabled").addClass("ui-state-disabled");
@@ -279,6 +389,7 @@
 	}
 	function initializeModifyListViewState(){}
 	function initializeModifyMainFormViewState(){
+		$("#view-form-2-2").find("#modifyStateTD").empty();
 		$("#view-form-3-2").find("#modificationIdTD").empty().removeClass("ui-state-enabled").addClass("ui-state-disabled");
 		$("#view-form-3-2").find("#modificationDate").val("").removeClass("ui-state-enabled").addClass("ui-state-disabled");
 		$("#view-form-3-2").find("#modificationPerson").val("").removeClass("ui-state-enabled").addClass("ui-state-disabled");
@@ -291,21 +402,61 @@
 	
 	function stateMachine(){
 		if($("#view-form-1").find("#state").val()==="PROCESSING"){
-			$("#dialog-view-form-1").find("#check").prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
-			$("#dialog-view-form-1").find("#reject").prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
-			$("#dialog-view-form-1").find("#approve").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
+			$("#dialog-view-form-1").find("#checkEquipment").prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
+			$("#dialog-view-form-1").find("#rejectEquipment").prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
+			$("#dialog-view-form-1").find("#approveEquipment").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
 		}else if($("#view-form-1").find("#state").val()==="CHECKED"){
-			$("#dialog-view-form-1").find("#check").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
-			$("#dialog-view-form-1").find("#reject").prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
-			$("#dialog-view-form-1").find("#approve").prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
+			$("#dialog-view-form-1").find("#checkEquipment").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
+			$("#dialog-view-form-1").find("#rejectEquipment").prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
+			$("#dialog-view-form-1").find("#approveEquipment").prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
 		}else if($("#view-form-1").find("#state").val()==="APPROVED"){
-			$("#dialog-view-form-1").find("#check").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
-			$("#dialog-view-form-1").find("#reject").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
-			$("#dialog-view-form-1").find("#approve").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
+			$("#dialog-view-form-1").find("#checkEquipment").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
+			$("#dialog-view-form-1").find("#rejectEquipment").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
+			$("#dialog-view-form-1").find("#approveEquipment").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
 		}else if($("#view-form-1").find("#state").val()==="REJECTED"){
-			$("#dialog-view-form-1").find("#check").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
-			$("#dialog-view-form-1").find("#reject").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
-			$("#dialog-view-form-1").find("#approve").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
+			$("#dialog-view-form-1").find("#checkEquipment").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
+			$("#dialog-view-form-1").find("#rejectEquipment").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
+			$("#dialog-view-form-1").find("#approveEquipment").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
+		}
+	}
+	
+	function stateMachineMaintenance(){
+		if($("#view-form-2-2").find("#maintainState").val()==="PROCESSING"){
+			$("#dialog-view-form-2").find("#checkMaintenance").prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
+			$("#dialog-view-form-2").find("#rejectMaintenance").prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
+			$("#dialog-view-form-2").find("#approveMaintenance").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
+		}else if($("#view-form-2-2").find("#maintainState").val()==="CHECKED"){
+			$("#dialog-view-form-2").find("#checkMaintenance").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
+			$("#dialog-view-form-2").find("#rejectMaintenance").prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
+			$("#dialog-view-form-2").find("#approveMaintenance").prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
+		}else if($("#view-form-2-2").find("#maintainState").val()==="APPROVED"){
+			$("#dialog-view-form-2").find("#checkMaintenance").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
+			$("#dialog-view-form-2").find("#rejectMaintenance").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
+			$("#dialog-view-form-2").find("#approveMaintenance").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
+		}else if($("#view-form-2-2").find("#maintainState").val()==="REJECTED"){
+			$("#dialog-view-form-2").find("#checkMaintenance").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
+			$("#dialog-view-form-2").find("#rejectMaintenance").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
+			$("#dialog-view-form-2").find("#approveMaintenance").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
+		}
+	}
+	
+	function stateMachineModification(){
+		if($("#view-form-3-2").find("#modifyState").val()==="PROCESSING"){
+			$("#dialog-view-form-3").find("#checkModification").prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
+			$("#dialog-view-form-3").find("#rejectModification").prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
+			$("#dialog-view-form-3").find("#approveModification").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
+		}else if($("#view-form-3-2").find("#modifyState").val()==="CHECKED"){
+			$("#dialog-view-form-3").find("#checkModification").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
+			$("#dialog-view-form-3").find("#rejectModification").prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
+			$("#dialog-view-form-3").find("#approveModification").prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
+		}else if($("#view-form-3-2").find("#modifyState").val()==="APPROVED"){
+			$("#dialog-view-form-3").find("#checkModification").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
+			$("#dialog-view-form-3").find("#rejectModification").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
+			$("#dialog-view-form-3").find("#approveModification").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
+		}else if($("#view-form-3-2").find("#modifyState").val()==="REJECTED"){
+			$("#dialog-view-form-3").find("#checkModification").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
+			$("#dialog-view-form-3").find("#rejectModification").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
+			$("#dialog-view-form-3").find("#approveModification").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
 		}
 	}
 
@@ -336,9 +487,9 @@
 		<li><a href="#dialog-view-form-3">改裝資訊</a></li>
 	</ul>
 	<div id="dialog-view-form-1">
-		<button id="check" name="check" class="ui-button ui-corner-all ui-widget">檢核設備</button>
-		<button id="approve" name="approve" class="ui-button ui-corner-all ui-widget">核可設備</button>
-		<button id="reject" name="reject" class="ui-button ui-corner-all ui-widget">退回設備</button>
+		<button id="checkEquipment" name="checkEquipment" class="ui-button ui-corner-all ui-widget">檢核設備</button>
+		<button id="approveEquipment" name="approveEquipment" class="ui-button ui-corner-all ui-widget">核可設備</button>
+		<button id="rejectEquipment" name="rejectEquipment" class="ui-button ui-corner-all ui-widget">退回設備</button>
 		<form id="view-form-1">
 			<table id="single-view-table-1">
 				<%@ include file="./pages/Equipment_main_form.jsp" %>			
@@ -349,6 +500,9 @@
 		<table id="single-view-table-2-1" class="display" style="width: 100%">	
 			<%@ include file="./pages/MaintainEquipment_list.jsp" %>		
 		</table>
+		<button id="checkMaintenance" name="checkMaintenance" class="ui-button ui-corner-all ui-widget">檢核保養紀錄</button>
+		<button id="approveMaintenance" name="approveMaintenance" class="ui-button ui-corner-all ui-widget">核可保養紀錄</button>
+		<button id="rejectMaintenance" name="rejectMaintenance" class="ui-button ui-corner-all ui-widget">退回保養紀錄</button>
 		<form id="view-form-2-2">
 			<table id="single-view-table-2-2">	
 				<%@ include file="./pages/MaintainEquipment_main_form_for_view.jsp" %>			
@@ -359,6 +513,9 @@
 		<table id="single-view-table-3-1" class="display" style="width: 100%">	
 			<%@ include file="./pages/ModifyEquipment_list.jsp" %>		
 		</table>
+		<button id="checkModification" name="checkModification" class="ui-button ui-corner-all ui-widget">檢核改裝紀錄</button>
+		<button id="approveModification" name="approveModification" class="ui-button ui-corner-all ui-widget">核可改裝紀錄</button>
+		<button id="rejectModification" name="rejectModification" class="ui-button ui-corner-all ui-widget">退回改裝紀錄</button>
 		<form id="view-form-3-2">
 			<table id="single-view-table-3-2">		
 				<%@ include file="./pages/ModifyEquipment_main_form.jsp" %>	

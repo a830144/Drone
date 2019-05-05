@@ -32,6 +32,8 @@
 						<option value="M">月檢</option>
 						<option value="Q">季檢</option>
 				</select></td>
+				<td>資料狀態</td>
+				<td id="maintainStateTD"></td>
 			</tr>
 			<tr>
 				<td>結構系統(airframe)</td>

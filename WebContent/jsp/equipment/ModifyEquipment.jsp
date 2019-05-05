@@ -99,7 +99,7 @@
 			    	}
 			    	for(i=0;i<json.length;i++){
 		        		var obj = $.parseJSON(json[i]);
-		        		myarray[i][0]='';		        		
+		        		myarray[i][0]=obj.hasOwnProperty("modifyState")?obj.modifyState:'';			        		
 		        		myarray[i][1]=obj.hasOwnProperty("modificationId")?obj.modificationId:'';
 		        		myarray[i][2]=obj.hasOwnProperty("modificationDate")?obj.modificationDate:'';
 		        		myarray[i][3]=obj.hasOwnProperty("modificationPerson")?obj.modificationPerson:'';
@@ -134,6 +134,7 @@
 				var obj = data;
 				var form = $("#modify-form-2");
 				$("#modify-form-2").find("#modificationIdTD").empty().append("<input type='text' name='modificationId' id='modificationId' class='text ui-widget-content ui-corner-all ui-state-disabled'>");
+				$("#modify-form-2").find("#modifyStateTD").empty().append("<input type='text' name='modifyState' id='modifyState' class='text ui-widget-content ui-corner-all ui-state-disabled'>");
 				$.each(obj, function(key, value) {
 					$("#modify-form-2").find("#" + key).val(value);	
 					$("#modify-form-2").find("input[name='" + key +"']").val(value);
@@ -169,6 +170,7 @@
 	}
 	function initializeModifyMainFormState(){
 		$("#modify-form-2").find("#modificationIdTD").empty();
+		$("#modify-form-2").find("#modifyStateTD").empty();
 		$("#modify-form-2").find("#modificationIdDate").val("");
 		$("#modify-form-2").find("#modificationIdPerson").val("");
 		$("#modify-form-2").find("input[id*='clean']").prop("checked", true );

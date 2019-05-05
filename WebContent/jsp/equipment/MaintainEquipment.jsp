@@ -100,7 +100,7 @@
 			    	}
 			    	for (i=0; i <json.length; i++){
 		        		var obj = $.parseJSON(json[i]);
-		        		myarray[i][0]='';		        		
+		        		myarray[i][0]=obj.hasOwnProperty("maintainState")?obj.maintainState:'';		        		
 		        		myarray[i][1]=obj.hasOwnProperty("maintenanceId")?obj.maintenanceId:'';
 		        		myarray[i][2]=obj.hasOwnProperty("maintenanceType")?obj.maintenanceType:'';
 		        		myarray[i][3]=obj.hasOwnProperty("maintenanceDate")?obj.maintenanceDate:'';
@@ -136,6 +136,7 @@
 				var obj = data;
 				var form = $("#maintain-form-2");
 				$("#maintain-form-2").find("#maintenanceIdTD").empty().append("<input type='text' name='maintenanceId' id='maintenanceId' class='text ui-widget-content ui-corner-all ui-state-disabled'>");
+				$("#maintain-form-2").find("#maintainStateTD").empty().append("<input type='text' name='maintainState' id='maintainState' class='text ui-widget-content ui-corner-all ui-state-disabled'>");
 				$.each(obj, function(key, value) {
 					$("#maintain-form-2").find("#" + key).val(value);	
 					$("#maintain-form-2").find("input[name='" + key +"']").val(value);
@@ -171,6 +172,7 @@
 	}
 	function initializeMaintainMainFormState(){
 		$("#maintain-form-2").find("#maintenanceIdTD").empty();
+		$("#maintain-form-2").find("#maintainStateTD").empty();
 		$("#maintain-form-2").find("#maintenanceDate").val("");
 		$("#maintain-form-2").find("#maintenancePerson").val("");
 		$("#maintain-form-2").find("#maintenanceType").val("W");

@@ -33,9 +33,9 @@
 	        				content = content + "<td>" + col_5 +"</td>";
 	        				var col_6=obj.hasOwnProperty("parentNodeId")?obj.parentNodeId:'';
 	        				content = content + "<td>" + col_6 +"</td>";
-	        				var view_btn = "<button name='view"+ obj.codeId +"' id='" + obj.codeId +"' class='view' value='view'>檢視</button>";
-	        				var update_btn = "<button name='update"+ obj.codeId +"' id='" + obj.codeId +"' class='update' value='update'>修改</button>";
-	        				var delete_btn = "<button name='delete"+ obj.codeId +"' id='" + obj.codeId+"' class='delete' value='delete'>刪除</button>";		        		
+	        				var view_btn = "<button name='view"+ obj.codeId +"' id='" + obj.codeId +"' class='view ui-button ui-corner-all ui-widget' value='view'>檢視</button>";
+	        				var update_btn = "<button name='update"+ obj.codeId +"' id='" + obj.codeId +"' class='update ui-button ui-corner-all ui-widget' value='update'>修改</button>";
+	        				var delete_btn = "<button name='delete"+ obj.codeId +"' id='" + obj.codeId+"' class='delete ui-button ui-corner-all ui-widget' value='delete'>刪除</button>";		        		
 	        				var col_7="<td>" + view_btn + update_btn + delete_btn+"</td>";
 	        				content = content + col_7 + "</tr>";
 	        				

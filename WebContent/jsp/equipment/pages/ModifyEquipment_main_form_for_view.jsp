@@ -25,6 +25,10 @@
 					id="modificationPerson" class="text ui-widget-content ui-corner-all"></td>
 			</tr>
 			<tr>
+				<td>資料狀態</td>
+				<td id="modifyStateTD"></td>
+			</tr>
+			<tr>
 				<td>結構系統(airframe)</td>
 				<td>
 				<fieldset>
