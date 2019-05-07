@@ -62,17 +62,26 @@ public class EquipmentDaoImpl implements EquipmentDao{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Equipments> findByName(String name) {
-		
-		
+	public List<Equipments> findByName(String name) {		
 		String hql = "FROM Equipments as E left outer join fetch E.registrations where E.productName like :searchField";
 		Session session = this.sessionFactory.getCurrentSession();
 		Query<Equipments> query = session.createQuery(hql);
 		query.setParameter("searchField", "%" + name + "%");
-
 		List<Equipments> results = query.list();
 		return results;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Equipments> findByType(String type) {		
+		String hql = "FROM Equipments as E left outer join fetch E.registrations where E.constructionType like :searchField";
+		Session session = this.sessionFactory.getCurrentSession();
+		Query<Equipments> query = session.createQuery(hql);
+		query.setParameter("searchField", "%" + type + "%");
+		List<Equipments> results = query.list();
+		return results;
+	}
+	
 	@Override
 	public void deleteById(Integer id) {
 		Equipments equipments = findById(id);

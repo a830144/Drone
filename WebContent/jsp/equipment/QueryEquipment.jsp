@@ -93,7 +93,7 @@ $(function() {
 				<th>設備型號</th>
 				<th>設備構型</th>
 				<th>設備ID取得日期</th>
-				<th>狀態</th>
+				<th>-狀態</th>
 				<th>動作</th>
 			</tr>
 		</thead>

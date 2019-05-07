@@ -7,8 +7,8 @@ import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.statemachine.recipes.persist.PersistStateMachineHandler;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -21,12 +21,17 @@ import entity.EquipmentFlow;
 import entity.EquipmentPerformance;
 import entity.Equipments;
 import entity.MaintenanceDetail;
+import entity.MaintenanceFlow;
 import entity.Maintenances;
 import entity.ModificationDetail;
+import entity.ModificationFlow;
 import entity.Modifications;
 import service.EquipmentService;
 import stateMachine.Events;
 import stateMachine.States;
+import stateMachine.equipment.EquipmentPersistStateMachineHandler;
+import stateMachine.maintenance.MaintenancePersistStateMachineHandler;
+import stateMachine.modification.ModificationPersistStateMachineHandler;
 import util.EntityConstants;
 import vo.BaseEquipmentAttachment.TempAttach;
 import vo.Equipment;
@@ -42,7 +47,16 @@ public class EquipmentServiceImpl implements EquipmentService {
 	private ModificationDao modificationDao;
 
 	@Autowired
-	private PersistStateMachineHandler persistStateMachineHandler;
+	@Qualifier("equipmentPersistStateMachineHandler")
+	private EquipmentPersistStateMachineHandler equipmentPersistStateMachineHandler;
+	
+	@Autowired
+	@Qualifier("maintenancePersistStateMachineHandler")
+	private MaintenancePersistStateMachineHandler maintenancePersistStateMachineHandler;
+	
+	@Autowired
+	@Qualifier("modificationPersistStateMachineHandler")
+	private ModificationPersistStateMachineHandler modificationPersistStateMachineHandler;
 
 	public EquipmentDao getEquipmentDao() {
 		return equipmentDao;
@@ -108,7 +122,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 			} catch (InvocationTargetException e) {
 				e.printStackTrace();
 			}
-			updateState(entity_equipments, Events.UPDATE);
+			updateEquipmentState(entity_equipments, Events.UPDATE);
 			equipmentDao.update(entity_equipments);
 			
 	}
@@ -124,7 +138,6 @@ public class EquipmentServiceImpl implements EquipmentService {
 			e.printStackTrace();
 		}
 		int rowcount = maintenanceDao.deleteAllDetailsByMaintenanceId(vo.getMaintenanceId());
-		System.out.println("delete detail::"+rowcount);
 		Map<String, TempAttach> map = vo.getResultHashMap();
 		Iterator<String> iterator = map.keySet().iterator();
 		int i = 0;
@@ -135,6 +148,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 			entity_maintenances.getMaintenanceDetails().add(entity_maintenanceDetail);
 			entity_maintenanceDetail.setMaintenances(entity_maintenances);
 		}
+		updateMaintenanceState(entity_maintenances, Events.UPDATE);
 		maintenanceDao.update(entity_maintenances);
 		
 	}
@@ -163,6 +177,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 			entity_modifications.getModificationDetails().add(entity_modificationDetail);
 			entity_modificationDetail.setModifications(entity_modifications);
 		}
+		updateModificationState(entity_modifications, Events.UPDATE);
 		modificationDao.update(entity_modifications);
 		
 	}
@@ -200,6 +215,16 @@ public class EquipmentServiceImpl implements EquipmentService {
 		}
 		return equipmentsList;
 	}
+	
+	public List<Equipments> queryEquipmentsByType(String type) {
+		List<Equipments> equipmentsList;
+		if ("".equals(type) || type == null) {
+			equipmentsList = equipmentDao.findAll();
+		} else {
+			equipmentsList = equipmentDao.findByType(type);
+		}
+		return equipmentsList;
+	}
 
 	@Override
 	public void maintainEquipment(String jsonString) {		
@@ -225,6 +250,9 @@ public class EquipmentServiceImpl implements EquipmentService {
 			entity_maintenances.getMaintenanceDetails().add(entity_maintenanceDetail);
 			entity_maintenanceDetail.setMaintenances(entity_maintenances);
 		}
+		MaintenanceFlow entity_maintenanceFlow = gson.fromJson(jsonString, MaintenanceFlow.class);
+		entity_maintenanceFlow.setMaintainState(States.PROCESSING);
+		entity_maintenances.setMaintenanceFlow(entity_maintenanceFlow);
 		equipmentDao.persist(entity_equipments);
 	}
 	
@@ -254,6 +282,9 @@ public class EquipmentServiceImpl implements EquipmentService {
 			entity_modifications.getModificationDetails().add(entity_modificationDetail);
 			entity_modificationDetail.setModifications(entity_modifications);
 		}	
+		ModificationFlow entity_modificationFlow = gson.fromJson(jsonString, ModificationFlow.class);
+		entity_modificationFlow.setModifyState(States.PROCESSING);
+		entity_modifications.setModificationFlow(entity_modificationFlow);
 		equipmentDao.persist(entity_equipments);		
 	}
 
@@ -323,6 +354,9 @@ public class EquipmentServiceImpl implements EquipmentService {
 			Maintenances entity_maintenances = (Maintenances) iterator_maintenances.next();
 			try {
 				BeanUtils.copyProperties(vo, entity_maintenances);
+				if(entity_maintenances.getMaintenanceFlow()!=null){
+					BeanUtils.copyProperties(vo, entity_maintenances.getMaintenanceFlow());
+				}
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
@@ -343,7 +377,9 @@ public class EquipmentServiceImpl implements EquipmentService {
 		MaintainEquipment vo = new MaintainEquipment();
 		try {
 			BeanUtils.copyProperties(vo, entity_maintenances);
-			
+			if(entity_maintenances.getMaintenanceFlow()!=null){
+				BeanUtils.copyProperties(vo, entity_maintenances.getMaintenanceFlow());
+			}
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
@@ -367,6 +403,9 @@ public class EquipmentServiceImpl implements EquipmentService {
 			Modifications entity_modifications = (Modifications) iterator_modifications.next();
 			try {
 				BeanUtils.copyProperties(vo, entity_modifications);
+				if(entity_modifications.getModificationFlow()!=null){
+					BeanUtils.copyProperties(vo, entity_modifications.getModificationFlow());
+				}
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
@@ -384,7 +423,10 @@ public class EquipmentServiceImpl implements EquipmentService {
 
 		ModifyEquipment vo = new ModifyEquipment();
 		try {
-			BeanUtils.copyProperties(vo, entity_modifications);			
+			BeanUtils.copyProperties(vo, entity_modifications);	
+			if(entity_modifications.getModificationFlow()!=null){
+				BeanUtils.copyProperties(vo, entity_modifications.getModificationFlow());
+			}
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
@@ -399,36 +441,115 @@ public class EquipmentServiceImpl implements EquipmentService {
 
 	@Override
 	public void check(Integer id){
-		updateState(id, Events.CHECK);
+		updateEquipmentState(id, Events.CHECK);
 	}
 	
 	@Override
 	public void approve(Integer id){
-		updateState(id, Events.APPROVE);
+		updateEquipmentState(id, Events.APPROVE);
 	}
 	
 	@Override
 	public void reject(Integer id){
-		updateState(id, Events.REJECT);
+		updateEquipmentState(id, Events.REJECT);
 	}
 	
 	@Override
 	public void delete(Integer id){
-		updateState(id, Events.DELETE);
+		updateEquipmentState(id, Events.DELETE);
 	}
 	
-	public Boolean updateState(Integer id, stateMachine.Events event) {
+	public Boolean updateEquipmentState(Integer id, stateMachine.Events event) {
+		System.out.println("use updateEquipmentState!!!");
 		Equipments entity_equipments = equipmentDao.findById(id);
-	    return persistStateMachineHandler.handleEventWithState(
-	        MessageBuilder.withPayload(event.name()).setHeader(EntityConstants.entityHeader, entity_equipments).build(),
-	        entity_equipments.getEquipmentFlow().getState().name()
-	    );
-	  }
+		return equipmentPersistStateMachineHandler
+				.handleEventWithState(
+						MessageBuilder.withPayload(event.name())
+								.setHeader(EntityConstants.entityHeader, entity_equipments).build(),
+						entity_equipments.getEquipmentFlow().getState().name());
+	}
+
+	public Boolean updateEquipmentState(Equipments entity_equipments, stateMachine.Events event) {
+		System.out.println("use updateEquipmentState!!!");
+		return equipmentPersistStateMachineHandler
+				.handleEventWithState(
+						MessageBuilder.withPayload(event.name())
+								.setHeader(EntityConstants.entityHeader, entity_equipments).build(),
+						entity_equipments.getEquipmentFlow().getState().name());
+	}
 	
-	public Boolean updateState(Equipments entity_equipments, stateMachine.Events event) {
-	    return persistStateMachineHandler.handleEventWithState(
-	        MessageBuilder.withPayload(event.name()).setHeader(EntityConstants.entityHeader, entity_equipments).build(),
-	        entity_equipments.getEquipmentFlow().getState().name()
-	    );
-	  }
+	
+	public Boolean updateMaintenanceState(Integer id, stateMachine.Events event) {
+		System.out.println("use updateMaintenanceState!!!");
+		Maintenances entity_maintenances = maintenanceDao.findById(id);
+		return updateMaintenanceState(entity_maintenances,event);
+	}
+
+	public Boolean updateMaintenanceState(Maintenances entity_maintenances, stateMachine.Events event) {
+		System.out.println("use updateMaintenanceState!!!");
+		return maintenancePersistStateMachineHandler
+				.handleEventWithState(
+						MessageBuilder.withPayload(event.name())
+								.setHeader(EntityConstants.entityHeader, entity_maintenances).build(),
+						entity_maintenances.getMaintenanceFlow().getMaintainState().name());
+	}
+	
+	@Override
+	public void checkMaintenance(Integer id) {
+		updateMaintenanceState(id, Events.CHECK);		
+	}
+
+	@Override
+	public void approveMaintenance(Integer id) {
+		updateMaintenanceState(id, Events.APPROVE);
+	}
+
+	@Override
+	public void rejectMaintenance(Integer id) {
+		updateMaintenanceState(id, Events.REJECT);
+	}
+
+	@Override
+	public void deleteMaintenance(Integer id) {
+		updateMaintenanceState(id, Events.DELETE);
+	}
+	
+	public Boolean updateModificationState(Integer id, stateMachine.Events event) {
+		System.out.println("use updateModificationState!!!");
+		Modifications entity_modifications = modificationDao.findById(id);
+		return updateModificationState(entity_modifications,event);
+	}
+
+	public Boolean updateModificationState(Modifications entity_modifications, stateMachine.Events event) {
+		System.out.println("use updateModificationState!!!");
+		return modificationPersistStateMachineHandler
+				.handleEventWithState(
+						MessageBuilder.withPayload(event.name())
+								.setHeader(EntityConstants.entityHeader, entity_modifications).build(),
+						entity_modifications.getModificationFlow().getModifyState().name());
+	}
+	
+	@Override
+	public void checkModification(Integer id) {
+		updateModificationState(id, Events.CHECK);		
+	}
+
+	@Override
+	public void approveModification(Integer id) {
+		updateModificationState(id, Events.APPROVE);
+	}
+
+	@Override
+	public void rejectModification(Integer id) {
+		updateModificationState(id, Events.REJECT);
+	}
+
+	@Override
+	public void deleteModification(Integer id) {
+		updateModificationState(id, Events.DELETE);
+	}
+	
+	
+
+	
 }

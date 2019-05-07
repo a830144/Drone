@@ -13,9 +13,6 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 import org.springframework.statemachine.listener.StateMachineListenerAdapter;
 import org.springframework.statemachine.state.State;
 
-@Configuration 
-@ComponentScan
-@EnableStateMachine
 public class StateMachineConfig extends StateMachineConfigurerAdapter<String, String> {
 	
 	

@@ -25,5 +25,7 @@ public interface EquipmentDao{
     public List<Equipments> findAll();
     
     public List<Equipments> findByName(String name);
+    
+    public List<Equipments> findByType(String type);
      
 }

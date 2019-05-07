@@ -26,6 +26,8 @@ public interface EquipmentService {
 	
 	public List<Equipments> queryEquipments(String ename);
 	
+	public List<Equipments> queryEquipmentsByType(String type);
+	
 	public JsonArray queryMaintenancesById(Integer id);
 	
 	public JsonArray queryModificationsById(Integer id);
@@ -41,4 +43,20 @@ public interface EquipmentService {
 	public void reject(Integer id);
 	
 	public void delete(Integer id);
+	
+	public void checkMaintenance(Integer id);
+	
+	public void approveMaintenance(Integer id);
+	
+	public void rejectMaintenance(Integer id);
+	
+	public void deleteMaintenance(Integer id);
+	
+	public void checkModification(Integer id);
+	
+	public void approveModification(Integer id);
+	
+	public void rejectModification(Integer id);
+	
+	public void deleteModification(Integer id);
 }

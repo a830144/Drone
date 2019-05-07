@@ -3,7 +3,7 @@ var container   = document.getElementById('root');
 // h is short for hyperscript and it makes everything a little bit easier
 var h           = React.createElement;
 
-// This is how we inherit methods like setState from React.Component
+// This is how we inherit methods like setState from React.Component....
 Timer.prototype = Object.create(React.Component.prototype);
 
 function Timer(props) {

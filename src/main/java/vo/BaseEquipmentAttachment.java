@@ -16,6 +16,64 @@ public class BaseEquipmentAttachment {
 	private String maintenancePerson;
 	private Date modificationDate;
 	private String modificationPerson;
+	private Date sendDate;
+	private Integer sendId;
+	private Date checkDate;
+	private Integer checkId;
+	private Date approveDate;
+	private Integer approveId;
+	private stateMachine.States maintainState;
+	private stateMachine.States modifyState;
+	
+	
+	public Date getSendDate() {
+		return sendDate;
+	}
+	public void setSendDate(Date sendDate) {
+		this.sendDate = sendDate;
+	}
+	public Integer getSendId() {
+		return sendId;
+	}
+	public void setSendId(Integer sendId) {
+		this.sendId = sendId;
+	}
+	public Date getCheckDate() {
+		return checkDate;
+	}
+	public void setCheckDate(Date checkDate) {
+		this.checkDate = checkDate;
+	}
+	public Integer getCheckId() {
+		return checkId;
+	}
+	public void setCheckId(Integer checkId) {
+		this.checkId = checkId;
+	}
+	public Date getApproveDate() {
+		return approveDate;
+	}
+	public void setApproveDate(Date approveDate) {
+		this.approveDate = approveDate;
+	}
+	public Integer getApproveId() {
+		return approveId;
+	}
+	public void setApproveId(Integer approveId) {
+		this.approveId = approveId;
+	}
+	public stateMachine.States getMaintainState() {
+		return maintainState;
+	}
+	public void setMaintainState(stateMachine.States maintainState) {
+		this.maintainState = maintainState;
+	}
+	public stateMachine.States getModifyState() {
+		return modifyState;
+	}
+	public void setModifyState(stateMachine.States modifyState) {
+		this.modifyState = modifyState;
+	}
 	public Integer getEquipmentId() {
 		return equipmentId;
 	}

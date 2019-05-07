@@ -27,6 +27,13 @@
 <script type="text/javascript"  src=" https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.0/css/select.dataTables.min.css"/>
 <script type="text/javascript"  src="https://cdn.datatables.net/select/1.3.0/js/dataTables.select.min.js"></script>
+<script src="/Drone/js/jquery.steps.min.js"></script>
+<script src="/Drone/js/jquery.steps.js"></script>
+<link rel="stylesheet" href="/Drone/css/normalize.css">
+<link rel="stylesheet" href="/Drone/css/main.css">
+<link rel="stylesheet" href="/Drone/css/jquery.steps.css">
+<script src="/Drone/js/modernizr-2.6.2.min.js"></script>
+<script src="/Drone/js/jquery.cookie-1.3.1.js"></script>
 	<script
 		src="/Drone/js/react.js"></script>
 	<script
@@ -34,7 +41,7 @@
 		
 	<!-- Load our React component. -->
 <!-- //<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script> -->
-	<script src="/Drone/js/test3.js" charset="utf-8"></script>
+	<script src="/Drone/js/temp.js" charset="utf-8"></script>
 
 </body>
 </html>
