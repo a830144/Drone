@@ -6,11 +6,14 @@ import java.util.List;
 import org.hibernate.SessionFactory;
 
 import entity.Licenses;
+import entity.PersonsLicenses;
 
 public interface LicenseDao{
 	public void setSessionFactory(SessionFactory sessionFactory);
 
 	public void persist(Licenses entity);
+	
+	public void persistPersonLicense(PersonsLicenses entity);
     
     public void update(Licenses entity);
      

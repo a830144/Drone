@@ -11,7 +11,6 @@ import javax.persistence.GeneratedValue;
 import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -52,11 +51,10 @@ public class AerialPlans implements java.io.Serializable {
 	private Integer areaCenterEMinute;
 	private Float areaCenterESecond;
 	private Integer operationDiameter;
-	private Set<Equipments> equipments = new HashSet<Equipments>(0);
 	private Set<AerialActivities> aerialActivitieses = new HashSet<AerialActivities>(0);
-	private Set<Persons> persons = new HashSet<Persons>(0);
 	private Set<Areas> areases = new HashSet<Areas>(0);
 	private Set<OperationlimitsAerialplans> operationlimitsAerialplanses = new HashSet<OperationlimitsAerialplans>(0);
+	private Set<Missions> missionses = new HashSet<Missions>(0);
 
 	public AerialPlans() {
 	}
@@ -65,8 +63,8 @@ public class AerialPlans implements java.io.Serializable {
 			Integer amslTo, Integer agl, String takeOffLocationName, Integer takeOffNDegree, Integer takeOffNMinute,
 			Float takeOffNSecond, Integer takeOffEDegree, Integer takeOffEMinute, Float takeOffESecond,
 			Integer areaCenterNDegree, Integer areaCenterNMinute, Float areaCenterNSecond, Integer areaCenterEDegree,
-			Integer areaCenterEMinute, Float areaCenterESecond, Integer operationDiameter, Set<Equipments> equipments,
-			Set<AerialActivities> aerialActivitieses, Set<Persons> persons, Set<Areas> areases, Set<OperationlimitsAerialplans> operationlimitsAerialplanses) {
+			Integer areaCenterEMinute, Float areaCenterESecond, Integer operationDiameter, 
+			Set<AerialActivities> aerialActivitieses,  Set<Areas> areases, Set<OperationlimitsAerialplans> operationlimitsAerialplanses,Set<Missions> missionses) {
 		this.projects = projects;
 		this.usage = usage;
 		this.area = area;
@@ -89,11 +87,10 @@ public class AerialPlans implements java.io.Serializable {
 		this.areaCenterEMinute = areaCenterEMinute;
 		this.areaCenterESecond = areaCenterESecond;
 		this.operationDiameter = operationDiameter;
-		this.equipments = equipments;
 		this.aerialActivitieses = aerialActivitieses;
-		this.persons = persons;
 		this.areases = areases;
 		this.operationlimitsAerialplanses = operationlimitsAerialplanses;
+		this.missionses = missionses;
 	}
 
 	@Id
@@ -118,7 +115,7 @@ public class AerialPlans implements java.io.Serializable {
 		this.projects = projects;
 	}
 
-	@Column(name = "Usage", length = 50)
+	@Column(name = "Usefor", length = 50)
 	public String getUsage() {
 		return this.usage;
 	}
@@ -309,15 +306,6 @@ public class AerialPlans implements java.io.Serializable {
 		this.operationDiameter = operationDiameter;
 	}
 
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "aerialPlans")
-	public Set<Equipments> getEquipments() {
-		return this.equipments;
-	}
-
-	public void setEquipments(Set<Equipments> equipments) {
-		this.equipments = equipments;
-	}
-
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "aerialPlans")
 	public Set<AerialActivities> getAerialActivitieses() {
 		return this.aerialActivitieses;
@@ -325,15 +313,6 @@ public class AerialPlans implements java.io.Serializable {
 
 	public void setAerialActivitieses(Set<AerialActivities> aerialActivitieses) {
 		this.aerialActivitieses = aerialActivitieses;
-	}
-
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "aerialPlans")
-	public Set<Persons> getPersons() {
-		return this.persons;
-	}
-
-	public void setPersons(Set<Persons> persons) {
-		this.persons = persons;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "aerialPlans")
@@ -352,6 +331,15 @@ public class AerialPlans implements java.io.Serializable {
 
 	public void setOperationlimitsAerialplanses(Set<OperationlimitsAerialplans> operationlimitsAerialplanses) {
 		this.operationlimitsAerialplanses = operationlimitsAerialplanses;
+	}
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "aerialPlans")
+	public Set<Missions> getMissionses() {
+		return this.missionses;
+	}
+
+	public void setMissionses(Set<Missions> missionses) {
+		this.missionses = missionses;
 	}
 
 }

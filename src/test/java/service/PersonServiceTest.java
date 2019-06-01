@@ -19,7 +19,21 @@ public class PersonServiceTest extends TestCase {
 		super.tearDown();
 	}
 
-	
+	public void testQueryPersonsByLicenseType(){
+		ApplicationContext ctx 
+	      = new FileSystemXmlApplicationContext(new String[] {
+	        "D:\\64 bit_IDE &JAVA\\java-neon\\workspace\\Drone\\WebContent\\WEB-INF\\normal\\service-context.xml",
+	        "D:\\64 bit_IDE &JAVA\\java-neon\\workspace\\Drone\\WebContent\\WEB-INF\\normal\\dataSource-context.xml",
+	        "D:\\64 bit_IDE &JAVA\\java-neon\\workspace\\Drone\\WebContent\\WEB-INF\\normal\\persistence-context.xml"
+	        },true);
+		PersonService personService = (PersonService)ctx.getBean("personService");
+		JsonArray jsonArr = personService.queryPersonsByLicenseType("true");
+		System.out.println(jsonArr.size());
+		Iterator iter = jsonArr.iterator();
+		while(iter.hasNext()){
+			System.out.println(iter.next().toString());
+		}
+	}
 	
 	public void testGetLicensesById(){
 		ApplicationContext ctx 

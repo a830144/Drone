@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import dao.EventDao;
 import entity.Events;
+import entity.Participations;
 
 public class EventDaoImpl implements EventDao{
  
@@ -26,6 +27,12 @@ public class EventDaoImpl implements EventDao{
     	Session session = this.sessionFactory.getCurrentSession();
     	session.save(entity);
     }
+    @Override
+	public void persistParticipation(Participations entity) {
+    	Session session = this.sessionFactory.getCurrentSession();
+    	session.save(entity);
+		
+	}
     @Override
     public void update(Events entity) {
     	Session session = this.sessionFactory.getCurrentSession();
@@ -84,6 +91,7 @@ public class EventDaoImpl implements EventDao{
 		List<Events> results = query.list();
 		return results;
 	}
+	
 
 	
 

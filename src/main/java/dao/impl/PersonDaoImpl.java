@@ -1,6 +1,7 @@
 package dao.impl;
 
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -50,8 +51,12 @@ public class PersonDaoImpl implements PersonDao{
     @SuppressWarnings("unchecked")
     public List<Persons> findAll() {
     	Session session = this.sessionFactory.getCurrentSession();
-        List<Persons> Personss = (List<Persons>) session.createQuery("from Persons").list();
-        return Personss;
+        List<Persons> persons = (List<Persons>) session.createQuery("from Persons").list();
+        for(int i=0;i<persons.size();i++){
+        	Persons entity = persons.get(i);
+        	session.detach(entity);
+        }
+        return persons;
     }
     @Override
     public void deleteAll() {
@@ -110,6 +115,32 @@ public class PersonDaoImpl implements PersonDao{
 		
 		List<Participations> results = query.list();
 		return results.get(0);
+	}
+	@Override
+	public List<Persons> findPersonWithLicense(Set<String> type) {
+		String hql = "SELECT distinct P FROM entity.Persons P join P.personsLicenseses PL where  PL.licenses.type in (:searchField1) ";
+		Session session = this.sessionFactory.getCurrentSession();
+		Query<Persons> query = session.createQuery(hql);
+		query.setParameterList("searchField1", type);
+		List<Persons> results = query.list();
+		return results;
+	}
+	@Override
+	public void updatePersonsLicenses(PersonsLicenses entity) {
+		Session session = this.sessionFactory.getCurrentSession();
+    	session.save(entity);
+		
+	}
+	@Override
+	public void updateParticipation(Participations entity) {
+		Session session = this.sessionFactory.getCurrentSession();
+    	session.save(entity);
+		
+	}
+	@Override
+	public void updateCertificate(Certificates entity) {
+		Session session = this.sessionFactory.getCurrentSession();
+    	session.save(entity);		
 	}
 	
 }

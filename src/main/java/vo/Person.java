@@ -16,7 +16,13 @@ public class Person {
 	private String email;
 	private byte[] recentPhoto;
 	private byte[] investigation;
-	private Character status;
+	private stateMachine.States state;
+	public stateMachine.States getState() {
+		return state;
+	}
+	public void setState(stateMachine.States state) {
+		this.state = state;
+	}
 	public Integer getPersonId() {
 		return personId;
 	}
@@ -96,10 +102,5 @@ public class Person {
 	public void setInvestigation(byte[] investigation) {
 		this.investigation = investigation;
 	}
-	public Character getStatus() {
-		return status;
-	}
-	public void setStatus(Character status) {
-		this.status = status;
-	}
+	
 }

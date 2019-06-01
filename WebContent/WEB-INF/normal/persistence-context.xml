@@ -33,13 +33,14 @@
 				<value>entity.AerialActivities</value>
 				<value>entity.Areas</value>
 				<value>entity.Projects</value>
-				<value>entity.Code</value>					
+				<value>entity.Code</value>
+                <value>entity.Missions</value>						
 			</list>
 		</property>
 		<property name="hibernateProperties">
 			<props>
 				<prop key="dialect">org.hibernate.dialect.MySQL5Dialect</prop>
-				<prop key="show_sql">true</prop>
+				<prop key="hibernate.show_sql">true</prop>
 				<prop key="current_session_context_class">thread</prop>
 			</props>
 		</property>
@@ -78,6 +79,10 @@
 	</bean>
 	<bean id="projectDao"
 		class="dao.impl.ProjectDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+    <bean id="aerialPlanDao"
+		class="dao.impl.AerialPlanDaoImpl">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 </beans>

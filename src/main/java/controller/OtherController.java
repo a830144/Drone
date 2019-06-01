@@ -5,12 +5,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -198,5 +202,24 @@ public class OtherController {
 		}
 		
 		return tag;
+	}
+	
+	/**
+	 * Upload multiple file using Spring Controller
+	 */
+	@RequestMapping(value = "/other/uploadMultipleFile", method = RequestMethod.POST)
+	public @ResponseBody
+	String uploadMultipleFileHandler(MultipartHttpServletRequest request, HttpServletResponse response) {
+		/*Iterator<String> itr =  request.getFileNames();
+		System.out.println("name::"+request.getParameter("equipmentPhoto"));
+		System.out.println("file::"+request.getFileNames().next());*/
+	    String[] names = new String[1] ;
+	    names[0] = request.getParameter("equipmentPhoto");
+	    MultipartFile[] files = new MultipartFile[1];
+	    files[0] = request.getFile(request.getFileNames().next());
+		
+	    
+		return util.FileUploader.multiFiles(names, files,"equipments");
+
 	}
 }

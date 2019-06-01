@@ -126,7 +126,7 @@ function transferEventListAction(){
 		    	}
 		    	for(i=0;i<json.length;i++){
 	        		var obj = $.parseJSON(json[i]);
-	        		myarray[i][0]='';
+	        		myarray[i][0]=obj.hasOwnProperty("state")?obj.state:'';
 	        		myarray[i][1]=obj.hasOwnProperty("eventId")?obj.eventId:'';
 	        		myarray[i][2]=obj.hasOwnProperty("eventName")?obj.eventName:'';
 	        		myarray[i][3]=obj.hasOwnProperty("unit")?obj.unit:'';

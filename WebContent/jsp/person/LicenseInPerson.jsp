@@ -107,7 +107,7 @@
 			    	}
 			    	for(i=0;i<json.length;i++){
 		        		var obj = $.parseJSON(json[i]);
-		        		myarray[i][0]='';
+		        		myarray[i][0]=obj.hasOwnProperty("state")?obj.state:'';;
 		        		myarray[i][1]=obj.hasOwnProperty("licenseId")?obj.licenseId:'';
 		        		myarray[i][2]=obj.hasOwnProperty("gotDate")?obj.gotDate:'';
 		        		myarray[i][3]=obj.hasOwnProperty("type")?obj.type:'';
@@ -159,13 +159,12 @@
 		}, function(data, status) {
 			if (status == 'success') {
 				var obj = data;
-				var form = $("#license-form");
+				var form = $("#license-form-2");
 				$.each(obj, function(key, value) {
-					$("#license-form-2").find("#" + key).val(value);
+					form.find("#" + key).val(value);
 				});
-
-				$("#license-form-2").find("#personId").prop("disabled", true);
-				$("#license-form-2").find("#name").prop("disabled", true);
+				form.find("#personId").prop("disabled", true);
+				form.find("#name").prop("disabled", true);
 			}
 
 		});

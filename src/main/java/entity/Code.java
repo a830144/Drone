@@ -1,5 +1,5 @@
 package entity;
-// Generated 2019/4/21 ?? 04:33:45 by Hibernate Tools 5.2.3.Final
+// Generated 2019/5/19 ?? 06:30:15 by Hibernate Tools 5.2.3.Final
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,16 +15,6 @@ import javax.persistence.Table;
 @Table(name = "code", catalog = "drone")
 public class Code implements java.io.Serializable {
 
-	@Override
-	public String toString() {
-		return "Code [codeId=" + codeId + ", nodeId=" + nodeId + ", codeType=" + codeType + ", code=" + code
-				+ ", codeContent=" + codeContent + ", parentNodeId=" + parentNodeId + "]";
-	}
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3456293821850312533L;
 	private Integer codeId;
 	private Integer nodeId;
 	private String codeType;

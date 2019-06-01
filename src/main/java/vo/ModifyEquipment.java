@@ -4,8 +4,6 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
-import vo.BaseEquipmentAttachment.TempAttach;
-
 public class ModifyEquipment extends BaseEquipmentAttachment{
 	private String airframe;
 	private String propulsion;

@@ -3,11 +3,13 @@
 
 			<tr>
 				<td>作業高度</td>
-				<td>自<input type="text" name="amslFrom" id="amslFrom"
-					class="text ui-widget-content ui-corner-all">英呎至<input type="text" name="amslTo" id="amslTo"
+				<td>自
+					<input type="text" name="amslFrom" id="amslFrom" size="5"
+					class="text ui-widget-content ui-corner-all">英呎至
+					<input type="text" name="amslTo" id="amslTo" size="5"
 					class="text ui-widget-content ui-corner-all">英呎(AMSL, Above Mean Sea Level)</td>
 				<td>實際高度(平地/山區)</td>
-				<td><input type="text" name="agl" id="agl"
+				<td><input type="text" name="agl" id="agl" size="5"
 					class="text ui-widget-content ui-corner-all">英呎(AGL, Above Ground Level)</td>
 			</tr>
 			<tr>
@@ -17,14 +19,18 @@
 			</tr>
 			<tr>
 				<td>北緯</td>
-				<td><input type="text" name="takeOffNDegree" id="takeOffNDegree"
-					class="text ui-widget-content ui-corner-all">度<input type="text" name="takeOffNMinute" id="takeOffNMinute"
-					class="text ui-widget-content ui-corner-all">分<input type="text" name="takeOffNSecond" id="takeOffNSecond"
+				<td><input type="text" name="takeOffNDegree" id="takeOffNDegree" size="5"
+					class="text ui-widget-content ui-corner-all">度
+					<input type="text" name="takeOffNMinute" id="takeOffNMinute" size="5"
+					class="text ui-widget-content ui-corner-all">分
+					<input type="text" name="takeOffNSecond" id="takeOffNSecond" size="5"
 					class="text ui-widget-content ui-corner-all">秒</td>
 				<td>東經</td>
-				<td><input type="text" name="takeOffEDegree" id="takeOffEDegree"
-					class="text ui-widget-content ui-corner-all">度<input type="text" name="takeOffEMinute" id="takeOffEMinute"
-					class="text ui-widget-content ui-corner-all">分<input type="text" name="takeOffESecond" id="takeOffESecond"
+				<td><input type="text" name="takeOffEDegree" id="takeOffEDegree" size="5"
+					class="text ui-widget-content ui-corner-all">度
+					<input type="text" name="takeOffEMinute" id="takeOffEMinute" size="5"
+					class="text ui-widget-content ui-corner-all">分
+					<input type="text" name="takeOffESecond" id="takeOffESecond" size="5"
 					class="text ui-widget-content ui-corner-all">秒</td>
 
 			</tr>
@@ -33,19 +39,23 @@
 			</tr>
 			<tr>
 				<td>北緯</td>
-				<td><input type="text" name="areaCenterNDegree" id="areaCenterNDegree"
-					class="text ui-widget-content ui-corner-all">度<input type="text" name="areaCenterNMinute" id="areaCenterNMinute"
-					class="text ui-widget-content ui-corner-all">分<input type="text" name="areaCenterNSecond" id="areaCenterNSecond"
+				<td><input type="text" name="areaCenterNDegree" id="areaCenterNDegree" size="5"
+					class="text ui-widget-content ui-corner-all">度
+					<input type="text" name="areaCenterNMinute" id="areaCenterNMinute" size="5"
+					class="text ui-widget-content ui-corner-all">分
+					<input type="text" name="areaCenterNSecond" id="areaCenterNSecond" size="5"
 					class="text ui-widget-content ui-corner-all">秒</td>
 				<td>東經</td>
-				<td><input type="text" name="areaCenterEDegree" id="areaCenterEDegree"
-					class="text ui-widget-content ui-corner-all">度<input type="text" name="areaCenterEMinute" id="areaCenterEMinute"
-					class="text ui-widget-content ui-corner-all">分<input type="text" name="areaCenterESecond" id="areaCenterESecond"
+				<td><input type="text" name="areaCenterEDegree" id="areaCenterEDegree" size="5"
+					class="text ui-widget-content ui-corner-all">度 
+					<input type="text" name="areaCenterEMinute" id="areaCenterEMinute" size="5"
+					class="text ui-widget-content ui-corner-all">分
+					<input type="text" name="areaCenterESecond" id="areaCenterESecond" size="5"
 					class="text ui-widget-content ui-corner-all">秒</td>
 			</tr>
 			<tr>
 				<td>作業半徑</td>
-				<td>自<input type="text" name="operationDiameter" id="operationDiameter"
+				<td><input type="text" name="operationDiameter" id="operationDiameter" size="5"
 					class="text ui-widget-content ui-corner-all">海浬
 				
 			</tr>

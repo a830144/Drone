@@ -138,6 +138,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 			e.printStackTrace();
 		}
 		int rowcount = maintenanceDao.deleteAllDetailsByMaintenanceId(vo.getMaintenanceId());
+		System.out.println("delete row::"+rowcount);
 		Map<String, TempAttach> map = vo.getResultHashMap();
 		Iterator<String> iterator = map.keySet().iterator();
 		int i = 0;
@@ -438,6 +439,25 @@ public class EquipmentServiceImpl implements EquipmentService {
 
 		return jsonString;
 	}
+	
+	public Boolean updateEquipmentState(Integer id, stateMachine.Events event) {
+		System.out.println("use updateEquipmentState!!!");
+		Equipments entity_equipments = equipmentDao.findById(id);
+		return equipmentPersistStateMachineHandler
+				.handleEventWithState(
+						MessageBuilder.withPayload(event.name())
+								.setHeader(EntityConstants.entityHeader, entity_equipments).build(),
+						entity_equipments.getEquipmentFlow().getState().name());
+	}
+
+	public Boolean updateEquipmentState(Equipments entity_equipments, stateMachine.Events event) {
+		System.out.println("use updateEquipmentState!!!");
+		return equipmentPersistStateMachineHandler
+				.handleEventWithState(
+						MessageBuilder.withPayload(event.name())
+								.setHeader(EntityConstants.entityHeader, entity_equipments).build(),
+						entity_equipments.getEquipmentFlow().getState().name());
+	}
 
 	@Override
 	public void check(Integer id){
@@ -459,24 +479,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 		updateEquipmentState(id, Events.DELETE);
 	}
 	
-	public Boolean updateEquipmentState(Integer id, stateMachine.Events event) {
-		System.out.println("use updateEquipmentState!!!");
-		Equipments entity_equipments = equipmentDao.findById(id);
-		return equipmentPersistStateMachineHandler
-				.handleEventWithState(
-						MessageBuilder.withPayload(event.name())
-								.setHeader(EntityConstants.entityHeader, entity_equipments).build(),
-						entity_equipments.getEquipmentFlow().getState().name());
-	}
-
-	public Boolean updateEquipmentState(Equipments entity_equipments, stateMachine.Events event) {
-		System.out.println("use updateEquipmentState!!!");
-		return equipmentPersistStateMachineHandler
-				.handleEventWithState(
-						MessageBuilder.withPayload(event.name())
-								.setHeader(EntityConstants.entityHeader, entity_equipments).build(),
-						entity_equipments.getEquipmentFlow().getState().name());
-	}
+	
 	
 	
 	public Boolean updateMaintenanceState(Integer id, stateMachine.Events event) {

@@ -29,7 +29,6 @@
 									alert('修改保養紀錄成功');
 								  }
 							   })
-							   //$(this).dialog("close");
 				           }			 
 			 		    },
 			    		{
@@ -52,7 +51,6 @@
 								  alert('新增保養紀錄成功');
 							    }
 						    })
-						    //$(this).dialog("close");
 			              }
 			            },
 					    {

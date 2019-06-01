@@ -29,6 +29,9 @@
    	
    	<bean id="operationService" class="service.impl.OperationServiceImpl">
    		 <property name="projectDao" ref="projectDao" />
+         <property name="aerialPlanDao" ref="aerialPlanDao" />
+         <property name="equipmentDao" ref="equipmentDao" />
+         <property name="personDao" ref="personDao" />
    	</bean>
    	
    	<bean id="otherService" class="service.impl.OtherServiceImpl">

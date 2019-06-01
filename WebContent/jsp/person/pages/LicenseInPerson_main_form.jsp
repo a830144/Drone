@@ -32,3 +32,7 @@
 				<td><input type="file" name="photo" id="photo"
 					class="text ui-widget-content ui-corner-all"></td>
 			</tr>
+			<tr>
+				<td>資料狀態</td>
+				<td id="licenseStateTD"></td>
+			</tr>

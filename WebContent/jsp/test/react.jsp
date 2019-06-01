@@ -5,19 +5,6 @@
 <head>
 <meta charset="UTF-8" />
 <title>Add React in One Minute</title>
-</head>
-<body>
-
-	<h2>Add React in One Minute</h2>
-	<p>This page demonstrates using React with no build tooling.</p>
-	<p>React is loaded as a script tag.</p>
-
-	<!-- We will put our React component inside this div. -->
-	<div id="root">
-
-			</div>
-	<!-- Load React. -->
-	<!-- Note: when deploying, replace "development.js" with "production.min.js". -->
 <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
@@ -41,7 +28,21 @@
 		
 	<!-- Load our React component. -->
 <!-- //<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script> -->
-	<script src="/Drone/js/temp.js" charset="utf-8"></script>
+	
+</head>
+<body>
+
+	<h2>Add React in One Minute</h2>
+	<p>This page demonstrates using React with no build tooling.</p>
+	<p>React is loaded as a script tag.</p>
+
+	<!-- We will put our React component inside this div. -->
+	<div id="root">
+
+			</div>
+	<!-- Load React. -->
+	<!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+<script src="/Drone/js/selectEquipment.js" charset="utf-8"></script>
 
 </body>
 </html>

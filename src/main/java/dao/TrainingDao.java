@@ -5,12 +5,15 @@ import java.util.List;
 
 import org.hibernate.SessionFactory;
 
+import entity.Certificates;
 import entity.Trainings;
 
 public interface TrainingDao{
 	public void setSessionFactory(SessionFactory sessionFactory);
 
 	public void persist(Trainings entity);
+	
+	public void persistCertificate(Certificates entity);
     
     public void update(Trainings entity);
      

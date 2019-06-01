@@ -124,7 +124,7 @@ function transferTrainingListAction(){
 		    	}
 		    	for(i=0;i<json.length;i++){
 	        		var obj = $.parseJSON(json[i]);
-	        		myarray[i][0]='';
+	        		myarray[i][0]=obj.hasOwnProperty("state")?obj.state:'';
 	        		myarray[i][1]=obj.hasOwnProperty("trainingId")?obj.trainingId:'';
 	        		myarray[i][2]=obj.hasOwnProperty("trainingName")?obj.trainingName:'';
 	        		myarray[i][3]=obj.hasOwnProperty("unit")?obj.unit:'';

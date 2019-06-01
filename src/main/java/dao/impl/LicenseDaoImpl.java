@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import dao.LicenseDao;
 import entity.Licenses;
+import entity.PersonsLicenses;
 
 public class LicenseDaoImpl implements LicenseDao{
  
@@ -21,11 +22,16 @@ public class LicenseDaoImpl implements LicenseDao{
         this.sessionFactory = sessionFactory;
     }
     @Override
-    public void persist(Licenses entity) {
-    	
+    public void persist(Licenses entity) {    	
     	Session session = this.sessionFactory.getCurrentSession();
     	session.save(entity);
     }
+    
+    @Override
+	public void persistPersonLicense(PersonsLicenses entity) {
+    	Session session = this.sessionFactory.getCurrentSession();
+    	session.save(entity);	
+	}
     @Override
     public void update(Licenses entity) {
     	Session session = this.sessionFactory.getCurrentSession();
@@ -72,6 +78,7 @@ public class LicenseDaoImpl implements LicenseDao{
 		Licenses Licenses = findById(id);
 		delete(Licenses);
 	}
+	
 
 	
 

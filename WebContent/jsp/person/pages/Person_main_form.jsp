@@ -62,3 +62,8 @@
 				<td><input type="file" name="investigation" id="investigation"
 					class="text ui-widget-content ui-corner-all"></td>
 			</tr>
+			<tr>
+				<td>資料狀態</td>
+				<td><input type="text" name="state" id="state"
+					class="text ui-widget-content ui-corner-all"></td>
+			</tr>

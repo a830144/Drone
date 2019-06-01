@@ -20,7 +20,7 @@ function deleteEquipment(id) {
 					  data:{"id" : id},
 					  success : function() {
 							alert('刪除成功');
-							reloadQueryEquipment();
+							reloadQueryEquipmentAction();
 					  }
 				})
 	          $( this ).dialog( "close" );

@@ -1,7 +1,9 @@
 package dao;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -117,6 +119,33 @@ public class PersonDaoTest extends TestCase {
 		while(iterator.hasNext()){
 			Persons e = iterator.next();
 			System.out.println(e.toString());
+		}
+		
+	}
+	
+	
+	public void testFindPersonWithLicense(){
+		Configuration configuration = new Configuration().configure();
+		SessionFactory sessionFactory = configuration.buildSessionFactory();
+		PersonDao = new PersonDaoImpl();
+		Transaction tx1 =sessionFactory.getCurrentSession().beginTransaction();
+		PersonDao.setSessionFactory(sessionFactory);
+		
+		
+		Set para = new HashSet();
+		para.add(""+13);
+		para.add(""+14);
+		para.add(""+15);
+		para.add(""+16);
+		para.add(""+17);
+		List<Persons> list = PersonDao.findPersonWithLicense(para);
+		tx1.commit();
+		Iterator iterator = list.iterator();
+		System.out.println(list.size());
+		while(iterator.hasNext()){
+			System.out.println(iterator.next() instanceof entity.Persons);
+			Persons e = (Persons)iterator.next();
+			
 		}
 		
 	}

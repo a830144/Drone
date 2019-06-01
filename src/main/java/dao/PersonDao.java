@@ -2,6 +2,7 @@ package dao;
 
 
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.SessionFactory;
 
@@ -16,6 +17,12 @@ public interface PersonDao{
 	public void persist(Persons entity);
     
     public void update(Persons entity);
+    
+    public void updatePersonsLicenses(PersonsLicenses entity);
+    
+    public void updateParticipation(Participations entity);
+    
+    public void updateCertificate(Certificates entity);
      
     public Persons findById(Integer id);
     
@@ -34,4 +41,6 @@ public interface PersonDao{
     public Certificates findTrainingInfo(Integer personId,Integer trainingId);
     
     public Participations findEventInfo(Integer personId,Integer eventId);
+    
+    public List<Persons> findPersonWithLicense(Set<String> type);
 }

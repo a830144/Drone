@@ -23,7 +23,8 @@
 <link rel="stylesheet" href="/Drone/css/jquery.steps.css">
 <script src="/Drone/js/modernizr-2.6.2.min.js"></script>
 <script src="/Drone/js/jquery.cookie-1.3.1.js"></script>
-
+<script src="/Drone/js/react.js"></script>
+<script src="/Drone/js/react-dom.js"></script>
 
 
 <style type="text/css">

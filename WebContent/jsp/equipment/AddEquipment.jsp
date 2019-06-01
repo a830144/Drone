@@ -46,9 +46,26 @@
 											},
 											success : function() {
 												alert('新增成功');
-												reloadQueryEquipment();
+												reloadQueryEquipmentAction();
 											}
 										})
+								var fileData = new FormData($("#add-form"));
+								$.ajax({
+						            type: "POST",
+						            enctype: 'multipart/form-data',
+						            url: "/Drone/other/uploadMultipleFile",
+						            data: fileData,
+						            processData: false,
+						            contentType: false,
+						            cache: false,
+						            timeout: 600000,
+						            success: function (data) {
+						                console.log("SUCCESS : ", data);
+						            },
+						            error: function (e) {
+						                console.log("ERROR : ", e);
+						            }
+						        });
 
 								$(this).dialog("close");
 							}
@@ -105,10 +122,16 @@
 			</tr>
 			<tr>
 				<td>設備照片</td>
-				<td><input type="file" name="equipmentPhoto" id="equipmentPhoto"
+				<td><input type="text" name="equipmentPhoto" id="equipmentPhoto"
+					class="text ui-widget-content ui-corner-all">
+					</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>
+					<input type="file" name="file" id="file"
 					class="text ui-widget-content ui-corner-all"></td>
 			</tr>
-
 			<tr>
 				<td>翼展</td>
 				<td><input type="number" name="wingWidth" id="wingWidth"

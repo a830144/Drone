@@ -19,9 +19,9 @@
 				$("#dialog-view-form-2").find("#checkMaintenance").button().unbind("click");
 				$("#dialog-view-form-2").find("#approveMaintenance").button().unbind("click");
 				$("#dialog-view-form-2").find("#rejectMaintenance").button().unbind("click");
-				$("#dialog-view-form-2").find("#checkModification").button().unbind("click");
-				$("#dialog-view-form-2").find("#approveModification").button().unbind("click");
-				$("#dialog-view-form-2").find("#rejectModification").button().unbind("click");
+				$("#dialog-view-form-3").find("#checkModification").button().unbind("click");
+				$("#dialog-view-form-3").find("#approveModification").button().unbind("click");
+				$("#dialog-view-form-3").find("#rejectModification").button().unbind("click");
 				$( "#single-view-table-2-1").unbind( "select" );
 				var table2 = $('#single-view-table-2-1').DataTable();
 				table2.destroy();
@@ -86,7 +86,7 @@
 				var obj = data;
 				var form = $("#view-form-1");
 				$.each(obj, function(key, value) {
-					$("#view-form-1").find("#" + key).val(value);
+					form.find("#" + key).val(value);
 					$("#view-form-2-2").find("#" + key).val(value);
 					$("#view-form-3-2").find("#" + key).val(value);
 				});				

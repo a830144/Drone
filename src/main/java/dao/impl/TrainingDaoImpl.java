@@ -8,11 +8,12 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import dao.TrainingDao;
+import entity.Certificates;
 import entity.Trainings;
 
 public class TrainingDaoImpl implements TrainingDao{
  
-    public TrainingDaoImpl() {
+	public TrainingDaoImpl() {
     }      
     private SessionFactory sessionFactory;
 
@@ -26,6 +27,12 @@ public class TrainingDaoImpl implements TrainingDao{
     	Session session = this.sessionFactory.getCurrentSession();
     	session.save(entity);
     }
+    @Override
+   	public void persistCertificate(Certificates entity) {
+    	Session session = this.sessionFactory.getCurrentSession();
+    	session.save(entity);
+   		
+   	}
     @Override
     public void update(Trainings entity) {
     	Session session = this.sessionFactory.getCurrentSession();

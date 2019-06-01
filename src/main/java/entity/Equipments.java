@@ -14,9 +14,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -37,7 +34,7 @@ public class Equipments implements java.io.Serializable {
 	private String manufactoryName;
 	private String constructionType;	
 	private Float maxWeight;	
-	private byte[] equipmentPhoto;
+	private String equipmentPhoto;
 	
 	private EquipmentPerformance equipmentPerformance;
 	private EquipmentFlow equipmentFlow;
@@ -61,8 +58,8 @@ public class Equipments implements java.io.Serializable {
 	}
 
 	private Set<Maintenances> maintenanceses = new HashSet<Maintenances>(0);
-	private Set<AerialPlans> aerialPlans = new HashSet<AerialPlans>(0);
 	private Set<Modifications> modificationses = new HashSet<Modifications>(0);
+	private Set<Missions> missionses = new HashSet<Missions>(0);
 	private Registrations registrations;
 
 	public Equipments() {
@@ -78,7 +75,6 @@ public class Equipments implements java.io.Serializable {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-
 	@Column(name = "Equipment_ID", unique = true, nullable = false)
 	public Integer getEquipmentId() {
 		return this.equipmentId;
@@ -125,11 +121,11 @@ public class Equipments implements java.io.Serializable {
 	}	
 
 	@Column(name = "Equipment_Photo")
-	public byte[] getEquipmentPhoto() {
+	public String getEquipmentPhoto() {
 		return this.equipmentPhoto;
 	}
 
-	public void setEquipmentPhoto(byte[] equipmentPhoto) {
+	public void setEquipmentPhoto(String equipmentPhoto) {
 		this.equipmentPhoto = equipmentPhoto;
 	}
 
@@ -140,20 +136,6 @@ public class Equipments implements java.io.Serializable {
 
 	public void setMaintenanceses(Set<Maintenances> maintenanceses) {
 		this.maintenanceses = maintenanceses;
-	}
-	
-	@ManyToMany(fetch = FetchType.LAZY,cascade = { CascadeType.ALL })
-    @JoinTable(
-        name = "equipments_aerialplans", 
-        joinColumns = { @JoinColumn(name = "Equipment_ID") }, 
-        inverseJoinColumns = { @JoinColumn(name = "Aerial_Plan_ID") }
-    )
-	public Set<AerialPlans> getAerialPlans() {
-		return this.aerialPlans;
-	}
-
-	public void setAerialPlans(Set<AerialPlans> aerialPlans) {
-		this.aerialPlans = aerialPlans;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY,cascade=CascadeType.ALL, mappedBy = "equipments")
@@ -172,6 +154,15 @@ public class Equipments implements java.io.Serializable {
 
 	public void setRegistrations(Registrations registrations) {
 		this.registrations = registrations;
+	}
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "equipments")
+	public Set<Missions> getMissionses() {
+		return this.missionses;
+	}
+
+	public void setMissionses(Set<Missions> missionses) {
+		this.missionses = missionses;
 	}
 
 }

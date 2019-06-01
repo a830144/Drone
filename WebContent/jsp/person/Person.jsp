@@ -64,6 +64,7 @@ table.dataTable thead th {
 		$("#licenseDiv").load("./LicenseInPerson.jsp");
 		$("#trainingDiv").load("./TrainingInPerson.jsp");
 		$("#eventDiv").load("./EventInPerson.jsp");
+		$("#deleteDiv").load("./DeletePerson.jsp");
 		$(document).on('click', '#add', function() {
 			addPerson();
 		});
@@ -83,7 +84,7 @@ table.dataTable thead th {
 			eventInPerson(this.id);
 		});
 		$(document).on('click', '.delete', function() {
-			alert("delete :" + this.id);
+			deletePerson(this.id);
 		});
 
 	});
@@ -103,6 +104,7 @@ table.dataTable thead th {
 	<div id="licenseDiv"></div>
 	<div id="trainingDiv"></div>
 	<div id="eventDiv"></div>
+	<div id="deleteDiv"></div>
 
 </body>
 </html>

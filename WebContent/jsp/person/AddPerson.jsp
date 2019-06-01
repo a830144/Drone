@@ -50,7 +50,7 @@
 											},
 											success : function() {
 												alert('新增成功');
-												reloadQueryEquipment();
+												reloadQueryPersonAction();
 											}
 										})
 

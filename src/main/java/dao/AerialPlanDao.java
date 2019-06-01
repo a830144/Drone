@@ -5,24 +5,29 @@ import java.util.List;
 
 import org.hibernate.SessionFactory;
 
-import entity.Persons;
+import entity.AerialPlans;
+import entity.Missions;
 
 public interface AerialPlanDao{
 	public void setSessionFactory(SessionFactory sessionFactory);
 
-	public void persist(Persons entity);
+	public void persist(AerialPlans entity);
     
-    public void update(Persons entity);
+    public void update(AerialPlans entity);
      
-    public Persons findById(Integer id);
+    public AerialPlans findById(Integer id);
     
-    public List<Persons> findByName(String name);
+    public List<AerialPlans> findByName(String name);
      
-    public void delete(Persons entity);
+    public void delete(AerialPlans entity);
      
-    public List<Persons> findAll();
+    public List<AerialPlans> findAll();
      
     public void deleteAll();
     
     public void deleteById(Integer id);
+    
+    public void persistMission(Missions entity);
+    
+    public List<AerialPlans> findByProjectId(Integer projectId);
 }

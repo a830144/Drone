@@ -8,14 +8,7 @@ public class Equipment {
 	private String manufactoryName;
 	private String constructionType;	
 	private Float maxWeight;
-	private byte[] equipmentPhoto;
-	
-	public byte[] getEquipmentPhoto() {
-		return equipmentPhoto;
-	}
-	public void setEquipmentPhoto(byte[] equipmentPhoto) {
-		this.equipmentPhoto = equipmentPhoto;
-	}
+	private String equipmentPhoto;
 	private Float wingWidth;
 	private Float equipmentLength;
 	private String propulsionSystem;
@@ -27,7 +20,6 @@ public class Equipment {
 	private Float maxDistance;
 	private Float antiWind;
 	private String note;
-	
 	private Date sendDate;
 	private Integer sendId;
 	private Date checkDate;
@@ -174,5 +166,12 @@ public class Equipment {
 	}
 	public void setApproveId(Integer approveId) {
 		this.approveId = approveId;
+	}
+
+	public String getEquipmentPhoto() {
+		return equipmentPhoto;
+	}
+	public void setEquipmentPhoto(String equipmentPhoto) {
+		this.equipmentPhoto = equipmentPhoto;
 	}
 }

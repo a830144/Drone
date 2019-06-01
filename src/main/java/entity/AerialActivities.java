@@ -29,8 +29,8 @@ public class AerialActivities implements java.io.Serializable {
 	private int aerialActivityId;
 	private AerialPlans aerialPlans;
 	private byte[] areaFile;
-	private Date startTime;
-	private Date endTime;
+	private Date startDate;
+	private Date endDate;
 
 	public AerialActivities() {
 	}
@@ -39,13 +39,16 @@ public class AerialActivities implements java.io.Serializable {
 		this.aerialActivityId = aerialActivityId;
 	}
 
-	public AerialActivities(int aerialActivityId, AerialPlans aerialPlans, byte[] areaFile, Date startTime,
-			Date endTime) {
+	
+
+	public AerialActivities(int aerialActivityId, AerialPlans aerialPlans, byte[] areaFile, Date startDate,
+			Date endDate) {
+		super();
 		this.aerialActivityId = aerialActivityId;
 		this.aerialPlans = aerialPlans;
 		this.areaFile = areaFile;
-		this.startTime = startTime;
-		this.endTime = endTime;
+		this.startDate = startDate;
+		this.endDate = endDate;
 	}
 
 	@Id
@@ -79,24 +82,24 @@ public class AerialActivities implements java.io.Serializable {
 		this.areaFile = areaFile;
 	}
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "Start_Time", length = 19)
-	public Date getStartTime() {
-		return this.startTime;
+	@Temporal(TemporalType.DATE)
+	@Column(name = "Start_Date", length = 10)
+	public Date getStartDate() {
+		return this.startDate;
 	}
 
-	public void setStartTime(Date startTime) {
-		this.startTime = startTime;
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
 	}
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "End_Time", length = 19)
-	public Date getEndTime() {
-		return this.endTime;
+	@Temporal(TemporalType.DATE)
+	@Column(name = "End_Date", length = 10)
+	public Date getEndDate() {
+		return this.endDate;
 	}
 
-	public void setEndTime(Date endTime) {
-		this.endTime = endTime;
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
 	}
 
 }

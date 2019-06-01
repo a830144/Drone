@@ -1,7 +1,5 @@
 package dao.impl;
 
-import javax.persistence.Entity;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -9,7 +7,6 @@ import dao.ConstructionTypeDao;
 import entity.Aircrafts;
 import entity.Helicopters;
 import entity.MultiRotors;
-import entity.Projects;
 
 public class ConstructionTypeDaoImpl implements ConstructionTypeDao {
 	

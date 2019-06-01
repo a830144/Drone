@@ -29,7 +29,7 @@
 			</tr>
 			<tr>
 				<td>設備照片</td>
-				<td><input type="file" name="equipmentPhoto" id="equipmentPhoto"
+				<td><input type="text" name="equipmentPhoto" id="equipmentPhoto"
 					class="text ui-widget-content ui-corner-all"></td>
 			</tr>
 

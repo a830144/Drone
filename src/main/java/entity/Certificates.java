@@ -5,6 +5,7 @@ package entity;
 
 import java.util.Date;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -34,9 +35,22 @@ public class Certificates implements java.io.Serializable {
 	private Date endDate;
 	private Integer hours;
 	private byte[] photo;
+	
+	private CertificateFlow certificateFlow;
+	
+	
+	@Embedded
+	public CertificateFlow getCertificateFlow() {
+		return certificateFlow;
+	}
+
+	public void setCertificateFlow(CertificateFlow certificateFlow) {
+		this.certificateFlow = certificateFlow;
+	}
 
 	public Certificates() {
 	}
+
 
 	public Certificates(Persons persons, Trainings trainings) {
 		this.persons = persons;

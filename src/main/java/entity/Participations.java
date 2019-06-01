@@ -4,6 +4,7 @@ package entity;
 // Generated Mar 21, 2019 12:09:06 AM by Hibernate Tools 5.2.3.Final
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -28,9 +29,23 @@ public class Participations implements java.io.Serializable {
 	private Events events;
 	private Persons persons;
 	private byte[] photo;
+	
+	private ParticipationFlow participationFlow;
+	
+	
+	@Embedded
+	public ParticipationFlow getParticipationFlow() {
+		return participationFlow;
+	}
+
+	public void setParticipationFlow(ParticipationFlow participationFlow) {
+		this.participationFlow = participationFlow;
+	}
 
 	public Participations() {
 	}
+
+	
 
 	public Participations(Events events, Persons persons, byte[] photo) {
 		this.events = events;

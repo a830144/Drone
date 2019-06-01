@@ -199,9 +199,9 @@ public class EquipmentController {
 	public String showQueryEquipment(String name,String type) {
 		System.out.println("QueryEquipment");
 		List<Equipments> list=null;
-		if(name!=""){
+		if(name != null){
 			list = equipmentService.queryEquipments(name);
-		}if(type!=""){
+		}if(!"".equals(type)&& type!=null){
 			list = equipmentService.queryEquipmentsByType(type);
 		}
 		Iterator<Equipments> iterator = list.iterator();
@@ -226,7 +226,7 @@ public class EquipmentController {
 			jsonArray.add(jsonObj.toString());
 		}
 
-		String jsonString =jsonArray.toString();	
+		String jsonString =jsonArray.toString();
 		return jsonString;
 	}
 }

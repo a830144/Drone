@@ -24,8 +24,28 @@
 									alert('修改成功');
 									reloadQueryEquipmentAction();
 								}
-							})	
-							reloadQueryEquipmentAction();
+							})
+							var fileData = new FormData();
+							fileData.append("equipmentPhoto",$("#update-form").find("#equipmentPhoto").val());
+							//alert(document.getElementById("equipmentfile").files[0].name+";"+document.getElementById("equipmentfile").files[0].size)
+							fileData.append("file",document.getElementById("equipmentfile").files[0]);
+							$.ajax({
+						         type: "POST",
+						         enctype: 'multipart/form-data',
+						         url: "/Drone/other/uploadMultipleFile",
+						         data: fileData,
+						         processData: false,
+						         contentType: false,
+						         cache: false,
+						         timeout: 600000,
+						         success: function (data) {
+						            console.log("SUCCESS : ", data);
+						         },
+						         error: function (e) {
+						             console.log("ERROR : ", e);
+						          }
+						     });
+							//reloadQueryEquipmentAction();
 							$(this).dialog("close");
 						},
 
@@ -64,7 +84,7 @@
 	}
 </script>
 <div id="dialog-update-form" title="修改設備資料">
-	<form id="update-form">
+	<form id="update-form" enctype="multipart/form-data">
 		<table id="single-update-table-1">
 			<tr>
 				<td>設備ID</td>
@@ -94,7 +114,14 @@
 			</tr>
 			<tr>
 				<td>設備照片</td>
-				<td><input type="file" name="equipmentPhoto" id="equipmentPhoto"
+				<td><input type="text" name="equipmentPhoto" id="equipmentPhoto"
+					class="text ui-widget-content ui-corner-all">
+					</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>
+					<input type="file" name="file" id="equipmentfile"
 					class="text ui-widget-content ui-corner-all"></td>
 			</tr>
 

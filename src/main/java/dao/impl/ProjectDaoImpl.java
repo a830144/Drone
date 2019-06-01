@@ -34,8 +34,9 @@ public class ProjectDaoImpl implements ProjectDao{
     @Override
     public Projects findById(Integer id) {
     	Session session = this.sessionFactory.getCurrentSession();
-        Projects Projects = session.get(Projects.class, id);
-        return Projects; 
+        Projects projects = session.get(Projects.class, id);
+        session.detach(projects);
+        return projects; 
     }
     @Override
     public void delete(Projects entity) {
