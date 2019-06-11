@@ -5,26 +5,16 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import dao.AerialPlanDao;
 import entity.AerialPlans;
-import entity.Equipments;
 import entity.Missions;
-import entity.Persons;
-import entity.Projects;
 
 public class AerialPlanDaoImpl implements AerialPlanDao{
+	
+	@Autowired
 	private SessionFactory sessionFactory;
-
-
-
-	@Override
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-		
-	}
-
-
 
 	@Override
 	public void persist(AerialPlans entity) {
@@ -32,15 +22,11 @@ public class AerialPlanDaoImpl implements AerialPlanDao{
     	session.save(entity);
 	}
 
-
-
 	@Override
 	public void update(AerialPlans entity) {
 		// TODO Auto-generated method stub
 		
 	}
-
-
 
 	@Override
 	public AerialPlans findById(Integer id) {

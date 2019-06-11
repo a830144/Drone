@@ -47,9 +47,16 @@ public class PersonServiceImpl implements PersonService {
 
 	private Gson gson = new GsonBuilder().setDateFormat("MM/dd/yyyy").create();
 	
+	@Autowired
 	private PersonDao personDao;
+	
+	@Autowired
 	private LicenseDao licenseDao;
+	
+	@Autowired
 	private TrainingDao trainingDao;
+	
+	@Autowired
 	private EventDao eventDao;
 	
 	@Autowired
@@ -66,43 +73,9 @@ public class PersonServiceImpl implements PersonService {
 	
 	@Autowired
 	@Qualifier("personlicensePersistStateMachineHandler")
-	private PersonlicensePersistStateMachineHandler personlicensePersistStateMachineHandler;
-	
-	
+	private PersonlicensePersistStateMachineHandler personlicensePersistStateMachineHandler;	
 
 	public PersonServiceImpl() {
-	}
-
-	public PersonDao getPersonDao() {
-		return personDao;
-	}
-
-	public void setPersonDao(PersonDao personDao) {
-		this.personDao = personDao;
-	}
-
-	public LicenseDao getLicenseDao() {
-		return licenseDao;
-	}
-
-	public void setLicenseDao(LicenseDao licenseDao) {
-		this.licenseDao = licenseDao;
-	}
-
-	public TrainingDao getTrainingDao() {
-		return trainingDao;
-	}
-
-	public void setTrainingDao(TrainingDao trainingDao) {
-		this.trainingDao = trainingDao;
-	}
-
-	public EventDao getEventDao() {
-		return eventDao;
-	}
-
-	public void setEventDao(EventDao eventDao) {
-		this.eventDao = eventDao;
 	}
 
 	@Override

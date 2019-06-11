@@ -4,15 +4,12 @@ package dao;
 import java.util.List;
 import java.util.Set;
 
-import org.hibernate.SessionFactory;
-
 import entity.Certificates;
 import entity.Participations;
 import entity.Persons;
 import entity.PersonsLicenses;
 
 public interface PersonDao{
-	public void setSessionFactory(SessionFactory sessionFactory);
 
 	public void persist(Persons entity);
     

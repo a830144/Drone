@@ -13,14 +13,9 @@ import entity.PersonsLicenses;
 
 public class LicenseDaoImpl implements LicenseDao{
  
-    public LicenseDaoImpl() {
-    }      
-    private SessionFactory sessionFactory;
-
-    @Autowired
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+	@Autowired
+	private SessionFactory sessionFactory;
+	
     @Override
     public void persist(Licenses entity) {    	
     	Session session = this.sessionFactory.getCurrentSession();

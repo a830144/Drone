@@ -3,13 +3,10 @@ package dao;
 
 import java.util.List;
 
-import org.hibernate.SessionFactory;
-
 import entity.AerialPlans;
 import entity.Missions;
 
 public interface AerialPlanDao{
-	public void setSessionFactory(SessionFactory sessionFactory);
 
 	public void persist(AerialPlans entity);
     

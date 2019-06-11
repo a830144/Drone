@@ -9,21 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import dao.CodeDao;
 import entity.Code;
-import entity.Events;
 
 public class CodeDaoImpl implements CodeDao{
- 
-    public CodeDaoImpl() {
-    }      
-    private SessionFactory sessionFactory;
+	
+	@Autowired
+	private SessionFactory sessionFactory;
 
-    @Autowired
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
     @Override
-    public void persist(Code entity) {
-    	
+    public void persist(Code entity) {   	
     	Session session = this.sessionFactory.getCurrentSession();
     	session.save(entity);
     }

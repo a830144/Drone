@@ -15,16 +15,10 @@ import entity.Persons;
 import entity.PersonsLicenses;
 
 public class PersonDaoImpl implements PersonDao{
- 
-    
-	public PersonDaoImpl() {
-    }      
-    private SessionFactory sessionFactory;
-
-    @Autowired
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+   
+	@Autowired
+	private SessionFactory sessionFactory;
+	
     @Override
     public void persist(Persons entity) {
     	

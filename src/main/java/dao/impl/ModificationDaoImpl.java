@@ -11,12 +11,9 @@ import dao.ModificationDao;
 import entity.Modifications;
 
 public class ModificationDaoImpl implements ModificationDao{
-	 private SessionFactory sessionFactory;
-	 @Autowired
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		// TODO Auto-generated method stub
-		this.sessionFactory = sessionFactory;
-	}
+	
+	@Autowired
+	private SessionFactory sessionFactory;
 
 	@Override
 	public void persist(Modifications entity) {

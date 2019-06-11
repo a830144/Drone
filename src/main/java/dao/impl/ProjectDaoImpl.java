@@ -11,15 +11,10 @@ import dao.ProjectDao;
 import entity.Projects;
 
 public class ProjectDaoImpl implements ProjectDao{
- 
-    public ProjectDaoImpl() {
-    }      
-    private SessionFactory sessionFactory;
-
-    @Autowired
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+	
+	@Autowired
+	private SessionFactory sessionFactory;
+	
     @Override
     public void persist(Projects entity) {
     	

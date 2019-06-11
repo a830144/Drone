@@ -8,16 +8,12 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import dao.MaintenanceDao;
-import entity.Equipments;
 import entity.Maintenances;
 
 public class MaintenanceDaoImpl implements MaintenanceDao{
-	 private SessionFactory sessionFactory;
-	 @Autowired
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		// TODO Auto-generated method stub
-		this.sessionFactory = sessionFactory;
-	}
+	
+	@Autowired
+	private SessionFactory sessionFactory;
 
 	@Override
 	public void persist(Maintenances entity) {

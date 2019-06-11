@@ -13,14 +13,9 @@ import entity.Participations;
 
 public class EventDaoImpl implements EventDao{
  
-    public EventDaoImpl() {
-    }      
-    private SessionFactory sessionFactory;
-
-    @Autowired
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+	@Autowired
+	private SessionFactory sessionFactory;
+	
     @Override
     public void persist(Events entity) {
     	

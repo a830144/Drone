@@ -3,12 +3,9 @@ package dao;
 
 import java.util.List;
 
-import org.hibernate.SessionFactory;
-
 import entity.Projects;
 
 public interface ProjectDao{
-	public void setSessionFactory(SessionFactory sessionFactory);
 
 	public void persist(Projects entity);
     

@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -23,44 +24,17 @@ public class OtherServiceImpl implements OtherService {
 	
 	private Gson gson = new GsonBuilder().setDateFormat("MM/dd/yyyy").create();
 	
+	@Autowired
 	private LicenseDao licenseDao;
+	
+	@Autowired
 	private TrainingDao trainingDao;
+	
+	@Autowired
 	private EventDao eventDao;
+	
+	@Autowired
 	private CodeDao codeDao;
-	
-	public CodeDao getCodeDao() {
-		return codeDao;
-	}
-
-	public void setCodeDao(CodeDao codeDao) {
-		this.codeDao = codeDao;
-	}
-
-	public LicenseDao getLicenseDao() {
-		return licenseDao;
-	}
-
-	public void setLicenseDao(LicenseDao licenseDao) {
-		this.licenseDao = licenseDao;
-	}
-
-	public TrainingDao getTrainingDao() {
-		return trainingDao;
-	}
-
-	public void setTrainingDao(TrainingDao trainingDao) {
-		this.trainingDao = trainingDao;
-	}
-
-	public EventDao getEventDao() {
-		return eventDao;
-	}
-
-	public void setEventDao(EventDao eventDao) {
-		this.eventDao = eventDao;
-	}
-	
-	
 	
 	@Override
 	public void persistEvent(String jsonString) {		

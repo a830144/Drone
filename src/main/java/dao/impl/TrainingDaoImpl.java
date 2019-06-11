@@ -13,14 +13,9 @@ import entity.Trainings;
 
 public class TrainingDaoImpl implements TrainingDao{
  
-	public TrainingDaoImpl() {
-    }      
-    private SessionFactory sessionFactory;
-
-    @Autowired
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+	@Autowired
+	private SessionFactory sessionFactory;
+	
     @Override
     public void persist(Trainings entity) {
     	

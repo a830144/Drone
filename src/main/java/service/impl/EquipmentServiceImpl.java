@@ -42,8 +42,13 @@ public class EquipmentServiceImpl implements EquipmentService {
 	
 	private Gson gson = new GsonBuilder().setDateFormat("MM/dd/yyyy").create();
 
+	@Autowired
 	private EquipmentDao equipmentDao;
+	
+	@Autowired
 	private MaintenanceDao maintenanceDao;
+	
+	@Autowired
 	private ModificationDao modificationDao;
 
 	@Autowired
@@ -56,31 +61,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 	
 	@Autowired
 	@Qualifier("modificationPersistStateMachineHandler")
-	private ModificationPersistStateMachineHandler modificationPersistStateMachineHandler;
-
-	public EquipmentDao getEquipmentDao() {
-		return equipmentDao;
-	}
-
-	public void setEquipmentDao(EquipmentDao equipmentDao) {
-		this.equipmentDao = equipmentDao;
-	}
-
-	public MaintenanceDao getMaintenanceDao() {
-		return maintenanceDao;
-	}
-
-	public void setMaintenanceDao(MaintenanceDao maintenanceDao) {
-		this.maintenanceDao = maintenanceDao;
-	}
-
-	public ModificationDao getModificationDao() {
-		return modificationDao;
-	}
-
-	public void setModificationDao(ModificationDao modificationDao) {
-		this.modificationDao = modificationDao;
-	}
+	private ModificationPersistStateMachineHandler modificationPersistStateMachineHandler;	
 	
 	public EquipmentServiceImpl() {
 		
@@ -99,32 +80,32 @@ public class EquipmentServiceImpl implements EquipmentService {
 
 	@Override
 	public void updateEquipment(String jsonString) {
-			Equipment vo = gson.fromJson(jsonString, Equipment.class);
-			Equipments entity_equipments = equipmentDao.findById(vo.getEquipmentId());
-			try {
-				BeanUtils.copyProperties(entity_equipments, vo);
-				if(entity_equipments.getEquipmentPerformance()!=null){
-					BeanUtils.copyProperties( entity_equipments.getEquipmentPerformance(),vo);
-				}else{
-					EquipmentPerformance entity_equipmentPerformance = new EquipmentPerformance();
-					BeanUtils.copyProperties( entity_equipmentPerformance,vo);
-					entity_equipments.setEquipmentPerformance(entity_equipmentPerformance);
-				}
-				if(entity_equipments.getEquipmentFlow()!=null){
-					BeanUtils.copyProperties( entity_equipments.getEquipmentFlow(),vo);
-				}else{
-					EquipmentFlow entity_equipmentFlow = new EquipmentFlow();
-					BeanUtils.copyProperties( entity_equipmentFlow,vo);
-					entity_equipments.setEquipmentFlow(entity_equipmentFlow);
-				}
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
+		Equipment vo = gson.fromJson(jsonString, Equipment.class);
+		Equipments entity_equipments = equipmentDao.findById(vo.getEquipmentId());
+		try {
+			BeanUtils.copyProperties(entity_equipments, vo);
+			if (entity_equipments.getEquipmentPerformance() != null) {
+				BeanUtils.copyProperties(entity_equipments.getEquipmentPerformance(), vo);
+			} else {
+				EquipmentPerformance entity_equipmentPerformance = new EquipmentPerformance();
+				BeanUtils.copyProperties(entity_equipmentPerformance, vo);
+				entity_equipments.setEquipmentPerformance(entity_equipmentPerformance);
 			}
-			updateEquipmentState(entity_equipments, Events.UPDATE);
-			equipmentDao.update(entity_equipments);
-			
+			if (entity_equipments.getEquipmentFlow() != null) {
+				BeanUtils.copyProperties(entity_equipments.getEquipmentFlow(), vo);
+			} else {
+				EquipmentFlow entity_equipmentFlow = new EquipmentFlow();
+				BeanUtils.copyProperties(entity_equipmentFlow, vo);
+				entity_equipments.setEquipmentFlow(entity_equipmentFlow);
+			}
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		updateEquipmentState(entity_equipments, Events.UPDATE);
+		equipmentDao.update(entity_equipments);
+
 	}
 	@Override
 	public void updateMaintainEquipment(String jsonString) {
@@ -186,7 +167,6 @@ public class EquipmentServiceImpl implements EquipmentService {
 	@Override
 	public String queryEquipmentById(Integer id) {
 		Equipments entity_equipments = equipmentDao.findById(id);
-
 		Equipment vo = new Equipment();
 		try {
 			BeanUtils.copyProperties(vo, entity_equipments);
@@ -231,30 +211,34 @@ public class EquipmentServiceImpl implements EquipmentService {
 	public void maintainEquipment(String jsonString) {		
 		MaintainEquipment vo = gson.fromJson(jsonString, MaintainEquipment.class);
 		Equipments entity_equipments = equipmentDao.findById(vo.getEquipmentId());
-		Maintenances entity_maintenances = new Maintenances();
-		try {
-			BeanUtils.copyProperties(entity_maintenances, vo);
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+		if (entity_equipments != null) {
+			Maintenances entity_maintenances = new Maintenances();
+			try {
+				BeanUtils.copyProperties(entity_maintenances, vo);
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}
+			entity_equipments.getMaintenanceses().add(entity_maintenances);
+			entity_maintenances.setEquipments(entity_equipments);
+			Map<String, TempAttach> map = vo.getResultHashMap();
+			Iterator<String> iterator = map.keySet().iterator();
+			int i = 0;
+			while (iterator.hasNext()) {
+				String key = iterator.next().toString();
+				TempAttach value = map.get(key);
+				MaintenanceDetail entity_maintenanceDetail = new DetailBuilder().setSeq(++i).buildMaintainDetail(value);
+				entity_maintenances.getMaintenanceDetails().add(entity_maintenanceDetail);
+				entity_maintenanceDetail.setMaintenances(entity_maintenances);
+			}
+			MaintenanceFlow entity_maintenanceFlow = gson.fromJson(jsonString, MaintenanceFlow.class);
+			entity_maintenanceFlow.setMaintainState(States.PROCESSING);
+			entity_maintenances.setMaintenanceFlow(entity_maintenanceFlow);
+			equipmentDao.persist(entity_equipments);
+		} else {
+			System.out.println("no this ID");
 		}
-		entity_equipments.getMaintenanceses().add(entity_maintenances);
-		entity_maintenances.setEquipments(entity_equipments);
-		Map<String, TempAttach> map = vo.getResultHashMap();
-		Iterator<String> iterator = map.keySet().iterator();
-		int i = 0;
-		while (iterator.hasNext()) {
-			String key = iterator.next().toString();
-			TempAttach value = map.get(key);
-			MaintenanceDetail entity_maintenanceDetail = new DetailBuilder().setSeq(++i).buildMaintainDetail(value);			
-			entity_maintenances.getMaintenanceDetails().add(entity_maintenanceDetail);
-			entity_maintenanceDetail.setMaintenances(entity_maintenances);
-		}
-		MaintenanceFlow entity_maintenanceFlow = gson.fromJson(jsonString, MaintenanceFlow.class);
-		entity_maintenanceFlow.setMaintainState(States.PROCESSING);
-		entity_maintenances.setMaintenanceFlow(entity_maintenanceFlow);
-		equipmentDao.persist(entity_equipments);
 	}
 	
 	@Override

@@ -3,12 +3,9 @@ package dao;
 
 import java.util.List;
 
-import org.hibernate.SessionFactory;
-
 import entity.Code;
 
 public interface CodeDao{
-	public void setSessionFactory(SessionFactory sessionFactory);
 
 	public void persist(Code entity);
     

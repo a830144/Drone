@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -28,50 +29,20 @@ import vo.AerialPlan.EquipmentPerson;
 public class OperationServiceImpl implements OperationService {
 	private Gson gson = new GsonBuilder().setDateFormat("MM/dd/yyyy").create();
 
+	@Autowired
 	private AerialPlanDao aerialPlanDao;
+	
+	@Autowired
 	private EquipmentDao equipmentDao;
+	
+	@Autowired
 	private PersonDao personDao;
-	private ProjectDao projectDao;
-		
-	public AerialPlanDao getAerialPlanDao() {
-		return aerialPlanDao;
-	}
-
-
-
-	public void setAerialPlanDao(AerialPlanDao aerialPlanDao) {
-		this.aerialPlanDao = aerialPlanDao;
-	}
-
-
-
-	public EquipmentDao getEquipmentDao() {
-		return equipmentDao;
-	}
-
-
-
-	public void setEquipmentDao(EquipmentDao equipmentDao) {
-		this.equipmentDao = equipmentDao;
-	}
-
-
-
-	public PersonDao getPersonDao() {
-		return personDao;
-	}
-
-
-
-	public void setPersonDao(PersonDao personDao) {
-		this.personDao = personDao;
-	}
-
-
+	
+	@Autowired
+	private ProjectDao projectDao;		
 
 	@Override
 	public void persistAerialPlan(String jsonString) {
-		Gson gson = new GsonBuilder().setDateFormat("MM/dd/yyyy").create();
 		AerialPlan vo = gson.fromJson(jsonString, AerialPlan.class);
 		Projects entity_projects = projectDao.findById(vo.getProjectId());
 		AerialPlans entity_aerialPlans = new AerialPlans();

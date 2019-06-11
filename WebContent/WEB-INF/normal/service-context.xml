@@ -11,34 +11,19 @@
     http://www.springframework.org/schema/tx/spring-tx.xsd
     http://www.springframework.org/schema/aop
     http://www.springframework.org/schema/aop/spring-aop.xsd">
-
+	<context:annotation-config/>
 	<context:component-scan base-package="stateMachine">
 	</context:component-scan>
-    <bean id="equipmentService" class="service.impl.EquipmentServiceImpl">
-   		 <property name="equipmentDao" ref="equipmentDao" />
-   		 <property name="maintenanceDao" ref="maintenanceDao" />
-   		 <property name="modificationDao" ref="modificationDao" />
+    <bean id="equipmentService" class="service.impl.EquipmentServiceImpl">   		 
    	</bean>
    	
    	<bean id="personService" class="service.impl.PersonServiceImpl">
-   		 <property name="personDao" ref="personDao" />
-   		 <property name="licenseDao" ref="licenseDao" />
-   		 <property name="trainingDao" ref="trainingDao" />
-   		 <property name="eventDao" ref="eventDao" />
    	</bean>
    	
    	<bean id="operationService" class="service.impl.OperationServiceImpl">
-   		 <property name="projectDao" ref="projectDao" />
-         <property name="aerialPlanDao" ref="aerialPlanDao" />
-         <property name="equipmentDao" ref="equipmentDao" />
-         <property name="personDao" ref="personDao" />
    	</bean>
    	
    	<bean id="otherService" class="service.impl.OtherServiceImpl">
-   		 <property name="licenseDao" ref="licenseDao" />
-   		 <property name="trainingDao" ref="trainingDao" />
-   		 <property name="eventDao" ref="eventDao" />
-   		 <property name="codeDao" ref="codeDao" />
    	</bean>
 
 	<bean id="txManager"

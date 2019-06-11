@@ -22,8 +22,7 @@ import vo.Equipment;
 public class EquipmentController {
 	@Autowired
 	private EquipmentService equipmentService;
-	
-	
+		
 	@RequestMapping(value="/equipment/AddEquipmentProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
 	public void addEquipment(String data) {

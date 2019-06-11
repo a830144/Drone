@@ -1,4 +1,6 @@
 package service;
+import static org.mockito.Mockito.mock;
+
 import java.util.Date;
 import java.util.Iterator;
 
@@ -9,7 +11,10 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
-
+import static org.mockito.Mockito.*;
+import dao.impl.EquipmentDaoImpl;
+import dao.impl.MaintenanceDaoImpl;
+import dao.impl.ModificationDaoImpl;
 import entity.Equipments;
 import junit.framework.TestCase;
 import service.impl.EquipmentServiceImpl;
@@ -38,6 +43,8 @@ public class EquipmentServiceTest extends TestCase {
 		equipmentService.persist(jsonString);;
 	}
 	
+
+	
 	public void testUpdate(){
 		equipmentService = new EquipmentServiceImpl();
 		String jsonString = equipmentService.queryEquipmentById(new Integer(34));
@@ -50,9 +57,35 @@ public class EquipmentServiceTest extends TestCase {
 		jsonString = gson.toJson(e);
 		equipmentService.updateEquipment(jsonString);
 	}
+
 	
 	public void testMaintain(){
-		ApplicationContext ctx 
+		EquipmentDaoImpl equipmentDao = mock(EquipmentDaoImpl.class);
+		MaintenanceDaoImpl maintenanceDao = mock(MaintenanceDaoImpl.class);
+		ModificationDaoImpl modificationDao = mock(ModificationDaoImpl.class);
+		EquipmentServiceImpl equipmentService = new EquipmentServiceImpl();
+		equipmentService.setEquipmentDao(equipmentDao);
+		equipmentService.setMaintenanceDao(maintenanceDao);
+		equipmentService.setModificationDao(modificationDao);
+MaintainEquipment vo = new MaintainEquipment();
+		
+		vo.setEquipmentId(42);
+		
+		vo.setMaintenanceDate(new Date());
+		vo.setMaintenancePerson("施又心");
+		
+		vo.setAirframe("R");
+		vo.setAirframe_comment("very big problem");
+		vo.setBattery("R");
+		vo.setBattery_comment("very big problem");
+		vo.setController("R");
+		vo.setController_comment("very big problem");
+		
+		Gson gson = new GsonBuilder().setDateFormat("MM/dd/yyyy").create();				
+		String jsonString = gson.toJson(vo);
+		equipmentService.maintainEquipment(jsonString);
+		verify(equipmentDao,times(1)).findById(42);
+		/*ApplicationContext ctx 
 	      = new FileSystemXmlApplicationContext(new String[] {
 	        "E:\\02_CASE\\64 bit_IDE &JAVA\\java-neon\\workspace\\Drone\\WebContent\\WEB-INF\\normal\\service-context.xml",
 	        "E:\\02_CASE\\64 bit_IDE &JAVA\\java-neon\\workspace\\Drone\\WebContent\\WEB-INF\\normal\\dataSource-context.xml",
@@ -75,7 +108,7 @@ public class EquipmentServiceTest extends TestCase {
 		
 		Gson gson = new GsonBuilder().setDateFormat("MM/dd/yyyy").create();				
 		String jsonString = gson.toJson(vo);
-		equipmentService.maintainEquipment(jsonString);
+		equipmentService.maintainEquipment(jsonString);*/
 	}
 	
 	public void testModify(){

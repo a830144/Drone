@@ -4,11 +4,9 @@ import java.util.List;
 
 import com.google.gson.JsonArray;
 
-import dao.EquipmentDao;
 import entity.Equipments;
 
 public interface EquipmentService {
-	public void setEquipmentDao(EquipmentDao equipmentDao);
 	
 	public void persist(String jsonString);
 

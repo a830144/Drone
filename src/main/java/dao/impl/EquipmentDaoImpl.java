@@ -14,14 +14,9 @@ import entity.Equipments;
 @Repository
 public class EquipmentDaoImpl implements EquipmentDao{
  
-    public EquipmentDaoImpl() {
-    }      
-    private SessionFactory sessionFactory;
-
-    @Autowired
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+	@Autowired
+	private SessionFactory sessionFactory;
+	
     @Override
     public void persist(Equipments entity) {
     	
