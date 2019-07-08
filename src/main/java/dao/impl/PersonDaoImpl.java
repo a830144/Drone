@@ -7,13 +7,16 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import dao.PersonDao;
 import entity.Certificates;
+import entity.Equipments;
 import entity.Participations;
 import entity.Persons;
 import entity.PersonsLicenses;
 
+@Repository
 public class PersonDaoImpl implements PersonDao{
    
 	@Autowired
@@ -135,6 +138,15 @@ public class PersonDaoImpl implements PersonDao{
 	public void updateCertificate(Certificates entity) {
 		Session session = this.sessionFactory.getCurrentSession();
     	session.save(entity);		
+	}
+	@Override
+	public List<Persons> findByMission(Integer aerialPlanId, Integer equipmentId) {
+		String hql = "select distinct M.equipments FROM Missions M where M.aerialPlans.aerialPlanId="+aerialPlanId+" and M.equipments.equipmentId="+equipmentId;
+		Session session = this.sessionFactory.getCurrentSession();
+		Query<Persons> query = session.createQuery(hql);
+		List<Persons> results = query.list();
+		
+		return results;
 	}
 	
 }

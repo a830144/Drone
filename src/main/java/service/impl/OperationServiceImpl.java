@@ -7,15 +7,18 @@ import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 
+import dao.AerialActivityDao;
 import dao.AerialPlanDao;
 import dao.EquipmentDao;
 import dao.PersonDao;
 import dao.ProjectDao;
+import entity.AerialActivities;
 import entity.AerialPlans;
 import entity.Equipments;
 import entity.Missions;
@@ -26,11 +29,15 @@ import service.OperationService;
 import vo.AerialPlan;
 import vo.AerialPlan.EquipmentPerson;
 
+@Service
 public class OperationServiceImpl implements OperationService {
 	private Gson gson = new GsonBuilder().setDateFormat("MM/dd/yyyy").create();
 
 	@Autowired
 	private AerialPlanDao aerialPlanDao;
+	
+	@Autowired
+	private AerialActivityDao aerialActivityDao;
 	
 	@Autowired
 	private EquipmentDao equipmentDao;
@@ -83,7 +90,13 @@ public class OperationServiceImpl implements OperationService {
 
 	@Override
 	public List<AerialPlans> queryAerialPlans(String projectId) {
-		return null;
+		List<AerialPlans> aerialPlansList;
+		if ("".equals(projectId) || projectId == null) {
+			aerialPlansList = aerialPlanDao.findAll();
+		} else {
+			aerialPlansList = aerialPlanDao.findByProjectId(Integer.parseInt(projectId));
+		}
+		return aerialPlansList;
 	}
 	
 	@Override
@@ -124,18 +137,6 @@ public class OperationServiceImpl implements OperationService {
 		jsonString = gson.toJson(vo);
 		return jsonString;
 	}
-
-	public ProjectDao getProjectDao() {
-		return projectDao;
-	}
-
-
-
-	public void setProjectDao(ProjectDao projectDao) {
-		this.projectDao = projectDao;
-	}
-
-
 
 	public OperationServiceImpl() {
 		
@@ -189,7 +190,6 @@ public class OperationServiceImpl implements OperationService {
 
 	@Override
 	public List<Projects> queryProjects(String ename) {
-
 		List<Projects> projectList;
 		if ("".equals(ename) || ename == null) {
 			projectList = projectDao.findAll();
@@ -205,6 +205,33 @@ public class OperationServiceImpl implements OperationService {
 	public void updateAerialPlan(String jsonString) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public JsonArray queryAerialActivityByProjectId(Integer projectId) {
+		List<AerialActivities> list_aerialActivities = aerialActivityDao.findByProjectId(projectId);
+		Iterator<AerialActivities> iterator_aerialActivities = list_aerialActivities.iterator();
+		JsonArray jsonArray = new JsonArray();
+
+		while (iterator_aerialActivities.hasNext()) {
+			AerialActivities vo = new AerialActivities();
+			AerialActivities entity_aerialActivities = (AerialActivities) iterator_aerialActivities.next();
+			try {
+				BeanUtils.copyProperties(vo, entity_aerialActivities);
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}			
+			jsonArray.add(gson.toJson(vo));
+		}
+		return jsonArray;
+	}
+
+	@Override
+	public String queryAerialActivityByAerialActivityId(Integer aerialActivityId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

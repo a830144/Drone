@@ -2,275 +2,210 @@
 	pageEncoding="utf-8"%>
 
 <script>
-function prepareAerialPlanDomAction(){
-	$("#dialog-aerialPlan-form").dialog({
-		autoOpen : false,
-		height : 700,
-		width : 1350,
-		modal : true,
-		buttons : [
-			{
-			  text: "修改航拍計畫資料",
-	          icon: "ui-icon-pencil",
-	          id: "updateAerialPlanBtn",
-	          click: function() {
-	        	     $("#aerialPlan-form").find("#projectId").prop("disabled", false);
-				     $("#aerialPlan-form").find("#name").prop("disabled", false);						
-				     var myJson = JSON.stringify($("#aerialPlan-form").serializeObject());
-				     var jsonObject = JSON.parse(myJson);
-				     var arr = new Array();
-				     jsonObject.equipmentsArray = arr;
-				     var table = $('#single-aerialPlan-table-3-1').DataTable();
-				     table.rows().eq(0).each( function ( index ) {
-				    	    var row = table.row( index );
-				    	    var cell = table.cell( index ,0);
-							var equipmentId = cell.data();
-							cell = table.cell( index ,6);
-							var personId_1 = cell.data();
-							cell = table.cell( index ,7);
-							var personId_2 = cell.data();
-							jsonObject['equipmentsArray'].push({"equipmentId":equipmentId,"personId_1":personId_1,"personId_2":personId_2});
-				     } );
-				     myJson = JSON.stringify(jsonObject);
-				     $.ajax({
-						 url : "/Drone/operation/UpdateAerialPlanProcess",
-						 type : "POST",
-						 data : {
-							"data" : myJson
-						 },
-						 success : function() {
-							alert('修改航拍計畫紀錄成功');
-						  }
-					 })
-	          }			 
- 		    },
-    		{
-      		  text: "新增航拍計畫資料",
-              icon: "ui-icon-plus",
-              id: "addAerialPlanBtn",
-              click: function() {
-    	         $("#aerialPlan-form").find("#projectId").prop("disabled", false);
-			     $("#aerialPlan-form").find("#name").prop("disabled", false);						
-			     var myJson = JSON.stringify($("#aerialPlan-form").serializeObject());
-			     var jsonObject = JSON.parse(myJson);
-			     var arr = new Array();
-			     jsonObject.equipmentsArray = arr;
-			     var table = $('#single-aerialPlan-table-3-1').DataTable();
-			     table.rows().eq(0).each( function ( index ) {
-			    	    var row = table.row( index );
-			    	    var cell = table.cell( index ,0);
-						var equipmentId = cell.data();
-						cell = table.cell( index ,6);
-						var personId_1 = cell.data();
-						cell = table.cell( index ,7);
-						var personId_2 = cell.data();
-						jsonObject['equipmentsArray'].push({"equipmentId":equipmentId,"personId_1":personId_1,"personId_2":personId_2});
-			     } );
-			     myJson = JSON.stringify(jsonObject);
-			     $.ajax({
-					 url : "/Drone/operation/AddAerialPlanProcess",
-					 type : "POST",
-					 data : {
-						"data" : myJson
-					 },
-					 success : function() {
-						alert('新增航拍計畫紀錄成功');
-					  }
-				 })
-              }
-            },
-		    {
-	          text: "關閉",
-	          icon: "ui-icon-closethick",
-	          click: function() {
-	             $( this ).dialog( "close" );
-	          }
-	 
-	 		}],
-		close : function() {
-			var table1 = $('#single-aerialPlan-table-1').DataTable();
-			table1.destroy();
-
-			var table3 = $('#single-aerialPlan-table-3-1').DataTable();
-			table3.destroy();
-		}
-	});	
-	$("#dialog-aerialPlan-tabs").tabs({
-		  activate: function( event, ui ) {
-			  $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
-		  }
-	});
-	$("#wizard").steps({
-        headerTag: "h2",
-        bodyTag: "section",
-        transitionEffect: "slideLeft"
-    });
-	$("#aerialPlan-form").find("#startDate").datepicker();
-	$("#aerialPlan-form").find("#endDate").datepicker();
-}
-
-function viewDomFinishState(id){
-	window.projectId = id;
-}
-
-function transferAerialPlanListAction(){
-	var singleaerialPlantable1 = $('#single-aerialPlan-table-1').DataTable( {
-		columnDefs: [
-			{	
-			    className: 'dt-center',
-			    targets: '_all'
-			}],
-		"select":true,
-        "order": [[ 1, 'asc' ]],
-		"scrollY": "100px",
-        "scrollCollapse": true,		
-		"ajax": {
-			"type": "POST",
-		    "url": "/Drone/operation/QueryAerailPlansProcess",  
-		    "data": {  
-		        "projectId": window.projectId 
-		    }, 
-		    "dataSrc": function ( json ) {
-		    	var myarray=new Array(json.length);
-		    	for (i=0; i <json.length; i++){
-		    	    myarray[i]=new Array(4);
-		    	}
-		    	for (i=0; i <json.length; i++){
-	        		var obj = $.parseJSON(json[i]);
-	        		myarray[i][0]='';		        		
-	        		myarray[i][1]=obj.hasOwnProperty("aerialPlanId")?obj.aerialPlanId:'';
-	        		myarray[i][2]=obj.hasOwnProperty("usage")?obj.usage:'';
-	        		myarray[i][3]=obj.startDate+'~'+obj.endDate;	        		
-	        	}
-		    	registerAerialPlanListEvent();
-		        return myarray;
-		      }
-		    ,
-	        dataType: 'json'
-		}
-	});
-	$(' .dataTables_scrollBody').height(100);
-}
-
-function registerAerialPlanListEvent(){
-	var singleaerialplantable1 = $('#single-aerialPlan-table-1').DataTable();
-	singleaerialplantable1.on( 'select', function ( e, dt, type, indexes ) {
-		var cell = singleaerialplantable1.cell( indexes ,1);
-		var aerialPlanId = cell.data();
-		alert('您選取了航拍計畫編號 :'+ aerialPlanId);
-		$.ajax({
-		  url:"/Drone/operation/ViewAerialPlanByAerialPlanId",
-		  type:"POST",
-		  data:{"id" : aerialPlanId},
-		  dataType: "json",
-		  success: function(data){				  
-			var obj = data;
-			var form = $("#aerialPlan-form");
-			form.find("#aerialPlanIdTD").empty().append("<input type='text' name='aerialPlanId' id='aerialPlanId' class='text ui-widget-content ui-corner-all ui-state-disabled'>");
-			form.find("#aerialPlanStateTD").empty().append("<input type='text' name='aerialPlanState' id='aerialPlanState' class='text ui-widget-content ui-corner-all ui-state-disabled'>");
-			$.each(obj, function(key, value) {
-				form.find("#" + key).val(value);	
-				form.find("input[name='" + key +"']").val(value);
+var aerialActivity_obj = {
+		addOrUpdate : function (action){
+			  $("#aerialActivity-form").find("#projectId").prop("disabled", false);
+			  $("#aerialActivity-form").find("#name").prop("disabled", false);
+			  $("#aerialActivity-form").find("#aerialPlanId").prop("disabled",false);
+			  $("#aerialActivity-form").find("#usage").prop("disabled",false);							
+			  var myJson = JSON.stringify($("#aerialActivity-form").serializeObject());
+			  $.ajax({
+				 url : action==='update'?"/Drone/operation/UpdateAerialActivityProcess":"/Drone/operation/AddAerialActivityProcess",
+				 type : "POST", 
+				 success : function() {
+					alert(action==='update'?'修改航拍活動紀錄成功':'新增航拍活動紀錄成功');
+				  }
+			   })
+		},
+		prepareAerialActivityDomAction : function (){		
+			$("#dialog-aerialActivity-form").dialog({
+				autoOpen : false,
+				height : 500,
+				width : 1050,
+				modal : true,
+				buttons : [
+					{
+					  text: "修改航拍活動資料",
+			          icon: "ui-icon-pencil",
+			          id: "updateAerialActivityBtn",
+			          click: function (){ aerialActivity_obj.addOrUpdate('update') }
+		 		    },
+		    		{
+		      		  text: "新增航拍活動資料",
+		              icon: "ui-icon-plus",
+		              id: "addAerialActivityBtn",
+		              click: function (){ aerialActivity_obj.addOrUpdate('add') }	
+		            },
+				    {
+			          text: "關閉",
+			          icon: "ui-icon-closethick",
+			          click: function() {
+			             $( this ).dialog( "close" );
+			          }
+			 
+			 		}],
+				close : function() {
+					var table1 = $('#single-aerialActivity-table-1').DataTable();
+					table1.destroy();
+				}
+			});	
+			$("#dialog-aerialActivity-tabs").tabs({
+				  activate: function( event, ui ) {
+					  $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
+				  }
 			});
-			$("#addAerialPlanBtn").prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
-			$("#updateAerialPlanBtn").prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
-		}})
-	});
-	singleaerialplantable1.on( 'deselect', function ( e, dt, type, indexes ) {
-		if ( type === 'row' ) {				
-			initializeAerialPlanMainFormState();
-	    }
-	});
-}
+			 
+			
+		},
+		viewDomFinishState : function (id){
+			window.projectId = id;
+		},
+		transferAerialActivityListAction : function (){
+			var singleaerialActivitytable1 = $('#single-aerialActivity-table-1').DataTable( {
+				columnDefs: [
+				{	
+					className: 'dt-center',
+					targets: '_all'
+				}],
+				"select":true,
+		        "order": [[ 1, 'asc' ]],
+				"scrollY": "100px",
+		        "scrollCollapse": true,		
+				"ajax": {
+					"type": "POST",
+				    "url": "/Drone/operation/QueryAerailActivitiesProcess",  
+				    "data": {  
+				    	"projectId": window.projectId 
+				    }, 
+				    "dataSrc": function ( json ) {
+				    	var myarray=new Array(json.length);
+				    	for (i=0; i <json.length; i++){
+				    	    myarray[i]=new Array(4);
+				    	}
+				    	for (i=0; i <json.length; i++){
+			        		var obj = $.parseJSON(json[i]);
+			        		myarray[i][0]='';		        		
+			        		myarray[i][1]=obj.hasOwnProperty("aerialPlanId")?obj.aerialPlanId:'';
+			        		myarray[i][2]=obj.hasOwnProperty("aerialActivityId")?obj.aerialActivityId:'';
+			        		myarray[i][3]=obj.startDate+'~'+obj.endDate;
+			        	}
+				    	//aerialActivity_obj.registerAerialActivityListEvent();
+				        return myarray;
+				      }
+				    ,
+			        dataType: 'json'
+				}
 
-
-function transferAerialPlanMainFormAction(){
-	 $.post("/Drone/operation/ViewProjectProcess", {
-		id : window.projectId
-	}, function(data, status) {
-		if (status == 'success') {
-			var obj = data;
-			var form = $("#dialog-aerialPlan-form-2");
-			$.each(obj, function(key, value) {
-				form.find("#" + key).val(value);
 			});
-			form.find("#projectId").prop("disabled", true);
-			form.find("#name").prop("disabled", true);
-		}
+		},
+		registerAerialActivityListEvent : function (){
 
-	}); 
-	
-}
+		},
+		transferAerialActivityMainFormAction : function (){
+			$.post("/Drone/operation/ViewProjectProcess", {
+				id : window.projectId
+			}, function(data, status) {
+				if (status == 'success') {
+					var obj = data;
+					var form = $("#dialog-aerialActivity-form-2");
+					$.each(obj, function(key, value) {
+						form.find("#" + key).val(value);
+					});
+					form.find("#projectId").prop("disabled", true);
+					form.find("#name").prop("disabled", true);
+				}
 
-function transferEquipmentInPlanListAction(){
-	var singleaerialPlantable31 = $('#single-aerialPlan-table-3-1').DataTable( {
-		"select":true,
-        "order": [[ 1, 'asc' ]],
-		"scrollY": "100px",
-        "scrollCollapse": true
+			});
+			
+			var container = document.getElementById('root-activity');
+			ReactDOM.render(React.createElement(Steps_activity, {}), container);
+			container = document.getElementById('firstStep-activity');
+			ReactDOM.render(React.createElement(FirstStep_activity, {}), container);
+			container = document.getElementById('secondStep-activity');
+			ReactDOM.render(React.createElement(SecondStep_activity, {}), container);
+			
+			$.ajax({
+				url : "/Drone/operation/QueryAerailPlansIDsByProjectId",
+				type : "POST",
+				data: {  
+			    	"projectId": window.projectId 
+			    }, 
+				success : function(tag) {  
+					$("#dialog-aerialActivity-form-2").find("#aerialPlanId").append(tag);
+					aerialActivity_obj.registerAerialPlanIdEvent();
+		        }
+			});	
+			
+			
+		},
+		registerAerialPlanIdEvent : function (){
+			$("#dialog-aerialActivity-form-2").find("#aerialPlanId").change(function() {		
+				var id = $("#dialog-aerialActivity-form-2").find("#aerialPlanId").val();
+				//aerialPlanId change,ajax bring other data in form2
+				$.ajax({
+					url : "/Drone/operation/ViewAerialPlanByAerialPlanId",
+					type : "POST",	
+					data : {
+						"id" : id
+					},
+					success : function(json) {   
+						$("#dialog-aerialActivity-form-2").find("#usage").val(json.usage);
+						$("#dialog-aerialActivity-form-2").find("#startDate").val(json.startDate);
+						$("#dialog-aerialActivity-form-2").find("#endDate").val(json.endDate);
+		            }
+				});
+				//aerialPlanId change,ajax refresh the table in form3
+				window.aerialPlanId = id;
+			});
+		},
+		
+		initializeAerialActivityListState : function (){
+			
+		},
 
-	});
-	
-}
-
-function initializeAerialPlanListState(){
-	
-}
-
-function initializeAerialPlanMainFormState(){
-	
+		initializeAerialActivityMainFormState : function (){
+			
+		}	
 }
 
 $(function() {
-	prepareAerialPlanDomAction();
+	aerialActivity_obj.prepareAerialActivityDomAction();
 });
 
 
-function aerialPlan(id){
-	viewDomFinishState(id);	
-	transferAerialPlanListAction();
-	transferAerialPlanMainFormAction();
-	transferEquipmentInPlanListAction();
-	initializeAerialPlanListState();	
-	$("#dialog-aerialPlan-form").dialog("open");
+function aerialActivity(id){	
+	aerialActivity_obj.viewDomFinishState(id);	
+	aerialActivity_obj.transferAerialActivityListAction();
+	aerialActivity_obj.transferAerialActivityMainFormAction();
+	aerialActivity_obj.initializeAerialActivityListState();		
+	$("#dialog-aerialActivity-form").dialog("open");
 
 }
 </script>
-<div id="dialog-aerialPlan-form" title="檢視設備資料">
-	<div id="dialog-aerialPlan-form-1">
-		<table id="single-aerialPlan-table-1">
-			<%@ include file="./pages/AerialPlan_list.jsp"%>
+<div id="dialog-aerialActivity-form" title="檢視航拍活動資料" style="display: none;">
+	<div id="dialog-aerialActivity-form-1">
+		<table id="single-aerialActivity-table-1">
+			<%@ include file="./pages/AerialActivity_list.jsp"%>
 		</table>
 	</div>
-
-
-	<div id="dialog-aerialPlan-tabs">
+	<div id="dialog-aerialActivity-tabs">
 		<ul>
-			<li><a href="#dialog-aerialPlan-form-2">主要資訊</a></li>
-			<li><a href="#dialog-aerialPlan-form-3">使用設備資訊</a></li>
-			<li><a href="#dialog-aerialPlan-form-4">其他資訊</a></li>
+			<li><a href="#dialog-aerialActivity-form-2">主要資訊</a></li>
+			<li><a href="#dialog-aerialActivity-form-3">使用設備資訊</a></li>
 		</ul>
-		<form id="aerialPlan-form">
-			<div id="dialog-aerialPlan-form-2">
-				<table id="single-aerialPlan-table-2-1" class="display"
-					style="width: 100%">
-					<%@ include file="./pages/AerialPlan_main_form.jsp"%>
+		<form id="aerialActivity-form">
+			<div id="dialog-aerialActivity-form-2">
+				<table id="single-aerialActivity-table-2-1" class="display" style="width: 100%">
+					<%@ include file="./pages/AerialActivity_main_form.jsp"%>
 				</table>
 			</div>
-			<div id="dialog-aerialPlan-form-3">
-				<table id="single-aerialPlan-table-3-1" class="display"
+			<div id="dialog-aerialActivity-form-3">
+				<table id="single-aerialActivity-table-3-1" class="display"
 					style="width: 100%">
-					<%@ include file="./pages/EquipmentInPlan_list.jsp"%>
 				</table>
-				<div id="root"></div>
-			</div>
-			<div id="dialog-aerialPlan-form-4">
-				<table id="single-aerialPlan-table-4-1" class="display"
-					style="width: 100%">
-					<%@ include file="./pages/AerialPlan_other_form.jsp"%>
-				</table>
+				<div id="root-activity"></div>
 			</div>
 		</form>
-	</div>
+	</div>	
 </div>
-<script src="/Drone/js/selectEquipment.js" charset="utf-8"></script>
+<script src="/Drone/js/aerialActivity.steps.js" charset="utf-8"></script>

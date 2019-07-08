@@ -63,37 +63,8 @@ function prepareTrainingDomAction(){
 		}
 	});
 	
-	$.ajax({
-		url : "/Drone/other/QueryTrainingIDs",
-		type : "POST",
-		success : function(tag) {  
-			$("#training-form-2").find("#trainingId").append(tag);
-			registerTrainingIdEvent();
-        }
-	});	
-	
 	$("#training-form-2").find("#startDate").datepicker();
 	$("#training-form-2").find("#endDate").datepicker();
-}
-function registerTrainingIdEvent(){
-	$("#training-form-2").find("#trainingId").change(function() {
-		
-		var id = $("#training-form-2").find('#trainingId').val();
-		$.ajax({
-			url : "/Drone/other/ViewTrainingProcess",
-			type : "POST",	
-			data : {
-				"id" : id
-			},
-			success : function(json) {   
-				//alert(json.trainingName);
-				$("#training-form-2").find("#trainingName").val(json.trainingName);
-				$("#training-form-2").find("#unit").val(json.unit);
-				$("#training-form-2").find("#trainingType").val(json.trainingType);
-            }
-		});
-	});
-
 }
 
 function trainingDomFinishState(id){
@@ -188,6 +159,35 @@ function transferTrainingMainFormAction(){
 		}
 
 	});
+	
+	$.ajax({
+		url : "/Drone/other/QueryTrainingIDs",
+		type : "POST",
+		success : function(tag) {  
+			$("#training-form-2").find("#trainingId").append(tag);
+			registerTrainingIdEvent();
+        }
+	});	
+}
+
+function registerTrainingIdEvent(){
+	$("#training-form-2").find("#trainingId").change(function() {		
+		var id = $("#training-form-2").find('#trainingId').val();
+		$.ajax({
+			url : "/Drone/other/ViewTrainingProcess",
+			type : "POST",	
+			data : {
+				"id" : id
+			},
+			success : function(json) {   
+				//alert(json.trainingName);
+				$("#training-form-2").find("#trainingName").val(json.trainingName);
+				$("#training-form-2").find("#unit").val(json.unit);
+				$("#training-form-2").find("#trainingType").val(json.trainingType);
+            }
+		});
+	});
+
 }
 function initializeTrainingListState(){
 	

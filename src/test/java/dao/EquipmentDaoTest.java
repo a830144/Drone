@@ -31,7 +31,6 @@ public class EquipmentDaoTest extends TestCase {
 		SessionFactory sessionFactory = configuration.buildSessionFactory();
 		equipmentDao = new EquipmentDaoImpl();
 		Transaction tx1 =sessionFactory.getCurrentSession().beginTransaction();
-		equipmentDao.setSessionFactory(sessionFactory);
 		
 		equipmentDao.deleteById(new Integer(10));
 		
@@ -43,7 +42,6 @@ public class EquipmentDaoTest extends TestCase {
 		SessionFactory sessionFactory = configuration.buildSessionFactory();
 		equipmentDao = new EquipmentDaoImpl();
 		Transaction tx1 =sessionFactory.getCurrentSession().beginTransaction();
-		equipmentDao.setSessionFactory(sessionFactory);
 		
 		Equipments e = equipmentDao.findById(new Integer(42));
 		/*Equipments e = new Equipments();
@@ -65,7 +63,6 @@ public class EquipmentDaoTest extends TestCase {
 		SessionFactory sessionFactory = configuration.buildSessionFactory();
 		equipmentDao = new EquipmentDaoImpl();
 		Transaction tx1 =sessionFactory.getCurrentSession().beginTransaction();
-		equipmentDao.setSessionFactory(sessionFactory);
 		
 		
 		Equipments entity = new  Equipments();
@@ -98,7 +95,6 @@ public class EquipmentDaoTest extends TestCase {
 		SessionFactory sessionFactory = configuration.buildSessionFactory();
 		equipmentDao = new EquipmentDaoImpl();
 		Transaction tx1 =sessionFactory.getCurrentSession().beginTransaction();
-		equipmentDao.setSessionFactory(sessionFactory);
 		
 		
 		Equipments entity =equipmentDao.findById(new Integer(34));
@@ -122,7 +118,6 @@ public class EquipmentDaoTest extends TestCase {
 		SessionFactory sessionFactory = configuration.buildSessionFactory();
 		equipmentDao = new EquipmentDaoImpl();
 		Transaction tx1 =sessionFactory.getCurrentSession().beginTransaction();
-		equipmentDao.setSessionFactory(sessionFactory);
 		
 		
 		
@@ -141,7 +136,6 @@ public class EquipmentDaoTest extends TestCase {
 		SessionFactory sessionFactory = configuration.buildSessionFactory();
 		equipmentDao = new EquipmentDaoImpl();
 		Transaction tx1 =sessionFactory.getCurrentSession().beginTransaction();
-		equipmentDao.setSessionFactory(sessionFactory);
 		Equipments equipments = equipmentDao.findById(new Integer(46));
 		tx1.commit();
 		System.out.println(equipments.toString());
@@ -155,7 +149,6 @@ public class EquipmentDaoTest extends TestCase {
 		SessionFactory sessionFactory = configuration.buildSessionFactory();
 		equipmentDao = new EquipmentDaoImpl();
 		Transaction tx1 =sessionFactory.getCurrentSession().beginTransaction();
-		equipmentDao.setSessionFactory(sessionFactory);
 		
 		List<Equipments> list = equipmentDao.findByName("Inspire 2");
 		tx1.commit();
@@ -172,12 +165,27 @@ public class EquipmentDaoTest extends TestCase {
 		SessionFactory sessionFactory = configuration.buildSessionFactory();
 		equipmentDao = new EquipmentDaoImpl();
 		Transaction tx1 =sessionFactory.getCurrentSession().beginTransaction();
-		equipmentDao.setSessionFactory(sessionFactory);
 		
 		Equipments e = new Equipments();
 		e.setEquipmentId(38);
 		equipmentDao.delete(e);
 		tx1.commit();
+		
+	}
+	
+	public void testFindByMission(){
+		Configuration configuration = new Configuration().configure();
+		SessionFactory sessionFactory = configuration.buildSessionFactory();
+		equipmentDao = new EquipmentDaoImpl();
+		Transaction tx1 =sessionFactory.getCurrentSession().beginTransaction();
+		
+		List<Equipments> list = equipmentDao.findByMission(1);
+		tx1.commit();
+		Iterator<Equipments> iterator = list.iterator();
+		while(iterator.hasNext()){
+			Equipments e = iterator.next();
+			System.out.println(e.toString());
+		}
 		
 	}
 }

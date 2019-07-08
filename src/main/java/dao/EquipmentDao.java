@@ -24,5 +24,7 @@ public interface EquipmentDao{
     public List<Equipments> findByName(String name);
     
     public List<Equipments> findByType(String type);
+    
+    public List<Equipments> findByMission(Integer aerialPlanId);
      
 }

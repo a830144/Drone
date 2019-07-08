@@ -4,10 +4,10 @@
 			<tr>
 				<td>專案ID</td>
 				<td><input type="text" name="projectId" id="projectId"
-					class="text ui-widget-content ui-corner-all"></td>
+					class="text ui-widget-content ui-corner-all ui-state-disabled"></td>
 				<td>專案名稱</td>
 				<td><input type="text" name="name" id="name"
-					class="text ui-widget-content ui-corner-all"></td>
+					class="text ui-widget-content ui-corner-all ui-state-disabled"></td>
 			</tr>
 			<tr>
 				<td>用途</td>

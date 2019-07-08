@@ -47,14 +47,11 @@ public class Persons implements java.io.Serializable {
 	private byte[] investigation;
 	
 	private PersonFlow personFlow;
-	
-	
+		
 	@Embedded
 	public PersonFlow getPersonFlow() {
 		return personFlow;
 	}
-
-
 
 	public void setPersonFlow(PersonFlow personFlow) {
 		this.personFlow = personFlow;
@@ -64,6 +61,7 @@ public class Persons implements java.io.Serializable {
 	private Set<Certificates> certificateses = new HashSet<Certificates>(0);
 	private Set<PersonsLicenses> personsLicenseses = new HashSet<PersonsLicenses>(0);
 	private Set<Missions> missionses = new HashSet<Missions>(0);
+	private Set<RealMissions> realmissionses = new HashSet<RealMissions>(0);
 	public Persons() {
 	}
 
@@ -252,5 +250,14 @@ public class Persons implements java.io.Serializable {
 
 	public void setMissionses(Set<Missions> missionses) {
 		this.missionses = missionses;
+	}
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "equipments")
+	public Set<RealMissions> getRealmissionses() {
+		return realmissionses;
+	}
+
+	public void setRealmissionses(Set<RealMissions> realmissionses) {
+		this.realmissionses = realmissionses;
 	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import entity.Certificates;
+import entity.Equipments;
 import entity.Participations;
 import entity.Persons;
 import entity.PersonsLicenses;
@@ -22,13 +23,9 @@ public interface PersonDao{
     public void updateCertificate(Certificates entity);
      
     public Persons findById(Integer id);
-    
-    public List<Persons> findByName(String name);
      
     public void delete(Persons entity);
-     
-    public List<Persons> findAll();
-     
+          
     public void deleteAll();
     
     public void deleteById(Integer id);
@@ -40,4 +37,10 @@ public interface PersonDao{
     public Participations findEventInfo(Integer personId,Integer eventId);
     
     public List<Persons> findPersonWithLicense(Set<String> type);
+    
+    public List<Persons> findAll();
+    
+    public List<Persons> findByName(String name);
+    
+    public List<Persons> findByMission(Integer aerialPlanId,Integer equipmentId);
 }

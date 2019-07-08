@@ -195,13 +195,17 @@ public class EquipmentController {
 	
 	@RequestMapping(value="/equipment/QueryEquipmentProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public String showQueryEquipment(String name,String type) {
-		System.out.println("QueryEquipment");
+	public String showQueryEquipment(String name,String type,String aerialPlanId) {
+		System.out.println("showQueryEquipment :: "+ aerialPlanId);
 		List<Equipments> list=null;
 		if(name != null){
 			list = equipmentService.queryEquipments(name);
-		}if(!"".equals(type)&& type!=null){
+		}
+		if(!"".equals(type)&& type!=null){
 			list = equipmentService.queryEquipmentsByType(type);
+		}
+		if(!"".equals(aerialPlanId)&& aerialPlanId!=null){
+			list = equipmentService.queryEquipmentsByAerialPlanId(Integer.parseInt(aerialPlanId));
 		}
 		Iterator<Equipments> iterator = list.iterator();
 		JsonArray jsonArray = new JsonArray();

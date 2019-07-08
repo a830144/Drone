@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -37,6 +38,17 @@ public class Projects implements java.io.Serializable {
 	private byte[] otherData;
 	private String status;
 	private Set<AerialPlans> aerialPlanses = new HashSet<AerialPlans>(0);
+	
+	private ProjectFlow projectFlow;
+	
+	@Embedded
+	public ProjectFlow getProjectFlow() {
+		return projectFlow;
+	}
+
+	public void setProjectFlow(ProjectFlow projectFlow) {
+		this.projectFlow = projectFlow;
+	}
 
 	public Projects() {
 	}

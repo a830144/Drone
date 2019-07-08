@@ -15,6 +15,10 @@ import javax.persistence.Table;
 @Table(name = "code", catalog = "drone")
 public class Code implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3456293821850312533L;
 	private Integer codeId;
 	private Integer nodeId;
 	private String codeType;

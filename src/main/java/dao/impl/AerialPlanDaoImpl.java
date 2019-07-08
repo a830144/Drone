@@ -6,11 +6,13 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import dao.AerialPlanDao;
 import entity.AerialPlans;
 import entity.Missions;
 
+@Repository
 public class AerialPlanDaoImpl implements AerialPlanDao{
 	
 	@Autowired
@@ -24,8 +26,8 @@ public class AerialPlanDaoImpl implements AerialPlanDao{
 
 	@Override
 	public void update(AerialPlans entity) {
-		// TODO Auto-generated method stub
-		
+		Session session = this.sessionFactory.getCurrentSession();
+    	session.update(entity);	
 	}
 
 	@Override
@@ -46,8 +48,8 @@ public class AerialPlanDaoImpl implements AerialPlanDao{
 	
 	@Override
 	public List<AerialPlans> findByProjectId(Integer projectId) {
-		String hql = "FROM AerialPlans as E where E.projects.projectId = :searchField";
 		Session session = this.sessionFactory.getCurrentSession();
+		String hql = "FROM AerialPlans as E where E.projects.projectId = :searchField";
 		Query<AerialPlans> query = session.createQuery(hql); 
 		query.setParameter("searchField",projectId);
 		

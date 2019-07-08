@@ -31,4 +31,8 @@ public interface OperationService {
 	
 	public String queryAerialPlanByAerialPlanId(Integer aerialPlanId);
 	
+	public JsonArray queryAerialActivityByProjectId(Integer projectId);
+	
+	public String queryAerialActivityByAerialActivityId(Integer aerialActivityId);
+	
 }

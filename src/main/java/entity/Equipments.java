@@ -60,6 +60,7 @@ public class Equipments implements java.io.Serializable {
 	private Set<Maintenances> maintenanceses = new HashSet<Maintenances>(0);
 	private Set<Modifications> modificationses = new HashSet<Modifications>(0);
 	private Set<Missions> missionses = new HashSet<Missions>(0);
+	private Set<RealMissions> realmissionses = new HashSet<RealMissions>(0);
 	private Registrations registrations;
 
 	public Equipments() {
@@ -163,6 +164,15 @@ public class Equipments implements java.io.Serializable {
 
 	public void setMissionses(Set<Missions> missionses) {
 		this.missionses = missionses;
+	}
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "equipments")
+	public Set<RealMissions> getRealmissionses() {
+		return realmissionses;
+	}
+
+	public void setRealmissionses(Set<RealMissions> realmissionses) {
+		this.realmissionses = realmissionses;
 	}
 
 }

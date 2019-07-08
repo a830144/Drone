@@ -26,6 +26,8 @@ public interface EquipmentService {
 	
 	public List<Equipments> queryEquipmentsByType(String type);
 	
+	public List<Equipments> queryEquipmentsByAerialPlanId(Integer aerialPlanId);
+	
 	public JsonArray queryMaintenancesById(Integer id);
 	
 	public JsonArray queryModificationsById(Integer id);

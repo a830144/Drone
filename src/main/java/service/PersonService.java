@@ -1,6 +1,10 @@
 package service;
 
+import java.util.List;
+
 import com.google.gson.JsonArray;
+
+import entity.Persons;
 
 public interface PersonService {
 	public void persist(String jsonString);
@@ -68,5 +72,7 @@ public interface PersonService {
 	public void rejectParticipation(Integer personId,Integer eventId);
 
 	public void deleteParticipation(Integer personId,Integer eventId);	
+	
+	public List<Persons> queryPersonsByMissionInfo(Integer aerialPlanId,Integer equipments);
 	
 }

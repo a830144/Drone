@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -43,6 +44,7 @@ import vo.LicenseInPerson;
 import vo.Person;
 import vo.TrainingInPerson;
 
+@Service
 public class PersonServiceImpl implements PersonService {
 
 	private Gson gson = new GsonBuilder().setDateFormat("MM/dd/yyyy").create();
@@ -645,6 +647,12 @@ public class PersonServiceImpl implements PersonService {
 	@Override
 	public void deleteParticipation(Integer personId,Integer eventId) {
 		updateParticipationState(personId,eventId, stateMachine.Events.DELETE);				
+	}
+
+	@Override
+	public List<Persons> queryPersonsByMissionInfo(Integer aerialPlanId, Integer equipments) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

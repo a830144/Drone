@@ -32,6 +32,7 @@
   <mapping class="entity.AerialActivities"/>
   <mapping class="entity.Areas"/>
   <mapping class="entity.Projects"/>
-
+  <mapping class="entity.Missions"/>
+  <mapping class="entity.RealMissions"/>
  </session-factory>
 </hibernate-configuration>

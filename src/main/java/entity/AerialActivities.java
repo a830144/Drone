@@ -4,13 +4,18 @@ package entity;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -31,6 +36,17 @@ public class AerialActivities implements java.io.Serializable {
 	private byte[] areaFile;
 	private Date startDate;
 	private Date endDate;
+	
+	private AerialActivityFlow aerialActivityFlow;
+
+	@Embedded
+	public AerialActivityFlow getAerialActivityFlow() {
+		return aerialActivityFlow;
+	}
+
+	public void setAerialActivityFlow(AerialActivityFlow aerialActivityFlow) {
+		this.aerialActivityFlow = aerialActivityFlow;
+	}
 
 	public AerialActivities() {
 	}
@@ -38,6 +54,8 @@ public class AerialActivities implements java.io.Serializable {
 	public AerialActivities(int aerialActivityId) {
 		this.aerialActivityId = aerialActivityId;
 	}
+	
+	private Set<RealMissions> realmissionses = new HashSet<RealMissions>(0);
 
 	
 
@@ -102,4 +120,12 @@ public class AerialActivities implements java.io.Serializable {
 		this.endDate = endDate;
 	}
 
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "equipments")
+	public Set<RealMissions> getRealmissionses() {
+		return realmissionses;
+	}
+
+	public void setRealmissionses(Set<RealMissions> realmissionses) {
+		this.realmissionses = realmissionses;
+	}
 }

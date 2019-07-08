@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.JsonArray;
 
+import entity.AerialPlans;
 import entity.Projects;
 import service.OperationService;
 
@@ -53,7 +54,7 @@ public class OperationController {
 	@ResponseBody
 	public String viewProject(String id) {
 		String jsonString = operationService.queryProjectById(new Integer(Integer.parseInt(id)));	
-		System.out.println(jsonString);
+		//System.out.println(jsonString);
 		return jsonString;
 	}
 	
@@ -81,8 +82,23 @@ public class OperationController {
 	public String showQueryAerialPlans(String projectId) {
 		JsonArray jsonArray = operationService.queryAerialPlanByProjectId(new Integer(Integer.parseInt(projectId)));
 		String jsonString =jsonArray.toString();
-		System.out.println("jsonString::"+jsonString);
+		//System.out.println("jsonString::"+jsonString);
 		return jsonString;
+	}
+	
+	@RequestMapping(value="/operation/QueryAerailPlansIDsByProjectId" , method = {RequestMethod.POST})
+	@ResponseBody
+	public String showQueryAerialPlansIDsByProjectId(String projectId) {
+		System.out.println("showQueryAerialPlansIDsByProjectId projectId::"+projectId);
+		List<AerialPlans> list = operationService.queryAerialPlans(projectId);
+		Iterator<AerialPlans> iterator = list.iterator();
+		String tag ="";
+		while (iterator.hasNext()) {
+			AerialPlans entity_aerialPlans = (AerialPlans) iterator.next();
+			tag += "<option value='"+entity_aerialPlans.getAerialPlanId()+"'>"+entity_aerialPlans.getAerialPlanId()+"</option>";
+		}	
+		System.out.println("tag::"+tag);
+		return tag;
 	}
 	
 	// view aerialPlan by aerialPlanId
@@ -91,6 +107,15 @@ public class OperationController {
 	public String viewAerialPlanByAerialPlanId(String id) {
 		String jsonString = operationService.queryAerialPlanByAerialPlanId(new Integer(Integer.parseInt(id)));
 		System.out.println("viewAerialPlanByAerialPlanId::" + jsonString);
+		return jsonString;
+	}
+	
+	@RequestMapping(value="/operation/QueryAerailActivitiesProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public String showQueryAerailActivities(String projectId) {
+		JsonArray jsonArray = operationService.queryAerialActivityByProjectId(new Integer(Integer.parseInt(projectId)));
+		String jsonString =jsonArray.toString();
+		System.out.println("showQueryAerailActivities jsonString::"+jsonString);
 		return jsonString;
 	}
 }

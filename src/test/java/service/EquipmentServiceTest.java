@@ -3,6 +3,7 @@ import static org.mockito.Mockito.mock;
 
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.context.ApplicationContext;
@@ -64,15 +65,13 @@ public class EquipmentServiceTest extends TestCase {
 		MaintenanceDaoImpl maintenanceDao = mock(MaintenanceDaoImpl.class);
 		ModificationDaoImpl modificationDao = mock(ModificationDaoImpl.class);
 		EquipmentServiceImpl equipmentService = new EquipmentServiceImpl();
-		equipmentService.setEquipmentDao(equipmentDao);
-		equipmentService.setMaintenanceDao(maintenanceDao);
-		equipmentService.setModificationDao(modificationDao);
+
 MaintainEquipment vo = new MaintainEquipment();
 		
 		vo.setEquipmentId(42);
 		
 		vo.setMaintenanceDate(new Date());
-		vo.setMaintenancePerson("施又心");
+		vo.setMaintenancePerson("æ–½å�ˆå¿ƒ");
 		
 		vo.setAirframe("R");
 		vo.setAirframe_comment("very big problem");
@@ -97,7 +96,7 @@ MaintainEquipment vo = new MaintainEquipment();
 		vo.setEquipmentId(42);
 		
 		vo.setMaintenanceDate(new Date());
-		vo.setMaintenancePerson("施又心");
+		vo.setMaintenancePerson("æ–½å�ˆå¿ƒ");
 		
 		vo.setAirframe("R");
 		vo.setAirframe_comment("very big problem");
@@ -124,7 +123,7 @@ MaintainEquipment vo = new MaintainEquipment();
 		vo.setEquipmentId(42);
 		
 		vo.setModificationDate(new Date());
-		vo.setModificationPerson("施又心");
+		vo.setModificationPerson("æ–½å�ˆå¿ƒ");
 		
 		vo.setAirframe("M");
 		vo.setAirframe_comment("SMALL problem");
@@ -191,4 +190,20 @@ MaintainEquipment vo = new MaintainEquipment();
 		}
 
 	}
+	
+	public void testQueryEquipmentsByAerialPlanId(){
+		ApplicationContext ctx 
+	      = new FileSystemXmlApplicationContext(new String[] {
+	        "D:\\64 bit_IDE &JAVA\\java-neon\\workspace\\Drone\\WebContent\\WEB-INF\\normal\\service-context.xml",
+	        "D:\\64 bit_IDE &JAVA\\java-neon\\workspace\\Drone\\WebContent\\WEB-INF\\normal\\dataSource-context.xml",
+	        "D:\\64 bit_IDE &JAVA\\java-neon\\workspace\\Drone\\WebContent\\WEB-INF\\normal\\persistence-context.xml"
+	        },true);
+		EquipmentService equipmentService =(EquipmentService)  ctx.getBean("equipmentService");
+		equipmentService = new EquipmentServiceImpl();
+		List list = equipmentService.queryEquipmentsByAerialPlanId(new Integer(1));
+		
+
+	}
+	
+	
 }

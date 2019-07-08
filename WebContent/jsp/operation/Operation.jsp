@@ -60,6 +60,10 @@
 				$("#viewDiv").load("./ViewProject.jsp");
 				$("#updateDiv").load("./UpdateProject.jsp");
 				$("#aerialPlanDiv").load("./AerialPlan.jsp");
+				$("#aerialActivityDiv").load("./AerialActivity.jsp");
+				$(document).on('click', '#add', function() {
+					addProject();
+				});
 				$(document).on('click', '.view', function() {
 					viewProject(this.id);
 				});
@@ -72,13 +76,15 @@
 				$(document).on('click', '.aerialPlan', function() {
 					aerialPlan(this.id);
 				});
-				
+				$(document).on('click', '.aerialActivity', function() {
+					aerialActivity(this.id);
+				});
 
 			});
 </script>
 </head>
 <body>
-	<button id="add" name="add">新增專案</button>
+	<button id="add" name="add" class="ui-button ui-corner-all ui-widget">新增專案</button>
 	<button id="query" name="query" class="ui-button ui-corner-all ui-widget">查詢專案</button>
 	<form id="query_form">
 		<input type="text" name="query_name" id="query_name"
@@ -89,7 +95,7 @@
 	<div id="viewDiv"></div>
 	<div id="updateDiv"></div>
 	<div id="aerialPlanDiv"></div>
-	
+	<div id="aerialActivityDiv"></div>
 
 </body>
 </html>

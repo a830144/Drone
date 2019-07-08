@@ -88,10 +88,12 @@ function prepareAerialPlanDomAction(){
 	 
 	 		}],
 		close : function() {
+			$( "#single-aerialPlan-table-1").unbind( "select" );
 			var table1 = $('#single-aerialPlan-table-1').DataTable();
 			table1.destroy();
 
 			var table3 = $('#single-aerialPlan-table-3-1').DataTable();
+			$( "#single-aerialPlan-table-3-1").unbind( "select" );
 			table3.destroy();
 		}
 	});	
@@ -236,7 +238,7 @@ function aerialPlan(id){
 
 }
 </script>
-<div id="dialog-aerialPlan-form" title="檢視設備資料">
+<div id="dialog-aerialPlan-form" title="檢視航拍計畫資料">
 	<div id="dialog-aerialPlan-form-1">
 		<table id="single-aerialPlan-table-1">
 			<%@ include file="./pages/AerialPlan_list.jsp"%>
@@ -273,4 +275,4 @@ function aerialPlan(id){
 		</form>
 	</div>
 </div>
-<script src="/Drone/js/selectEquipment.js" charset="utf-8"></script>
+<script src="/Drone/js/aerialPlan.steps.js" charset="utf-8"></script>

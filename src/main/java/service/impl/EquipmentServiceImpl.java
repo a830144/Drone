@@ -9,6 +9,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -38,6 +39,7 @@ import vo.Equipment;
 import vo.MaintainEquipment;
 import vo.ModifyEquipment;
 
+@Service
 public class EquipmentServiceImpl implements EquipmentService {
 	
 	private Gson gson = new GsonBuilder().setDateFormat("MM/dd/yyyy").create();
@@ -534,6 +536,17 @@ public class EquipmentServiceImpl implements EquipmentService {
 	@Override
 	public void deleteModification(Integer id) {
 		updateModificationState(id, Events.DELETE);
+	}
+
+	@Override
+	public List<Equipments> queryEquipmentsByAerialPlanId(Integer aerialPlanId) {
+		List<Equipments> equipmentsList;
+		if (aerialPlanId == null) {
+			equipmentsList = equipmentDao.findAll();
+		} else {
+			equipmentsList = equipmentDao.findByMission(aerialPlanId);
+		}
+		return equipmentsList;
 	}
 	
 	

@@ -1,5 +1,8 @@
 package dao.impl;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -10,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import dao.EquipmentDao;
 import entity.Equipments;
+import entity.Missions;
 
 @Repository
 public class EquipmentDaoImpl implements EquipmentDao{
@@ -18,8 +22,7 @@ public class EquipmentDaoImpl implements EquipmentDao{
 	private SessionFactory sessionFactory;
 	
     @Override
-    public void persist(Equipments entity) {
-    	
+    public void persist(Equipments entity) {    	
     	Session session = this.sessionFactory.getCurrentSession();
     	session.save(entity);
     }
@@ -81,6 +84,15 @@ public class EquipmentDaoImpl implements EquipmentDao{
 	public void deleteById(Integer id) {
 		Equipments equipments = findById(id);
 		delete(equipments);
+	}
+	@Override
+	public List<Equipments> findByMission(Integer aerialPlanId) {
+		String hql = "select distinct M.equipments FROM Missions M where M.aerialPlans.aerialPlanId="+aerialPlanId;
+		Session session = this.sessionFactory.getCurrentSession();
+		Query<Equipments> query = session.createQuery(hql);
+		List<Equipments> results = query.list();
+		
+		return results;
 	}
 
 	

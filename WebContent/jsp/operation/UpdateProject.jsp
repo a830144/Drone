@@ -4,8 +4,8 @@
 $(function() {
 	$("#dialog-update-form").dialog({
 		autoOpen : false,
-		height : 500,
-		width : 550,
+		height : 550,
+		width : 800,
 		modal : true,
 		buttons : {
 			"修改專案" : function() {
@@ -74,8 +74,6 @@ $(function() {
 				<td>委託公司</td>
 				<td><input type="text" name="company" id="company"
 					class="text ui-widget-content ui-corner-all"></td>
-			</tr>
-			<tr>
 				<td>專案經理</td>
 				<td><input type="text" name="projectManager" id="projectManager"
 					class="text ui-widget-content ui-corner-all"></td>
@@ -84,15 +82,13 @@ $(function() {
 				<td>連絡電話</td>
 				<td><input type="text" name="telephone" id="telephone"
 					class="text ui-widget-content ui-corner-all"></td>
-			</tr>
-			<tr>
 				<td>專案結案日期</td>
 				<td><input type="text" name="endDate" id="endDate"
 					class="text ui-widget-content ui-corner-all"></td>
 			</tr>
 			<tr>
 				<td>專案結案成果</td>
-				<td><textarea name="result" id="result" rows="20" cols="40" 
+				<td><textarea name="result" id="result" rows="10" cols="30" 
 					class="text ui-widget-content ui-corner-all"></textarea></td>
 			</tr>
 			<tr>
