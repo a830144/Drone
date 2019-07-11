@@ -33,8 +33,8 @@ public class AerialPlans implements java.io.Serializable {
 	private Projects projects;
 	private String usage;
 	private String area;
-	private Date startDate;
-	private Date endDate;
+	private Date aerialPlanStartDate;
+	private Date aerialPlanEndDate;
 	private Integer amslFrom;
 	private Integer amslTo;
 	private Integer agl;
@@ -71,17 +71,21 @@ public class AerialPlans implements java.io.Serializable {
 	public AerialPlans() {
 	}
 
-	public AerialPlans(Projects projects, String usage, String area, Date startDate, Date endDate, Integer amslFrom,
-			Integer amslTo, Integer agl, String takeOffLocationName, Integer takeOffNDegree, Integer takeOffNMinute,
-			Float takeOffNSecond, Integer takeOffEDegree, Integer takeOffEMinute, Float takeOffESecond,
-			Integer areaCenterNDegree, Integer areaCenterNMinute, Float areaCenterNSecond, Integer areaCenterEDegree,
-			Integer areaCenterEMinute, Float areaCenterESecond, Integer operationDiameter, 
-			Set<AerialActivities> aerialActivitieses,  Set<Areas> areases, Set<OperationlimitsAerialplans> operationlimitsAerialplanses,Set<Missions> missionses) {
+	public AerialPlans(Integer aerialPlanId, Projects projects, String usage, String area, Date aerialPlanStartDate,
+			Date aerialPlanEndDate, Integer amslFrom, Integer amslTo, Integer agl, String takeOffLocationName,
+			Integer takeOffNDegree, Integer takeOffNMinute, Float takeOffNSecond, Integer takeOffEDegree,
+			Integer takeOffEMinute, Float takeOffESecond, Integer areaCenterNDegree, Integer areaCenterNMinute,
+			Float areaCenterNSecond, Integer areaCenterEDegree, Integer areaCenterEMinute, Float areaCenterESecond,
+			Integer operationDiameter, Set<AerialActivities> aerialActivitieses, Set<Areas> areases,
+			Set<OperationlimitsAerialplans> operationlimitsAerialplanses, Set<Missions> missionses,
+			AerialPlanFlow aerialPlanFlow) {
+		super();
+		this.aerialPlanId = aerialPlanId;
 		this.projects = projects;
 		this.usage = usage;
 		this.area = area;
-		this.startDate = startDate;
-		this.endDate = endDate;
+		this.aerialPlanStartDate = aerialPlanStartDate;
+		this.aerialPlanEndDate = aerialPlanEndDate;
 		this.amslFrom = amslFrom;
 		this.amslTo = amslTo;
 		this.agl = agl;
@@ -103,6 +107,7 @@ public class AerialPlans implements java.io.Serializable {
 		this.areases = areases;
 		this.operationlimitsAerialplanses = operationlimitsAerialplanses;
 		this.missionses = missionses;
+		this.aerialPlanFlow = aerialPlanFlow;
 	}
 
 	@Id
@@ -147,24 +152,24 @@ public class AerialPlans implements java.io.Serializable {
 
 	@Temporal(TemporalType.DATE)
 	@Column(name = "Start_Date", length = 10)
-	public Date getStartDate() {
-		return this.startDate;
+	public Date getAerialPlanStartDate() {
+		return aerialPlanStartDate;
 	}
 
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
+	public void setAerialPlanStartDate(Date aerialPlanStartDate) {
+		this.aerialPlanStartDate = aerialPlanStartDate;
 	}
 
 	@Temporal(TemporalType.DATE)
 	@Column(name = "End_Date", length = 10)
-	public Date getEndDate() {
-		return this.endDate;
+	public Date getAerialPlanEndDate() {
+		return aerialPlanEndDate;
 	}
 
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
+	public void setAerialPlanEndDate(Date aerialPlanEndDate) {
+		this.aerialPlanEndDate = aerialPlanEndDate;
 	}
-
+	
 	@Column(name = "AMSL_From")
 	public Integer getAmslFrom() {
 		return this.amslFrom;

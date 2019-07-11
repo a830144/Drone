@@ -215,8 +215,8 @@ public class PersonController {
 	
 	@RequestMapping(value="/person/QueryPersonProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public String showQueryPerson(String name,String operationLimit) {
-		System.out.println("name:"+name);
+	public String showQueryPerson(String name,String operationLimit,String aerialPlanId, String equipmentId) {		
+		System.out.println("here: name :"+name+";operationLimit="+operationLimit+";aerialPlanId:"+aerialPlanId);
 		if(!"".equals(name)&& name!=null&&!"empty".equals(name)){
 			JsonArray jsonArray = personService.queryPersons(name);
 			String jsonString =jsonArray.toString();	
@@ -227,9 +227,12 @@ public class PersonController {
 			String jsonString =jsonArray.toString();	
 			System.out.println(jsonString);
 			return jsonString;
-		}
-		else if(!"".equals(operationLimit) && operationLimit!=null){
+		}else if(!"".equals(operationLimit) && operationLimit!=null){
 			JsonArray jsonArray = personService.queryPersonsByLicenseType(operationLimit);
+			String jsonString =jsonArray.toString();	
+			return jsonString;
+		}else if(!"".equals(aerialPlanId) && aerialPlanId!=null){
+			JsonArray jsonArray = personService.queryPersonsByMissionInfo(new Integer(aerialPlanId),new Integer(equipmentId));
 			String jsonString =jsonArray.toString();	
 			return jsonString;
 		}else{

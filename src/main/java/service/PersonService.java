@@ -73,6 +73,6 @@ public interface PersonService {
 
 	public void deleteParticipation(Integer personId,Integer eventId);	
 	
-	public List<Persons> queryPersonsByMissionInfo(Integer aerialPlanId,Integer equipments);
+	public JsonArray queryPersonsByMissionInfo(Integer aerialPlanId,Integer equipmentId);
 	
 }

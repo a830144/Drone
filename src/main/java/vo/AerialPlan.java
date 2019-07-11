@@ -10,11 +10,9 @@ public class AerialPlan {
 		return aerialPlanId;
 	}
 
-
 	public void setAerialPlanId(Integer aerialPlanId) {
 		this.aerialPlanId = aerialPlanId;
 	}
-
 
 	public Integer getProjectId() {
 		return projectId;
@@ -29,9 +27,9 @@ public class AerialPlan {
 	//用途
 	private String usage;
 	//作業開始日期
-	private Date startDate;
+	private Date aerialPlanStartDate;
 	//作業結束日期
-	private Date endDate;
+	private Date aerialPlanEndDate;
 	//作業高度起
 	private Integer amslFrom;
 	//作業高度至
@@ -186,8 +184,9 @@ public class AerialPlan {
 	private Float areaCenterESecond;
 	@Override
 	public String toString() {
-		return "AerialPlan [projectId=" + projectId + ", usage=" + usage + ", startDate=" + startDate + ", endDate="
-				+ endDate + ", amslFrom=" + amslFrom + ", amslTo=" + amslTo + ", agl=" + agl + ", takeOffLocationName="
+		return "AerialPlan [projectId=" + projectId + ", aerialPlanId=" + aerialPlanId + ", usage=" + usage
+				+ ", aerialPlanStartDate=" + aerialPlanStartDate + ", aerialPlanEndDate=" + aerialPlanEndDate
+				+ ", amslFrom=" + amslFrom + ", amslTo=" + amslTo + ", agl=" + agl + ", takeOffLocationName="
 				+ takeOffLocationName + ", takeOffNDegree=" + takeOffNDegree + ", takeOffNMinute=" + takeOffNMinute
 				+ ", takeOffNSecond=" + takeOffNSecond + ", takeOffEDegree=" + takeOffEDegree + ", takeOffEMinute="
 				+ takeOffEMinute + ", takeOffESecond=" + takeOffESecond + ", areaCenterNDegree=" + areaCenterNDegree
@@ -196,11 +195,12 @@ public class AerialPlan {
 				+ ", areaCenterESecond=" + areaCenterESecond + ", operationDiameter=" + operationDiameter
 				+ ", equipmentsArray=" + equipmentsArray + "]";
 	}
+	
 
 
 	//作業半徑
 	private Integer operationDiameter;
-	
+
 	public Integer getAmslFrom() {
 		return amslFrom;
 	}
@@ -251,23 +251,20 @@ public class AerialPlan {
 	}
 
 
-	public Date getStartDate() {
-		return startDate;
+	public Date getAerialPlanStartDate() {
+		return aerialPlanStartDate;
 	}
 
-
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
+	public void setAerialPlanStartDate(Date aerialPlanStartDate) {
+		this.aerialPlanStartDate = aerialPlanStartDate;
 	}
 
-
-	public Date getEndDate() {
-		return endDate;
+	public Date getAerialPlanEndDate() {
+		return aerialPlanEndDate;
 	}
 
-
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
+	public void setAerialPlanEndDate(Date aerialPlanEndDate) {
+		this.aerialPlanEndDate = aerialPlanEndDate;
 	}
 
 

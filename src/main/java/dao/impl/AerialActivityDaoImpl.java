@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import dao.AerialActivityDao;
 import entity.AerialActivities;
+import entity.RealMissions;
 
 @Repository
 public class AerialActivityDaoImpl implements AerialActivityDao{
@@ -21,6 +22,12 @@ public class AerialActivityDaoImpl implements AerialActivityDao{
 	public void persist(AerialActivities entity) {
 		Session session = this.sessionFactory.getCurrentSession();
     	session.save(entity);
+	}
+	
+	@Override
+	public void persistRealMission(RealMissions entity) {
+		Session session = this.sessionFactory.getCurrentSession();
+    	session.save(entity);		
 	}
 
 	@Override

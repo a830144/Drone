@@ -9,6 +9,7 @@ import entity.Operations;
 import entity.Projects;
 
 public interface OperationService {
+	
 	public void persistProject(String jsonString);
 
 	public void updateProject(String jsonString);
@@ -26,6 +27,8 @@ public interface OperationService {
 	public void persistAerialPlan(String jsonString);
 	
 	public void updateAerialPlan(String jsonString);
+	
+	public void persistAerialActivity(String jsonString);
 	
 	public JsonArray queryAerialPlanByProjectId(Integer projectId);
 	

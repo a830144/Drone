@@ -3,19 +3,48 @@
 
 <script>
 var aerialActivity_obj = {
+		projectId : '',
+		aerialPlanId : '',
+		equipmentId : '',
+		personId_1 : '',
+		personId_2 : '',
+
 		addOrUpdate : function (action){
 			  $("#aerialActivity-form").find("#projectId").prop("disabled", false);
 			  $("#aerialActivity-form").find("#name").prop("disabled", false);
 			  $("#aerialActivity-form").find("#aerialPlanId").prop("disabled",false);
 			  $("#aerialActivity-form").find("#usage").prop("disabled",false);							
 			  var myJson = JSON.stringify($("#aerialActivity-form").serializeObject());
+			  var jsonObject = JSON.parse(myJson);
+			  var arr = new Array();
+			  jsonObject.equipmentPersonArray = arr;
+			  var table = $('#single-aerialActivity-table-3-1').DataTable();
+			  table.rows().eq(0).each( function ( index ) {
+			    	var row = table.row( index );
+			    	var cell = table.cell( index ,0);
+					var equipmentId = cell.data();
+					cell = table.cell( index ,6);
+					var personId_1 = cell.data();
+					cell = table.cell( index ,7);
+					var personId_2 = cell.data();
+					jsonObject.equipmentPersonArray.push({
+						"equipmentId":equipmentId,
+						"personId_1":personId_1,
+						"personId_2":personId_2
+					});
+			  } );
+			  myJson = JSON.stringify(jsonObject);
+			  console.log(myJson);
 			  $.ajax({
-				 url : action==='update'?"/Drone/operation/UpdateAerialActivityProcess":"/Drone/operation/AddAerialActivityProcess",
 				 type : "POST", 
+				 url : action==='update'?"/Drone/operation/UpdateAerialActivityProcess":"/Drone/operation/AddAerialActivityProcess",
+				 data : {
+						data : myJson
+				 },
 				 success : function() {
 					alert(action==='update'?'修改航拍活動紀錄成功':'新增航拍活動紀錄成功');
-				  }
-			   })
+				 }
+			  })
 		},
 		prepareAerialActivityDomAction : function (){		
 			$("#dialog-aerialActivity-form").dialog({
@@ -47,6 +76,10 @@ var aerialActivity_obj = {
 				close : function() {
 					var table1 = $('#single-aerialActivity-table-1').DataTable();
 					table1.destroy();
+					
+					var table3 = $('#single-aerialActivity-table-3-1').DataTable();
+					$( "#single-aerialActivity-table-3-1").unbind( "select" );
+					table3.destroy();
 				}
 			});	
 			$("#dialog-aerialActivity-tabs").tabs({
@@ -58,7 +91,7 @@ var aerialActivity_obj = {
 			
 		},
 		viewDomFinishState : function (id){
-			window.projectId = id;
+			aerialActivity_obj.projectId = id;
 		},
 		transferAerialActivityListAction : function (){
 			var singleaerialActivitytable1 = $('#single-aerialActivity-table-1').DataTable( {
@@ -67,17 +100,17 @@ var aerialActivity_obj = {
 					className: 'dt-center',
 					targets: '_all'
 				}],
-				"select":true,
-		        "order": [[ 1, 'asc' ]],
-				"scrollY": "100px",
-		        "scrollCollapse": true,		
-				"ajax": {
-					"type": "POST",
-				    "url": "/Drone/operation/QueryAerailActivitiesProcess",  
-				    "data": {  
-				    	"projectId": window.projectId 
+				select:true,
+		        order: [[ 1, 'asc' ]],
+				scrollY: "100px",
+		        scrollCollapse: true,		
+				ajax: {
+					type: "POST",
+				    url: "/Drone/operation/QueryAerailActivitiesProcess",  
+				    data: {  
+				    	projectId : aerialActivity_obj.projectId 
 				    }, 
-				    "dataSrc": function ( json ) {
+				    dataSrc: function ( json ) {
 				    	var myarray=new Array(json.length);
 				    	for (i=0; i <json.length; i++){
 				    	    myarray[i]=new Array(4);
@@ -87,7 +120,7 @@ var aerialActivity_obj = {
 			        		myarray[i][0]='';		        		
 			        		myarray[i][1]=obj.hasOwnProperty("aerialPlanId")?obj.aerialPlanId:'';
 			        		myarray[i][2]=obj.hasOwnProperty("aerialActivityId")?obj.aerialActivityId:'';
-			        		myarray[i][3]=obj.startDate+'~'+obj.endDate;
+			        		myarray[i][3]=obj.aerialActivityStartDate+'~'+obj.aerialActivityEndDate;
 			        	}
 				    	//aerialActivity_obj.registerAerialActivityListEvent();
 				        return myarray;
@@ -103,7 +136,7 @@ var aerialActivity_obj = {
 		},
 		transferAerialActivityMainFormAction : function (){
 			$.post("/Drone/operation/ViewProjectProcess", {
-				id : window.projectId
+				id : aerialActivity_obj.projectId
 			}, function(data, status) {
 				if (status == 'success') {
 					var obj = data;
@@ -123,12 +156,14 @@ var aerialActivity_obj = {
 			ReactDOM.render(React.createElement(FirstStep_activity, {}), container);
 			container = document.getElementById('secondStep-activity');
 			ReactDOM.render(React.createElement(SecondStep_activity, {}), container);
+			container = document.getElementById('thirdStep-activity');
+			ReactDOM.render(React.createElement(ThirdStep_activity, {}), container);
 			
 			$.ajax({
 				url : "/Drone/operation/QueryAerailPlansIDsByProjectId",
 				type : "POST",
 				data: {  
-			    	"projectId": window.projectId 
+			    	projectId: aerialActivity_obj.projectId 
 			    }, 
 				success : function(tag) {  
 					$("#dialog-aerialActivity-form-2").find("#aerialPlanId").append(tag);
@@ -155,8 +190,18 @@ var aerialActivity_obj = {
 		            }
 				});
 				//aerialPlanId change,ajax refresh the table in form3
-				window.aerialPlanId = id;
+				aerialActivity_obj.aerialPlanId = id;
 			});
+		},
+		
+		transferEquipmentInPlanListAction : function(){
+			var singleaerialActivitytable31 = $('#single-aerialActivity-table-3-1').DataTable( {
+				"select":true,
+		        "order": [[ 1, 'asc' ]],
+				"scrollY": "100px",
+		        "scrollCollapse": true
+			});
+			
 		},
 		
 		initializeAerialActivityListState : function (){
@@ -177,6 +222,7 @@ function aerialActivity(id){
 	aerialActivity_obj.viewDomFinishState(id);	
 	aerialActivity_obj.transferAerialActivityListAction();
 	aerialActivity_obj.transferAerialActivityMainFormAction();
+	aerialActivity_obj.transferEquipmentInPlanListAction();
 	aerialActivity_obj.initializeAerialActivityListState();		
 	$("#dialog-aerialActivity-form").dialog("open");
 
@@ -195,13 +241,15 @@ function aerialActivity(id){
 		</ul>
 		<form id="aerialActivity-form">
 			<div id="dialog-aerialActivity-form-2">
-				<table id="single-aerialActivity-table-2-1" class="display" style="width: 100%">
+				<table id="single-aerialActivity-table-2-1" class="display" 
+					style="width: 100%">
 					<%@ include file="./pages/AerialActivity_main_form.jsp"%>
 				</table>
 			</div>
 			<div id="dialog-aerialActivity-form-3">
 				<table id="single-aerialActivity-table-3-1" class="display"
 					style="width: 100%">
+					<%@ include file="./pages/EquipmentInActivity_list.jsp"%>
 				</table>
 				<div id="root-activity"></div>
 			</div>

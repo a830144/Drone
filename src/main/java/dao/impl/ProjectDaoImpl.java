@@ -29,10 +29,12 @@ public class ProjectDaoImpl implements ProjectDao{
     	session.save(entity);
     }
     @Override
-    public Projects findById(Integer id) {
+    public Projects findById(Integer id,boolean detach) {
     	Session session = this.sessionFactory.getCurrentSession();
         Projects projects = session.get(Projects.class, id);
-        session.detach(projects);
+        if(detach){
+        	session.detach(projects);
+        }
         return projects; 
     }
     @Override
@@ -67,7 +69,7 @@ public class ProjectDaoImpl implements ProjectDao{
 	}
 	@Override
 	public void deleteById(Integer id) {
-		Projects Projects = findById(id);
+		Projects Projects = findById(id,false);
 		delete(Projects);
 	}
 

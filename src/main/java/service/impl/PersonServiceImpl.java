@@ -650,9 +650,28 @@ public class PersonServiceImpl implements PersonService {
 	}
 
 	@Override
-	public List<Persons> queryPersonsByMissionInfo(Integer aerialPlanId, Integer equipments) {
-		// TODO Auto-generated method stub
-		return null;
+	public JsonArray queryPersonsByMissionInfo(Integer aerialPlanId, Integer equipmentId) {
+		List<Persons> personsList = personDao.findByMission(aerialPlanId, equipmentId);
+		Iterator<Persons> iterator = personsList.iterator();
+		JsonArray jsonArray = new JsonArray();
+		while (iterator.hasNext()) {
+			Persons entity_persons = (Persons) iterator.next();
+			Person vo = new Person();
+			try {
+				BeanUtils.copyProperties(vo, entity_persons);
+				if (entity_persons.getPersonFlow() != null) {
+					BeanUtils.copyProperties(vo, entity_persons.getPersonFlow());
+				}
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}
+			JSONObject jsonObj = new JSONObject(vo);
+			jsonArray.add(jsonObj.toString());
+		}
+
+		return jsonArray;
 	}
 
 }

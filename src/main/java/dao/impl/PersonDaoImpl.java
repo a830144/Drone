@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 
 import dao.PersonDao;
 import entity.Certificates;
-import entity.Equipments;
 import entity.Participations;
 import entity.Persons;
 import entity.PersonsLicenses;
@@ -141,7 +140,7 @@ public class PersonDaoImpl implements PersonDao{
 	}
 	@Override
 	public List<Persons> findByMission(Integer aerialPlanId, Integer equipmentId) {
-		String hql = "select distinct M.equipments FROM Missions M where M.aerialPlans.aerialPlanId="+aerialPlanId+" and M.equipments.equipmentId="+equipmentId;
+		String hql = "select distinct M.persons FROM Missions M where M.aerialPlans.aerialPlanId="+aerialPlanId+" and M.equipments.equipmentId="+equipmentId;
 		Session session = this.sessionFactory.getCurrentSession();
 		Query<Persons> query = session.createQuery(hql);
 		List<Persons> results = query.list();

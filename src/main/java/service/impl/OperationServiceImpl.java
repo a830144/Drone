@@ -25,9 +25,13 @@ import entity.Missions;
 import entity.Operations;
 import entity.Persons;
 import entity.Projects;
+import entity.RealMissions;
 import service.OperationService;
+import vo.AerialActivity;
+import vo.AerialActivity.EquipmentPersonInActivity;
 import vo.AerialPlan;
 import vo.AerialPlan.EquipmentPerson;
+import vo.Project;
 
 @Service
 public class OperationServiceImpl implements OperationService {
@@ -51,7 +55,7 @@ public class OperationServiceImpl implements OperationService {
 	@Override
 	public void persistAerialPlan(String jsonString) {
 		AerialPlan vo = gson.fromJson(jsonString, AerialPlan.class);
-		Projects entity_projects = projectDao.findById(vo.getProjectId());
+		Projects entity_projects = projectDao.findById(vo.getProjectId(),false);
 		AerialPlans entity_aerialPlans = new AerialPlans();
 		System.out.println(vo);
 		List<EquipmentPerson> equipmentPersonList = vo.getEquipmentsArray();
@@ -69,11 +73,15 @@ public class OperationServiceImpl implements OperationService {
 			persistMission(entity_aerialPlans,Integer.parseInt(equipmentPerson.getEquipmentId()),Integer.parseInt(equipmentPerson.getPersonId_2()));
 		}
 		entity_aerialPlans.setProjects(entity_projects);
-		//entity_projects.getAerialPlanses().add(entity_aerialPlans);
 		aerialPlanDao.persist(entity_aerialPlans);
-		//projectDao.persist(entity);
 	}
 
+	/**
+	 * Persist Missions entity
+	 * @param entity_aerialPlans
+	 * @param equipmentId
+	 * @param personId
+	 */
 	private void persistMission(AerialPlans entity_aerialPlans,Integer equipmentId,Integer personId){
 		Equipments entity_equipments = equipmentDao.findById(equipmentId);
 		Persons entity_persons = personDao.findById(personId);
@@ -85,6 +93,25 @@ public class OperationServiceImpl implements OperationService {
 		entity_equipments.getMissionses().add(entity_missions);
 		entity_persons.getMissionses().add(entity_missions);
 		aerialPlanDao.persistMission(entity_missions);
+	}
+	
+	/**
+	 * Persist RealMissions entity
+	 * @param entity_aerialPlans
+	 * @param equipmentId
+	 * @param personId
+	 */
+	private void persistRealMission(AerialActivities entity_aerialActivities,Integer equipmentId,Integer personId){
+		Equipments entity_equipments = equipmentDao.findById(equipmentId);
+		Persons entity_persons = personDao.findById(personId);
+		RealMissions entity_realMissions = new RealMissions();
+		entity_realMissions.setAerialActivities(entity_aerialActivities);
+		entity_realMissions.setEquipments(entity_equipments);
+		entity_realMissions.setPersons(entity_persons);
+		entity_aerialActivities.getRealmissionses().add(entity_realMissions);
+		entity_equipments.getRealmissionses().add(entity_realMissions);
+		entity_persons.getRealmissionses().add(entity_realMissions);
+		aerialActivityDao.persistRealMission(entity_realMissions);
 	}
 
 
@@ -151,17 +178,14 @@ public class OperationServiceImpl implements OperationService {
 
 	@Override
 	public void persistProject(String jsonString) {
-		//Gson gson = new Gson();
-		Gson gson = new GsonBuilder().setDateFormat("MM/dd/yyyy").create();
 		Projects entity = gson.fromJson(jsonString, Projects.class);
 		projectDao.persist(entity);
 	}
 
 	@Override
 	public void updateProject(String jsonString) {
-		Gson gson = new Gson();
-		Projects vo = gson.fromJson(jsonString, Projects.class);
-		Projects entity = projectDao.findById(vo.getProjectId());
+		Project vo = gson.fromJson(jsonString, Project.class);
+		Projects entity = projectDao.findById(vo.getProjectId(),false);
 		try {
 			BeanUtils.copyProperties(entity, vo);
 		} catch (IllegalAccessException e) {
@@ -179,12 +203,11 @@ public class OperationServiceImpl implements OperationService {
 
 	@Override
 	public String queryProjectById(Integer id) {
-		Projects projects = projectDao.findById(id);
+		Projects projects = projectDao.findById(id,true);
 		// get through the result set
 		String jsonString = "";
 		JSONObject jsonObj = new JSONObject(projects);
 		jsonString = jsonObj.toString();
-
 		return jsonString;
 	}
 
@@ -214,10 +237,11 @@ public class OperationServiceImpl implements OperationService {
 		JsonArray jsonArray = new JsonArray();
 
 		while (iterator_aerialActivities.hasNext()) {
-			AerialActivities vo = new AerialActivities();
+			AerialActivity vo = new AerialActivity();
 			AerialActivities entity_aerialActivities = (AerialActivities) iterator_aerialActivities.next();
 			try {
 				BeanUtils.copyProperties(vo, entity_aerialActivities);
+				vo.setAerialPlanId(entity_aerialActivities.getAerialPlans().getAerialPlanId());
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
@@ -233,5 +257,34 @@ public class OperationServiceImpl implements OperationService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	/**
+	 * This function is for saving aerialActivity entity.
+	 * The relationship between project-->aerialPlan-->aerialActivity is 1:n-->1:n-->1:n
+	 */
+	@Override
+	public void persistAerialActivity(String jsonString) {
+		AerialActivity vo = gson.fromJson(jsonString, AerialActivity.class);
+		AerialPlans entity_aerialPlans = aerialPlanDao.findById(vo.getAerialPlanId());
+		AerialActivities entity_aerialActivities = new AerialActivities();
+		List<EquipmentPersonInActivity> equipmentPersonList = vo.getEquipmentPersonArray();
+		try {
+			BeanUtils.copyProperties(entity_aerialActivities, vo);			
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		for(int i =0;i<equipmentPersonList.size();i++){
+			EquipmentPersonInActivity equipmentPerson = equipmentPersonList.get(i);
+			persistRealMission(entity_aerialActivities,Integer.parseInt(equipmentPerson.getEquipmentId()),Integer.parseInt(equipmentPerson.getPersonId_1()));
+			persistRealMission(entity_aerialActivities,Integer.parseInt(equipmentPerson.getEquipmentId()),Integer.parseInt(equipmentPerson.getPersonId_2()));
+		}
+		entity_aerialActivities.setAerialPlans(entity_aerialPlans);
+		aerialActivityDao.persist(entity_aerialActivities);
+		
+	}
+
+
 
 }

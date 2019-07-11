@@ -21,8 +21,7 @@ import service.OperationService;
 public class OperationController {
 	@Autowired
 	private OperationService operationService;
-	
-	
+		
 	@RequestMapping(value="/operation/AddProjectProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
 	public void addProject(String data) {
@@ -35,6 +34,13 @@ public class OperationController {
 	public void addAerialPlan(String data) {
 		System.out.println("AddAerial Plan");
 		operationService.persistAerialPlan(data);		
+	}
+	
+	@RequestMapping(value="/operation/AddAerialActivityProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public void addAerialActivity(String data) {
+		System.out.println("AddAerial Activity");
+		operationService.persistAerialActivity(data);		
 	}
 	
 	@RequestMapping(value="/operation/UpdateAerialPlanProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")

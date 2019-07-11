@@ -26,7 +26,7 @@ $(document).ready(
 		        				myarray[i][0]=obj.hasOwnProperty("projectId")?obj.projectId:'';
 		        				myarray[i][1]=obj.hasOwnProperty("name")?obj.name:'';		        			
 		        				myarray[i][2]=obj.hasOwnProperty("company")?obj.company:'';
-		        				myarray[i][3]=obj.hasOwnProperty("endDate")?obj.endDate:'';
+		        				myarray[i][3]=obj.hasOwnProperty("projectEndDate")?obj.projectEndDate:'';
 		        				myarray[i][4]=obj.hasOwnProperty("projectManager")?obj.projectManager:'';
 		        				myarray[i][5]=obj.hasOwnProperty("status")?obj.status:'';
 		        				var view_btn = "<button name='view"+ obj.projectId +"' id='" + obj.projectId +"' class='view ui-button ui-corner-all ui-widget' value='view'>檢視</button>";

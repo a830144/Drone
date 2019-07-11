@@ -36,11 +36,11 @@ function prepareAerialPlanDomAction(){
 						 url : "/Drone/operation/UpdateAerialPlanProcess",
 						 type : "POST",
 						 data : {
-							"data" : myJson
+							data : myJson
 						 },
 						 success : function() {
 							alert('修改航拍計畫紀錄成功');
-						  }
+						 }
 					 })
 	          }			 
  		    },
@@ -102,11 +102,7 @@ function prepareAerialPlanDomAction(){
 			  $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
 		  }
 	});
-	$("#wizard").steps({
-        headerTag: "h2",
-        bodyTag: "section",
-        transitionEffect: "slideLeft"
-    });
+	
 	$("#aerialPlan-form").find("#startDate").datepicker();
 	$("#aerialPlan-form").find("#endDate").datepicker();
 }
@@ -142,7 +138,7 @@ function transferAerialPlanListAction(){
 	        		myarray[i][0]='';		        		
 	        		myarray[i][1]=obj.hasOwnProperty("aerialPlanId")?obj.aerialPlanId:'';
 	        		myarray[i][2]=obj.hasOwnProperty("usage")?obj.usage:'';
-	        		myarray[i][3]=obj.startDate+'~'+obj.endDate;	        		
+	        		myarray[i][3]=obj.aerialPlanStartDate+'~'+obj.aerialPlanEndDate;	        		
 	        	}
 		    	registerAerialPlanListEvent();
 		        return myarray;

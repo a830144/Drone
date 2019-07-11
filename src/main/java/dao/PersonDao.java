@@ -5,10 +5,9 @@ import java.util.List;
 import java.util.Set;
 
 import entity.Certificates;
-import entity.Equipments;
 import entity.Participations;
-import entity.Persons;
 import entity.PersonsLicenses;
+import entity.Persons;
 
 public interface PersonDao{
 

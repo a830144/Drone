@@ -34,9 +34,9 @@ public class AerialActivities implements java.io.Serializable {
 	private int aerialActivityId;
 	private AerialPlans aerialPlans;
 	private byte[] areaFile;
-	private Date startDate;
-	private Date endDate;
-	
+	private Date aerialActivityStartDate;
+	private Date aerialActivityEndDate;
+
 	private AerialActivityFlow aerialActivityFlow;
 
 	@Embedded
@@ -57,16 +57,17 @@ public class AerialActivities implements java.io.Serializable {
 	
 	private Set<RealMissions> realmissionses = new HashSet<RealMissions>(0);
 
-	
-
-	public AerialActivities(int aerialActivityId, AerialPlans aerialPlans, byte[] areaFile, Date startDate,
-			Date endDate) {
+	public AerialActivities(int aerialActivityId, AerialPlans aerialPlans, byte[] areaFile,
+			Date aerialActivityStartDate, Date aerialActivityEndDate, AerialActivityFlow aerialActivityFlow,
+			Set<RealMissions> realmissionses) {
 		super();
 		this.aerialActivityId = aerialActivityId;
 		this.aerialPlans = aerialPlans;
 		this.areaFile = areaFile;
-		this.startDate = startDate;
-		this.endDate = endDate;
+		this.aerialActivityStartDate = aerialActivityStartDate;
+		this.aerialActivityEndDate = aerialActivityEndDate;
+		this.aerialActivityFlow = aerialActivityFlow;
+		this.realmissionses = realmissionses;
 	}
 
 	@Id
@@ -102,22 +103,22 @@ public class AerialActivities implements java.io.Serializable {
 
 	@Temporal(TemporalType.DATE)
 	@Column(name = "Start_Date", length = 10)
-	public Date getStartDate() {
-		return this.startDate;
+	public Date getAerialActivityStartDate() {
+		return aerialActivityStartDate;
 	}
 
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
+	public void setAerialActivityStartDate(Date aerialActivityStartDate) {
+		this.aerialActivityStartDate = aerialActivityStartDate;
 	}
 
 	@Temporal(TemporalType.DATE)
 	@Column(name = "End_Date", length = 10)
-	public Date getEndDate() {
-		return this.endDate;
+	public Date getAerialActivityEndDate() {
+		return aerialActivityEndDate;
 	}
 
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
+	public void setAerialActivityEndDate(Date aerialActivityEndDate) {
+		this.aerialActivityEndDate = aerialActivityEndDate;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "equipments")

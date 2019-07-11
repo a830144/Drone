@@ -4,7 +4,7 @@ package dao;
 import java.util.List;
 
 import entity.AerialActivities;
-import entity.AerialPlans;
+import entity.RealMissions;
 
 public interface AerialActivityDao{
 
@@ -17,4 +17,6 @@ public interface AerialActivityDao{
     public List<AerialActivities> findByName(String name);
     
     public List<AerialActivities> findByProjectId(Integer projectId);
+    
+    public void persistRealMission(RealMissions entity);
 }

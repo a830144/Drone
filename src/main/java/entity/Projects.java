@@ -31,7 +31,7 @@ public class Projects implements java.io.Serializable {
 	private String name;
 	private String company;
 	private String telephone;
-	private Date endDate;
+	private Date projectEndDate;
 	private String projectManager;
 	private String result;
 	private byte[] areaData;
@@ -53,18 +53,22 @@ public class Projects implements java.io.Serializable {
 	public Projects() {
 	}
 
-	public Projects(String name, String company, String telephone, Date endDate, String projectManager, String result,
-			byte[] areaData, byte[] otherData, String status, Set<AerialPlans> aerialPlanses) {
+	public Projects(Integer projectId, String name, String company, String telephone, Date projectEndDate,
+			String projectManager, String result, byte[] areaData, byte[] otherData, String status,
+			Set<AerialPlans> aerialPlanses, ProjectFlow projectFlow) {
+		super();
+		this.projectId = projectId;
 		this.name = name;
 		this.company = company;
 		this.telephone = telephone;
-		this.endDate = endDate;
+		this.projectEndDate = projectEndDate;
 		this.projectManager = projectManager;
 		this.result = result;
 		this.areaData = areaData;
 		this.otherData = otherData;
 		this.status = status;
 		this.aerialPlanses = aerialPlanses;
+		this.projectFlow = projectFlow;
 	}
 
 	@Id
@@ -105,15 +109,15 @@ public class Projects implements java.io.Serializable {
 	public void setTelephone(String telephone) {
 		this.telephone = telephone;
 	}
-
+	
 	@Temporal(TemporalType.DATE)
 	@Column(name = "End_Date", length = 10)
-	public Date getEndDate() {
-		return this.endDate;
+	public Date getProjectEndDate() {
+		return projectEndDate;
 	}
 
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
+	public void setProjectEndDate(Date projectEndDate) {
+		this.projectEndDate = projectEndDate;
 	}
 
 	@Column(name = "Project_Manager", length = 20)

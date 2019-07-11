@@ -11,7 +11,7 @@ public interface ProjectDao{
     
     public void update(Projects entity);
      
-    public Projects findById(Integer id);
+    public Projects findById(Integer id,boolean detach);
     
     public List<Projects> findByName(String name);
      

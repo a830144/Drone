@@ -90,15 +90,15 @@ var EquipmentTable = React.createClass({
                 selector: 'td:first-child'
             },
             order: [[ 1, 'asc' ]],
-            "data": '',
-            "ordering": false,
-            "ajax": {
-				"type": "POST",
-			    "url": "/Drone/equipment/QueryEquipmentProcess",   
-			    "data": {  
+            data: '',
+            ordering: false,
+            ajax: {
+				type: "POST",
+			    url: "/Drone/equipment/QueryEquipmentProcess",   
+			    data: {  
 			        "type": this.props.type  
 			    }, 
-			    "dataSrc": function ( json ) {
+			    dataSrc : function ( json ) {
 			    	var myarray=new Array(json.length);
 			    	for(i=0; i <json.length; i++){
 			    	    myarray[i]=new Array(5);
@@ -147,15 +147,15 @@ var EquipmentTable = React.createClass({
                 selector: 'td:first-child'
             },
             order: [[ 1, 'asc' ]],
-            "data": '',
-            "ordering": false,
-            "ajax": {
-				"type": "POST",
-			    "url": "/Drone/equipment/QueryEquipmentProcess",   
-			    "data": {  
+            data: '',
+            ordering: false,
+            ajax : {
+				type: "POST",
+			    url: "/Drone/equipment/QueryEquipmentProcess",   
+			    data: {  
 			        "type": 'A'  
 			    }, 
-			    "dataSrc": function ( json ) {
+			    dataSrc: function ( json ) {
 			    	var myarray=new Array(json.length);
 			    	for(i=0; i <json.length; i++){
 			    	    myarray[i]=new Array(5);
@@ -315,15 +315,15 @@ var PersonTable = React.createClass({
                     'style': 'multi',
                     selector: 'td:first-child'
                 },
-                "data": this.props.equipmentId,
-                "ordering": false,
-                "ajax": {
-				    "type": "POST",
-			        "url": "/Drone/person/QueryPersonProcess",   
-			        "data": {  
-			           "operationLimit": this.state.operationLimit
+                data: this.props.equipmentId,
+                ordering: false,
+                ajax: {
+				    type: "POST",
+			        url: "/Drone/person/QueryPersonProcess",   
+			        data: {  
+			           operationLimit: this.state.operationLimit
 			        }, 
-			        "dataSrc": function ( json ) {
+			        dataSrc: function ( json ) {
 			    	    var myarray=new Array(json.length);
 	    			    for (i=0; i <json.length; i++){
 	    	   			    myarray[i]=new Array(4);
@@ -385,8 +385,8 @@ var PersonTable = React.createClass({
                 style:    'os',
                 selector: 'td:first-child'
             },
-            "data": this.props.names,
-            "ordering": false
+            data: this.props.names,
+            ordering: false
         });
         window.personId_1='';
         window.personId_2='';
@@ -442,7 +442,9 @@ var EquipmentConfirm = React.createClass({
             $.ajax({
 			    url:"/Drone/equipment/ViewEquipmentProcess",
 			    type:"POST",
-			    data:{"id" : window.equipmentId},
+			    data:{
+			    	id:this.state.equipmentId
+			    },
 			    dataType: "json",
 			    success: function(data){				  
 				    var obj = data;
@@ -584,9 +586,11 @@ var PersonConfirm_2 = React.createClass({
     componentDidUpdate(prevProps, prevState){
         if(this.state.personId_2!==prevState.personId_2){
             $.ajax({
-			    url:"/Drone/person/ViewPersonProcess",
-			    type:"POST",
-			    data:{"id" : window.personId_2},
+            	type:"POST",
+			    url:"/Drone/person/ViewPersonProcess",			    
+			    data:{
+			    	id : window.personId_2
+			    },
 			    dataType: "json",
 			    success: function(data){				  
 				    var obj = data;
@@ -675,4 +679,4 @@ ReactDOM.render(React.createElement(ThirdStep, {}), container);
 container = document.getElementById('fourthStep');
 
 ReactDOM.render(React.createElement(FourthStep, {}), container); 
-
+ 

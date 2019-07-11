@@ -54,13 +54,13 @@
 		$("#dialog-view-form-2").find("#rejectMaintenance").button({
 			icons: { primary: "ui-icon-eject" }
 		});
-		$("#dialog-view-form-2").find("#checkModification").button({
+		$("#dialog-view-form-3").find("#checkModification").button({
 			icons: { primary: "ui-icon-play" }
 		});
-		$("#dialog-view-form-2").find("#approveModification").button({
+		$("#dialog-view-form-3").find("#approveModification").button({
 			icons: { primary: "ui-icon-check" }
 		});
-		$("#dialog-view-form-2").find("#rejectModification").button({
+		$("#dialog-view-form-3").find("#rejectModification").button({
 			icons: { primary: "ui-icon-eject" }
 		});
 		$("#single-view-table-2-2").find("input[type='radio']").checkboxradio();

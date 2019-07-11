@@ -51,8 +51,7 @@ public class AerialPlanDaoImpl implements AerialPlanDao{
 		Session session = this.sessionFactory.getCurrentSession();
 		String hql = "FROM AerialPlans as E where E.projects.projectId = :searchField";
 		Query<AerialPlans> query = session.createQuery(hql); 
-		query.setParameter("searchField",projectId);
-		
+		query.setParameter("searchField",projectId);		
 		List<AerialPlans> results = query.list();
         for(int i=0;i<results.size();i++){
         	AerialPlans entity = results.get(i);
@@ -94,8 +93,7 @@ public class AerialPlanDaoImpl implements AerialPlanDao{
 	@Override
 	public void persistMission(Missions entity) {
 		Session session = this.sessionFactory.getCurrentSession();
-    	session.save(entity);
-		
+    	session.save(entity);		
 	}
 
 }
