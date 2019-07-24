@@ -92,6 +92,11 @@ public class OperationController {
 		return jsonString;
 	}
 	
+	/**
+	 * This function is for UI to generate the tag in drop down list
+	 * @param projectId
+	 * @return
+	 */
 	@RequestMapping(value="/operation/QueryAerailPlansIDsByProjectId" , method = {RequestMethod.POST})
 	@ResponseBody
 	public String showQueryAerialPlansIDsByProjectId(String projectId) {
@@ -107,7 +112,11 @@ public class OperationController {
 		return tag;
 	}
 	
-	// view aerialPlan by aerialPlanId
+	/** 
+	 * view aerialPlan by aerialPlanId
+	 * @param id
+	 * @return
+	 */
 	@RequestMapping(value = "/operation/ViewAerialPlanByAerialPlanId", method = {RequestMethod.POST }, produces = "application/json;charset=UTF-8")
 	@ResponseBody
 	public String viewAerialPlanByAerialPlanId(String id) {
@@ -116,12 +125,30 @@ public class OperationController {
 		return jsonString;
 	}
 	
+	/**
+	 * This function use project Id to find all mapping aerial activity data
+	 * @param projectId
+	 * @return
+	 */
 	@RequestMapping(value="/operation/QueryAerailActivitiesProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
 	public String showQueryAerailActivities(String projectId) {
 		JsonArray jsonArray = operationService.queryAerialActivityByProjectId(new Integer(Integer.parseInt(projectId)));
 		String jsonString =jsonArray.toString();
 		System.out.println("showQueryAerailActivities jsonString::"+jsonString);
+		return jsonString;
+	}
+	
+	/** 
+	 * view aerialActivity by aerialActivityId
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value = "/operation/ViewAerialActivityByAerialActivityId", method = {RequestMethod.POST }, produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public String viewAerialActivityByAerialActivityId(String id) {
+		String jsonString = operationService.queryAerialActivityByAerialActivityId(new Integer(Integer.parseInt(id)));
+		System.out.println("ViewAerialActivityByAerialActivityId::" + jsonString);
 		return jsonString;
 	}
 }

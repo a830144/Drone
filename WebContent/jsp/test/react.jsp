@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8" />
-<title>Add React in One Minute</title>
+
 <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
@@ -26,23 +26,62 @@
 	<script
 		src="/Drone/js/react-dom.js"></script>
 		
-	<!-- Load our React component. -->
-<!-- //<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script> -->
 	
 </head>
-<body>
 
-	<h2>Add React in One Minute</h2>
-	<p>This page demonstrates using React with no build tooling.</p>
-	<p>React is loaded as a script tag.</p>
+<script>
+var modify_obj = {		
+		modifyList_select_Action : function(modificationId){
+			modify_obj.store.crud = 'U';
+			modify_obj.store.modificationId = modificationId;
+			//notify
+			modify_obj.modifyDialog.notify(modify_obj.store);
+			modify_obj.modifyForm.notify(modify_obj.store);
+		},
+		modifyList_deselect_Action : function(modificationId){
+			modify_obj.store.crud = 'C';
+			modify_obj.store.modificationId = '-';
+			//notify
+			modify_obj.modifyDialog.notify(modify_obj.store);
+			modify_obj.modifyForm.notify(modify_obj.store);
+		},
+		store : {
+			crud : '',
+			equipmentId : '',
+			modificationId : ''			
+		},
+		initState : function (id){
+			modify_obj.equipmentId = id;
+		},
+		removeState : function (){
+			modify_obj.equipmentId = '';
+		},
+		
+		initReactComponent : function (){	
+			var container = document.getElementById('modifyDialog_modify');
+			modify_obj.modifyDialog = ReactDOM.render(React.createElement(modifyDialog_modify, {}), container);
+			container = document.getElementById('modifyList_modify');
+			modify_obj.modifyList = ReactDOM.render(React.createElement(modifyList_modify, {}), container);
+			container = document.getElementById('modifyForm_modify');
+			modify_obj.modifyForm = ReactDOM.render(React.createElement(modifyForm_modify, {}), container);
+			
+		},
+		removeReactComponent : function (){
+			var container = document.getElementById('modifyForm_modify');
+			ReactDOM.unmountComponentAtNode(container);
+			container = document.getElementById('modifyList_modify');
+			ReactDOM.unmountComponentAtNode(container);
+			container = document.getElementById('modifyDialog_modify');
+			ReactDOM.unmountComponentAtNode(container);
 
-	<!-- We will put our React component inside this div. -->
-	<div id="root">
+		},		
+}
+function modifyEquipment(id){	
+	modify_obj.initState(id);
+	modify_obj.initReactComponent(id);		
+}
 
-			</div>
-	<!-- Load React. -->
-	<!-- Note: when deploying, replace "development.js" with "production.min.js". -->
-<script src="/Drone/js/selectEquipment.js" charset="utf-8"></script>
-
-</body>
-</html>
+</script>
+<div id="modifyDialog_modify" title="設備維護" style="display: none;">
+</div>
+<script src="/Drone/js/equipment/modify.js" charset="utf-8"></script>

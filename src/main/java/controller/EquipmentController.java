@@ -32,23 +32,23 @@ public class EquipmentController {
 	
 	@RequestMapping(value="/equipment/CheckEquipmentProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public void checkEquipment(Integer id) {
+	public void checkEquipment(Integer targetId) {
 		System.out.println("CheckEquipment");
-		equipmentService.check(id);		
+		equipmentService.check(targetId);		
 	}
 	
 	@RequestMapping(value="/equipment/ApproveEquipmentProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public void approveEquipment(Integer id) {
+	public void approveEquipment(Integer targetId) {
 		System.out.println("ApproveEquipment");
-		equipmentService.approve(id);	
+		equipmentService.approve(targetId);	
 	}
 	
 	@RequestMapping(value="/equipment/RejectEquipmentProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public void rejectEquipment(Integer id) {
+	public void rejectEquipment(Integer targetId) {
 		System.out.println("RejectEquipment");
-		equipmentService.reject(id);	
+		equipmentService.reject(targetId);	
 	}
 	
 	@RequestMapping(value="/equipment/DeleteEquipmentProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
@@ -58,56 +58,56 @@ public class EquipmentController {
 		equipmentService.delete(id);	
 	}
 	
-	@RequestMapping(value="/equipment/CheckMaintenanceProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/maintain/CheckMaintainProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public void checkMaintenance(Integer id) {
+	public void checkMaintenance(Integer targetId) {
 		System.out.println("CheckMaintenance");
-		equipmentService.checkMaintenance(id);		
+		equipmentService.checkMaintenance(targetId);		
 	}
 	
-	@RequestMapping(value="/equipment/ApproveMaintenanceProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/maintain/ApproveMaintainProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public void approveMaintenance(Integer id) {
+	public void approveMaintenance(Integer targetId) {
 		System.out.println("ApproveMaintenance");
-		equipmentService.approveMaintenance(id);	
+		equipmentService.approveMaintenance(targetId);	
 	}
 	
-	@RequestMapping(value="/equipment/RejectMaintenanceProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/maintain/RejectMaintainProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public void rejectMaintenance(Integer id) {
+	public void rejectMaintenance(Integer targetId) {
 		System.out.println("RejectMaintenance");
-		equipmentService.rejectMaintenance(id);	
+		equipmentService.rejectMaintenance(targetId);	
 	}
 	
-	@RequestMapping(value="/equipment/DeleteMaintenanceProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/maintain/DeleteMaintainProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
 	public void deleteMaintenance(Integer id) {
 		System.out.println("DeleteMaintenance");
 		equipmentService.deleteMaintenance(id);	
 	}
 	
-	@RequestMapping(value="/equipment/CheckModificationProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/modify/CheckModifyProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public void checkModification(Integer id) {
+	public void checkModification(Integer targetId) {
 		System.out.println("CheckModification");
-		equipmentService.checkModification(id);		
+		equipmentService.checkModification(targetId);		
 	}
 	
-	@RequestMapping(value="/equipment/ApproveModificationProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/modify/ApproveModifyProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public void approveModification(Integer id) {
+	public void approveModification(Integer targetId) {
 		System.out.println("ApproveModification");
-		equipmentService.approveModification(id);	
+		equipmentService.approveModification(targetId);	
 	}
 	
-	@RequestMapping(value="/equipment/RejectModificationProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/modify/RejectModifyProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public void rejectModification(Integer id) {
+	public void rejectModification(Integer targetId) {
 		System.out.println("RejectModification");
-		equipmentService.rejectModification(id);	
+		equipmentService.rejectModification(targetId);	
 	}
 	
-	@RequestMapping(value="/equipment/DeleteModificationProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/modify/DeleteModifyProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
 	public void deleteModification(Integer id) {
 		System.out.println("DeleteModification");

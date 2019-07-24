@@ -32,7 +32,7 @@ body {
   <li><a href="./equipment/Equipment.jsp" target=_content><li><i class="fa fa-file-text-o" aria-hidden="true"></i> 設備管理</li></a></li>
   <li><a href="./operation/Operation.jsp" target=_content><li><i class="fa fa-file-text-o" aria-hidden="true"></i> 作業管理</li></a></li>
   <li><a href="./other/Other.jsp" target=_content><li><i class="fa fa-file-text-o" aria-hidden="true"></i> 其他管理</li></a></li>
-  <li><a href="./test/fileUpload.jsp" target=_content><li><i class="fa fa-file-text-o" aria-hidden="true"></i> 架構測試</li></a></li>
+  <li><a href="./test/react.jsp" target=_content><li><i class="fa fa-file-text-o" aria-hidden="true"></i> 架構測試</li></a></li>
 </ul>
 
 </body>

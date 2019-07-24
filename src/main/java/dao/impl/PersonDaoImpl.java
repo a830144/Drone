@@ -18,6 +18,24 @@ import entity.PersonsLicenses;
 @Repository
 public class PersonDaoImpl implements PersonDao{
    
+	@Override
+	public PersonsLicenses findLicenseInfo(Integer targetId) {
+		Session session = this.sessionFactory.getCurrentSession();
+		PersonsLicenses personsLicenses = session.get(PersonsLicenses.class, targetId);
+        return personsLicenses; 
+	}
+	@Override
+	public Certificates findTrainingInfo(Integer targetId) {
+		Session session = this.sessionFactory.getCurrentSession();
+		Certificates certificates = session.get(Certificates.class, targetId);
+        return certificates;
+	}
+	@Override
+	public Participations findEventInfo(Integer targetId) {
+		Session session = this.sessionFactory.getCurrentSession();
+		Participations participations = session.get(Participations.class, targetId);
+        return participations;
+	}
 	@Autowired
 	private SessionFactory sessionFactory;
 	

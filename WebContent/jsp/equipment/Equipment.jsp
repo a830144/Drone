@@ -5,15 +5,30 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>設備管理</title>
-<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+<!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css"> -->
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
+<!-- <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css"> -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.0/css/select.dataTables.min.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.1.4/css/fixedHeader.dataTables.css"/>
+<link rel="stylesheet" href="/Drone/css/normalize.css">
+<link rel="stylesheet" href="/Drone/css/main.css">
+<link rel="stylesheet" href="/Drone/css/jquery.steps.css">
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.css"/>
 <script type="text/javascript"  src=" https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.0/css/select.dataTables.min.css"/>
 <script type="text/javascript"  src="https://cdn.datatables.net/select/1.3.0/js/dataTables.select.min.js"></script>
+<script type="text/javascript"  src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.1.4/js/dataTables.fixedHeader.js"></script>
+<script src="/Drone/js/jquery.steps.min.js"></script>
+<script src="/Drone/js/jquery.steps.js"></script>
+<script src="/Drone/js/modernizr-2.6.2.min.js"></script>
+<script src="/Drone/js/jquery.cookie-1.3.1.js"></script>
+<script src="/Drone/js/react.js"></script>
+<script src="/Drone/js/react-dom.js"></script>
+<script src="/Drone/js/common/action.js" charset="utf-8"></script>
+<script src="/Drone/js/common/store.js" charset="utf-8"></script>
 <style type="text/css">
 .dataTables_scroll
 {
@@ -60,10 +75,17 @@
 	function reverseRadioValue(form,filter){
 		var details = ['airframe', 'propulsion','battery','controller','payload'];
 		details.forEach(function(item, index, array) {
-			  $(form).find("input[name='"+item+"']").val()==="C" ? $(form).find("#"+ filter + "-"+item+"-clean").prop('checked', true):$(form).find("#"+ filter + "-"+item+"-repair").prop('checked', true);
-		});		
+			if(filter==="ma"){
+				$(form).find("input[name='"+item+"']").val()==="C" ? $(form).find("#"+item+"_c").prop('checked', true):$(form).find("#"+item+"_r").prop('checked', true);
+			}else if(filter==="mo"){
+				$(form).find("input[name='"+item+"']").val()==="N" ? $(form).find("#"+item+"_n").prop('checked', true):$(form).find("#"+item+"_m").prop('checked', true);
+			}			  
+		});	
+
 		$($(form).find("input[name*='radio']")).button("enable").button("refresh");		
 	}
+	
+	
 	
 	$(document).ready(
 			function() {

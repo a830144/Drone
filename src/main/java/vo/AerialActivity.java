@@ -4,12 +4,41 @@ import java.util.Date;
 import java.util.List;
 
 public class AerialActivity {
+	@Override
+	public String toString() {
+		return "AerialActivity [projectId=" + projectId + ", aerialPlanId=" + aerialPlanId + ", aerialActivityId="
+				+ aerialActivityId + ", usage=" + usage + ", aerialPlanStartDate=" + aerialPlanStartDate
+				+ ", aerialPlanEndDate=" + aerialPlanEndDate + ", aerialActivityStartDate=" + aerialActivityStartDate
+				+ ", aerialActivityEndDate=" + aerialActivityEndDate + ", equipmentPersonArray=" + equipmentPersonArray
+				+ "]";
+	}
+
 	private Integer projectId;
 	private Integer aerialPlanId;
-	
 	private int aerialActivityId;
+	private String usage;
+	private Date aerialPlanStartDate;
+	private Date aerialPlanEndDate;
 	private Date aerialActivityStartDate;
 	private Date aerialActivityEndDate;
+	public Date getAerialPlanStartDate() {
+		return aerialPlanStartDate;
+	}
+	public void setAerialPlanStartDate(Date aerialPlanStartDate) {
+		this.aerialPlanStartDate = aerialPlanStartDate;
+	}
+	public Date getAerialPlanEndDate() {
+		return aerialPlanEndDate;
+	}
+	public void setAerialPlanEndDate(Date aerialPlanEndDate) {
+		this.aerialPlanEndDate = aerialPlanEndDate;
+	}
+	public String getUsage() {
+		return usage;
+	}
+	public void setUsage(String usage) {
+		this.usage = usage;
+	}
 	public Date getAerialActivityStartDate() {
 		return aerialActivityStartDate;
 	}

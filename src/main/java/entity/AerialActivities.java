@@ -121,7 +121,7 @@ public class AerialActivities implements java.io.Serializable {
 		this.aerialActivityEndDate = aerialActivityEndDate;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "equipments")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "aerialActivities")
 	public Set<RealMissions> getRealmissionses() {
 		return realmissionses;
 	}

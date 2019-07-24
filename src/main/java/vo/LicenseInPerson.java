@@ -13,6 +13,14 @@ public class LicenseInPerson extends Person{
 	private String type;
 	private String subType;
 	
+	private Integer personsLicensesId;
+	
+	public Integer getPersonsLicensesId() {
+		return personsLicensesId;
+	}
+	public void setPersonsLicensesId(Integer personsLicensesId) {
+		this.personsLicensesId = personsLicensesId;
+	}
 	public Date getGotDate() {
 		return gotDate;
 	}

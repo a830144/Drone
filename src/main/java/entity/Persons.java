@@ -252,7 +252,7 @@ public class Persons implements java.io.Serializable {
 		this.missionses = missionses;
 	}
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "equipments")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "persons")
 	public Set<RealMissions> getRealmissionses() {
 		return realmissionses;
 	}

@@ -1,8 +1,12 @@
 package service.impl;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.json.JSONObject;
@@ -254,8 +258,64 @@ public class OperationServiceImpl implements OperationService {
 
 	@Override
 	public String queryAerialActivityByAerialActivityId(Integer aerialActivityId) {
-		// TODO Auto-generated method stub
-		return null;
+		AerialActivities entity_aerialActivities = aerialActivityDao.findById(aerialActivityId);
+		AerialActivity vo = new AerialActivity();
+		try {
+			BeanUtils.copyProperties(vo, entity_aerialActivities);
+			BeanUtils.copyProperties(vo, entity_aerialActivities.getAerialPlans());
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		
+		List<Object[]> resultlist = aerialActivityDao.findRealMission(aerialActivityId);
+		System.out.println("list size::"+resultlist.size());
+		Map<Integer,LinkedList<String>> map = new HashMap<Integer,LinkedList<String>>();
+		for(Object[] result : resultlist) {
+		    Number equipmentId = (Number) result[0];
+		    Number personId = (Number) result[1];
+		    LinkedList<String> list;
+			if(map.get(equipmentId)==null){
+				list = new LinkedList<String>();
+			}else{
+				list = map.get(equipmentId);			
+			}
+			String[] availPersonIds = ((String)result[2]).split(",");
+			String tag ="<select>";
+			for(int i=0;i<availPersonIds.length;i++){
+				if(availPersonIds[i].equals(personId.toString())){
+					tag+="<option value='"+availPersonIds[i]+"' selected>"+availPersonIds[i]+"</option>";
+				}else{
+					tag+="<option value='"+availPersonIds[i]+"'>"+availPersonIds[i]+"</option>";
+				}
+			}
+			tag+="<select>";
+			list.add(tag);
+			map.put(equipmentId.intValue(),list);
+		}
+		
+		Set<Integer> keySet = map.keySet();
+		Iterator<Integer> iterator_keySet = keySet.iterator();
+		List<EquipmentPersonInActivity> resultList = new LinkedList<EquipmentPersonInActivity>();
+		while(iterator_keySet.hasNext()){
+			Integer key = iterator_keySet.next();
+			LinkedList<String> value = map.get(key);
+			AerialActivity.EquipmentPersonInActivity vo_equipmentPerson = new AerialActivity().new EquipmentPersonInActivity();
+			vo_equipmentPerson.setEquipmentId(key.toString());
+			vo_equipmentPerson.setPersonId_1(value.get(0).toString());
+			if(value.size()>1){
+				vo_equipmentPerson.setPersonId_2(value.get(1).toString());
+			}
+			resultList.add(vo_equipmentPerson);
+		}
+		vo.setEquipmentPersonArray(resultList);
+		
+		
+				
+		String jsonString = "";
+		jsonString = gson.toJson(vo);
+		return jsonString;
 	}
 
 	/**
@@ -265,6 +325,7 @@ public class OperationServiceImpl implements OperationService {
 	@Override
 	public void persistAerialActivity(String jsonString) {
 		AerialActivity vo = gson.fromJson(jsonString, AerialActivity.class);
+		System.out.println(jsonString+";"+vo);
 		AerialPlans entity_aerialPlans = aerialPlanDao.findById(vo.getAerialPlanId());
 		AerialActivities entity_aerialActivities = new AerialActivities();
 		List<EquipmentPersonInActivity> equipmentPersonList = vo.getEquipmentPersonArray();

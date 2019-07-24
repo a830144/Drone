@@ -25,23 +25,23 @@ public class PersonController {
 	
 	@RequestMapping(value="/person/CheckPersonProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public void checkPerson(Integer id) {
+	public void checkPerson(Integer targetId) {
 		System.out.println("CheckPerson");
-		personService.check(id);		
+		personService.check(targetId);		
 	}
 	
 	@RequestMapping(value="/person/ApprovePersonProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public void approvePerson(Integer id) {
+	public void approvePerson(Integer targetId) {
 		System.out.println("ApprovePerson");
-		personService.approve(id);	
+		personService.approve(targetId);	
 	}
 	
 	@RequestMapping(value="/person/RejectPersonProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public void rejectPerson(Integer id) {
+	public void rejectPerson(Integer targetId) {
 		System.out.println("RejectPerson");
-		personService.reject(id);	
+		personService.reject(targetId);	
 	}
 	
 	@RequestMapping(value="/person/DeletePersonProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
@@ -57,32 +57,32 @@ public class PersonController {
 		personService.eventInPerson(data);		
 	}
 	
-	@RequestMapping(value="/person/CheckParticipationProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/event/CheckEventProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public void checkParticipation(Integer personId,Integer eventId) {
+	public void checkParticipation(Integer targetId) {
 		System.out.println("CheckParticipation");
-		personService.checkParticipation(personId,eventId);		
+		personService.checkParticipation(targetId);		
 	}
 	
-	@RequestMapping(value="/person/ApproveParticipationProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/event/ApproveEventProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public void approveParticipation(Integer personId,Integer eventId) {
+	public void approveParticipation(Integer targetId) {
 		System.out.println("ApproveParticipation");
-		personService.approveParticipation(personId,eventId);	
+		personService.approveParticipation(targetId);	
 	}
 	
-	@RequestMapping(value="/person/RejectParticipationProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/event/RejectEventProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public void rejectParticipation(Integer personId,Integer eventId) {
+	public void rejectParticipation(Integer targetId) {
 		System.out.println("RejectParticipation");
-		personService.rejectParticipation(personId,eventId);	
+		personService.rejectParticipation(targetId);	
 	}
 	
 	@RequestMapping(value="/person/DeleteParticipationProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public void deleteParticipation(Integer personId,Integer eventId) {
+	public void deleteParticipation(Integer targetId) {
 		System.out.println("DeleteParticipation");
-		personService.deleteParticipation(personId,eventId);	
+		personService.deleteParticipation(targetId);	
 	}
 	
 	
@@ -92,32 +92,32 @@ public class PersonController {
 		personService.licenseInPerson(data);		
 	}
 	
-	@RequestMapping(value="/person/CheckPersonLicenseProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/license/CheckLicenseProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public void checkPersonLicense(Integer personId, Integer licenseId) {
-		System.out.println("CheckPersonLicense");
-		personService.checkPersonLicense(personId,licenseId);		
+	public void checkPersonLicense(Integer targetId) {
+		System.out.println("CheckPersonLicense::"+targetId);
+		personService.checkPersonLicense(targetId);		
 	}
 	
-	@RequestMapping(value="/person/ApprovePersonLicenseProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/license/ApproveLicenseProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public void approvePersonLicense(Integer personId, Integer licenseId) {
+	public void approvePersonLicense(Integer targetId) {
 		System.out.println("ApprovePersonLicense");
-		personService.approvePersonLicense(personId,licenseId);	
+		personService.approvePersonLicense(targetId);	
 	}
 	
-	@RequestMapping(value="/person/RejectPersonLicenseProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/license/RejectLicenseProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public void rejectPersonLicense(Integer personId, Integer licenseId) {
+	public void rejectPersonLicense(Integer targetId) {
 		System.out.println("RejectPersonLicense");
-		personService.rejectPersonLicense(personId,licenseId);	
+		personService.rejectPersonLicense(targetId);	
 	}
 	
 	@RequestMapping(value="/person/DeletePersonLicenseProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public void deletePersonLicense(Integer personId, Integer licenseId) {
+	public void deletePersonLicense(Integer targetId) {
 		System.out.println("DeletePersonLicense");
-		personService.deletePersonLicense(personId,licenseId);	
+		personService.deletePersonLicense(targetId);	
 	}
 	
 	@RequestMapping(value="/person/TrainingInPersonProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
@@ -126,32 +126,32 @@ public class PersonController {
 		personService.trainingInPerson(data);		
 	}
 	
-	@RequestMapping(value="/person/CheckCertificateProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/training/CheckTrainingProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public void checkCertificate(Integer personId,Integer trainingId) {
+	public void checkCertificate(Integer targetId) {
 		System.out.println("CheckCertificate");
-		personService.checkCertificate(personId,trainingId);		
+		personService.checkCertificate(targetId);		
 	}
 	
-	@RequestMapping(value="/person/ApproveCertificateProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/training/ApproveTrainingProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public void approveCertificate(Integer personId,Integer trainingId) {
+	public void approveCertificate(Integer targetId) {
 		System.out.println("ApproveCertificate");
-		personService.approveCertificate(personId,trainingId);	
+		personService.approveCertificate(targetId);	
 	}
 	
-	@RequestMapping(value="/person/RejectCertificateProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/training/RejectTrainingProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public void rejectCertificate(Integer personId,Integer trainingId) {
+	public void rejectCertificate(Integer targetId) {
 		System.out.println("RejectCertificate");
-		personService.rejectCertificate(personId,trainingId);	
+		personService.rejectCertificate(targetId);	
 	}
 	
 	@RequestMapping(value="/person/DeleteCertificateProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public void deleteCertificate(Integer personId,Integer trainingId) {
+	public void deleteCertificate(Integer targetId) {
 		System.out.println("DeleteCertificate");
-		personService.deleteCertificate(personId,trainingId);	
+		personService.deleteCertificate(targetId);	
 	}
 	
 	@RequestMapping(value="/person/UpdatePersonProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
@@ -243,14 +243,21 @@ public class PersonController {
 	@RequestMapping(value="/person/UpdateLicenseInPersonProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
 	public void updateLicenseInPerson(String data) {
-		System.out.println("UpdateMaintainEquipment");
-		//personService.updateMaintainEquipment(data);		
+		System.out.println("Update License in person");
+				
 	}
 	
 	@RequestMapping(value="/person/UpdateTrainingInPersonProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
 	public void updateTrainingInPerson(String data) {
-		System.out.println("UpdateModifyEquipment");
-		//personService.updateModifyEquipment(data);		
+		System.out.println("Update Training in person");
+				
+	}
+	
+	@RequestMapping(value="/person/UpdateEventInPersonProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public void updateEventInPerson(String data) {
+		System.out.println("Update Event in person");
+				
 	}
 }

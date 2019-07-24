@@ -19,7 +19,7 @@
 			<tr>
 				<td>航拍空域範圍檔案：(KML檔)：(File Upload&lt;10M) </td>
 				<td><input type="text" name="productName" id="productName"
-					class="text ui-widget-content ui-corner-all"></td>
+					class="text ui-widget-content ui-corner-all ui-state-disabled"></td>
 			</tr>
 			<tr>
 				<td>作業日期及時間(最多三個月、政府單位可延長至6個月)</td>

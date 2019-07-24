@@ -9,7 +9,15 @@ public class EventInPerson extends Person{
 	private Date endDate;
 	private String description;
 	
+	private Integer participationId;
 	
+	
+	public Integer getParticipationId() {
+		return participationId;
+	}
+	public void setParticipationId(Integer participationId) {
+		this.participationId = participationId;
+	}
 	private byte[] photo;
 	
 	public byte[] getPhoto() {

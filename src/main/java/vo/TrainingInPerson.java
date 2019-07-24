@@ -13,6 +13,14 @@ public class TrainingInPerson extends Person{
 	private Integer hours;
 	private byte[] photo;
 	
+	private Integer certificateId;
+	
+	public Integer getCertificateId() {
+		return certificateId;
+	}
+	public void setCertificateId(Integer certificateId) {
+		this.certificateId = certificateId;
+	}
 	public Date getStartDate() {
 		return startDate;
 	}

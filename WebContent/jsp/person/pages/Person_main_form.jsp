@@ -55,7 +55,7 @@
 			
 			</tr>
 			<tr>
-				<td>半身 最近照片</td>
+				<td>半身最近照片</td>
 				<td><input type="file" name="recentPhoto" id="recentPhoto"
 					class="text ui-widget-content ui-corner-all"></td>
 				<td>最近體檢資料</td>

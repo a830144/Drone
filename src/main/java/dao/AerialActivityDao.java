@@ -19,4 +19,6 @@ public interface AerialActivityDao{
     public List<AerialActivities> findByProjectId(Integer projectId);
     
     public void persistRealMission(RealMissions entity);
+    
+    public List<Object[]> findRealMission(Integer aerialActivityId);
 }

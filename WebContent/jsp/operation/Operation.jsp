@@ -14,6 +14,8 @@
 <script type="text/javascript"  src=" https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.0/css/select.dataTables.min.css"/>
 <script type="text/javascript"  src="https://cdn.datatables.net/select/1.3.0/js/dataTables.select.min.js"></script>
+<script type="text/javascript"  src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css"/>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.1.4/css/fixedHeader.dataTables.css"/>
 <script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.1.4/js/dataTables.fixedHeader.js"></script>
 <script src="/Drone/js/jquery.steps.min.js"></script>
@@ -25,9 +27,16 @@
 <script src="/Drone/js/jquery.cookie-1.3.1.js"></script>
 <script src="/Drone/js/react.js"></script>
 <script src="/Drone/js/react-dom.js"></script>
-
+<script src="/Drone/js/common/action.js" charset="utf-8"></script>
+<script src="/Drone/js/common/store.js" charset="utf-8"></script>
 
 <style type="text/css">
+.hide-true  {
+   display: none;
+}
+.hide-false  {
+   display: initial;
+}
 .dataTables_scroll
 {
     overflow:auto;

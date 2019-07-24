@@ -31,9 +31,15 @@ public interface PersonDao{
     
     public PersonsLicenses findLicenseInfo(Integer personId, Integer licenseId);
     
+    public PersonsLicenses findLicenseInfo(Integer targetId);
+    
     public Certificates findTrainingInfo(Integer personId,Integer trainingId);
     
+    public Certificates findTrainingInfo(Integer targetId);
+    
     public Participations findEventInfo(Integer personId,Integer eventId);
+    
+    public Participations findEventInfo(Integer targetId);
     
     public List<Persons> findPersonWithLicense(Set<String> type);
     

@@ -91,7 +91,7 @@ public class PersonServiceImpl implements PersonService {
 
 	@Override
 	public void updatePerson(String jsonString) {
-		Persons vo = gson.fromJson(jsonString, Persons.class);
+		Person vo = gson.fromJson(jsonString, Person.class);
 		Persons entity_persons = personDao.findById(vo.getPersonId());
 		try {
 			BeanUtils.copyProperties(entity_persons, vo);
@@ -530,9 +530,9 @@ public class PersonServiceImpl implements PersonService {
 		updatePersonState(id, stateMachine.Events.DELETE);
 	}	
 		
-	private Boolean updateCertificateState(Integer personId,Integer trainingId, stateMachine.Events event) {
+	private Boolean updateCertificateState(Integer targetId, stateMachine.Events event) {
 		System.out.println("use updateCertificateState!!!");
-		Certificates entity_certificates = personDao.findTrainingInfo(personId,trainingId);
+		Certificates entity_certificates = personDao.findTrainingInfo(targetId);
 		return certificatePersistStateMachineHandler
 				.handleEventWithState(
 						MessageBuilder.withPayload(event.name())
@@ -550,28 +550,28 @@ public class PersonServiceImpl implements PersonService {
 	}
 	
 	@Override
-	public void checkCertificate(Integer personId,Integer trainingId) {
-		updateCertificateState(personId,trainingId, stateMachine.Events.CHECK);
+	public void checkCertificate(Integer targetId) {
+		updateCertificateState(targetId, stateMachine.Events.CHECK);
 	}
 
 	@Override
-	public void approveCertificate(Integer personId,Integer trainingId) {
-		updateCertificateState(personId,trainingId, stateMachine.Events.APPROVE);
+	public void approveCertificate(Integer targetId) {
+		updateCertificateState(targetId, stateMachine.Events.APPROVE);
 	}
 	
 	@Override
-	public void rejectCertificate(Integer personId,Integer trainingId) {
-		updateCertificateState(personId,trainingId, stateMachine.Events.REJECT);
+	public void rejectCertificate(Integer targetId) {
+		updateCertificateState(targetId, stateMachine.Events.REJECT);
 	}
 	
 	@Override
-	public void deleteCertificate(Integer personId,Integer trainingId) {
-		updateCertificateState(personId,trainingId, stateMachine.Events.DELETE);
+	public void deleteCertificate(Integer targetId) {
+		updateCertificateState(targetId, stateMachine.Events.DELETE);
 	}	
 	
-	private Boolean updatePersonLicenseState(Integer personId,Integer licenseId, stateMachine.Events event) {
+	private Boolean updatePersonLicenseState(Integer targetId, stateMachine.Events event) {
 		System.out.println("use updatePersonLicenseState!!!");
-		PersonsLicenses entity_personsLicenses = personDao.findLicenseInfo(personId,licenseId);
+		PersonsLicenses entity_personsLicenses = personDao.findLicenseInfo(targetId);
 		return personlicensePersistStateMachineHandler
 				.handleEventWithState(
 						MessageBuilder.withPayload(event.name())
@@ -589,28 +589,28 @@ public class PersonServiceImpl implements PersonService {
 	}
 	
 	@Override
-	public void checkPersonLicense(Integer personId, Integer licenseId) {
-		updatePersonLicenseState(personId,licenseId, stateMachine.Events.CHECK);		
+	public void checkPersonLicense(Integer targetId) {
+		updatePersonLicenseState(targetId, stateMachine.Events.CHECK);		
 	}
 
 	@Override
-	public void approvePersonLicense(Integer personId, Integer licenseId) {
-		updatePersonLicenseState(personId,licenseId, stateMachine.Events.APPROVE);		
+	public void approvePersonLicense(Integer targetId) {
+		updatePersonLicenseState(targetId, stateMachine.Events.APPROVE);		
 	}
 
 	@Override
-	public void rejectPersonLicense(Integer personId, Integer licenseId) {
-		updatePersonLicenseState(personId,licenseId, stateMachine.Events.REJECT);		
+	public void rejectPersonLicense(Integer targetId) {
+		updatePersonLicenseState(targetId, stateMachine.Events.REJECT);		
 	}
 	
 	@Override
-	public void deletePersonLicense(Integer personId, Integer licenseId) {
-		updatePersonLicenseState(personId,licenseId, stateMachine.Events.DELETE);		
+	public void deletePersonLicense(Integer targetId) {
+		updatePersonLicenseState(targetId, stateMachine.Events.DELETE);		
 	}	
 	
-	private Boolean updateParticipationState(Integer personId,Integer eventId, stateMachine.Events event) {
+	private Boolean updateParticipationState(Integer targetId, stateMachine.Events event) {
 		System.out.println("use updateParticipationState!!!");
-		Participations entity_participations = personDao.findEventInfo(personId,eventId);
+		Participations entity_participations = personDao.findEventInfo(targetId);
 		return participationPersistStateMachineHandler
 				.handleEventWithState(
 						MessageBuilder.withPayload(event.name())
@@ -629,24 +629,24 @@ public class PersonServiceImpl implements PersonService {
 	
 	
 	@Override
-	public void checkParticipation(Integer personId,Integer eventId) {
-		updateParticipationState(personId,eventId, stateMachine.Events.CHECK);		
+	public void checkParticipation(Integer targetId) {
+		updateParticipationState(targetId, stateMachine.Events.CHECK);		
 	}
 
 	@Override
-	public void approveParticipation(Integer personId,Integer eventId) {
-		updateParticipationState(personId,eventId, stateMachine.Events.APPROVE);				
+	public void approveParticipation(Integer targetId) {
+		updateParticipationState(targetId, stateMachine.Events.APPROVE);				
 	}
 
 	@Override
-	public void rejectParticipation(Integer personId,Integer eventId) {
-		updateParticipationState(personId,eventId, stateMachine.Events.REJECT);		
+	public void rejectParticipation(Integer targetId) {
+		updateParticipationState(targetId, stateMachine.Events.REJECT);		
 		
 	}
 		
 	@Override
-	public void deleteParticipation(Integer personId,Integer eventId) {
-		updateParticipationState(personId,eventId, stateMachine.Events.DELETE);				
+	public void deleteParticipation(Integer targetId) {
+		updateParticipationState(targetId, stateMachine.Events.DELETE);				
 	}
 
 	@Override

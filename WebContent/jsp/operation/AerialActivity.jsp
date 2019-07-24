@@ -2,23 +2,27 @@
 	pageEncoding="utf-8"%>
 
 <script>
-var aerialActivity_obj = {
-		projectId : '',
-		aerialPlanId : '',
-		equipmentId : '',
-		personId_1 : '',
-		personId_2 : '',
-
+var aerialActivity_obj = {		
+		
 		addOrUpdate : function (action){
-			  $("#aerialActivity-form").find("#projectId").prop("disabled", false);
-			  $("#aerialActivity-form").find("#name").prop("disabled", false);
-			  $("#aerialActivity-form").find("#aerialPlanId").prop("disabled",false);
-			  $("#aerialActivity-form").find("#usage").prop("disabled",false);							
-			  var myJson = JSON.stringify($("#aerialActivity-form").serializeObject());
-			  var jsonObject = JSON.parse(myJson);
+			  $("#aerialActivityForm_activity").find("#projectId").prop("disabled", false);
+			  $("#aerialActivityForm_activity").find("#name").prop("disabled", false);
+			  $("#aerialActivityForm_activity").find("#aerialPlanId").prop("disabled",false);
+			  $("#aerialActivityForm_activity").find("#usage").prop("disabled",false);							
+			  			  
+			  var jsonObject = {};
+			  jsonObject.projectId =$("#aerialActivityForm_activity").find("#projectId").val();
+			  jsonObject.name = $("#aerialActivityForm_activity").find("#name").val();
+			  jsonObject.aerialPlanId = $("#aerialActivityForm_activity").find("#aerialPlanId").val();
+			  jsonObject.usage = $("#aerialActivityForm_activity").find("#usage").val();
+			  jsonObject.aerialPlanStartDate = $("#aerialActivityForm_activity").find("#aerialPlanStartDate").val();
+			  jsonObject.aerialPlanEndDate = $("#aerialActivityForm_activity").find("#aerialPlanEndDate").val();
+			  jsonObject.aerialActivityStartDate = $("#aerialActivityForm_activity").find("#aerialActivityStartDate").val();
+			  jsonObject.aerialActivityEndDate = $("#aerialActivityForm_activity").find("#aerialActivityEndDate").val();
+			  
 			  var arr = new Array();
 			  jsonObject.equipmentPersonArray = arr;
-			  var table = $('#single-aerialActivity-table-3-1').DataTable();
+			  var table = $('#equipmentPersonList_activity_sub').DataTable();
 			  table.rows().eq(0).each( function ( index ) {
 			    	var row = table.row( index );
 			    	var cell = table.cell( index ,0);
@@ -46,214 +50,99 @@ var aerialActivity_obj = {
 				 }
 			  })
 		},
-		prepareAerialActivityDomAction : function (){		
-			$("#dialog-aerialActivity-form").dialog({
-				autoOpen : false,
-				height : 500,
-				width : 1050,
-				modal : true,
-				buttons : [
-					{
-					  text: "修改航拍活動資料",
-			          icon: "ui-icon-pencil",
-			          id: "updateAerialActivityBtn",
-			          click: function (){ aerialActivity_obj.addOrUpdate('update') }
-		 		    },
-		    		{
-		      		  text: "新增航拍活動資料",
-		              icon: "ui-icon-plus",
-		              id: "addAerialActivityBtn",
-		              click: function (){ aerialActivity_obj.addOrUpdate('add') }	
-		            },
-				    {
-			          text: "關閉",
-			          icon: "ui-icon-closethick",
-			          click: function() {
-			             $( this ).dialog( "close" );
-			          }
-			 
-			 		}],
-				close : function() {
-					var table1 = $('#single-aerialActivity-table-1').DataTable();
-					table1.destroy();
-					
-					var table3 = $('#single-aerialActivity-table-3-1').DataTable();
-					$( "#single-aerialActivity-table-3-1").unbind( "select" );
-					table3.destroy();
-				}
-			});	
-			$("#dialog-aerialActivity-tabs").tabs({
-				  activate: function( event, ui ) {
-					  $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
-				  }
-			});
-			 
-			
+		
+		initState : function (id){
+			store_obj.projectId = id;
 		},
-		viewDomFinishState : function (id){
-			aerialActivity_obj.projectId = id;
-		},
-		transferAerialActivityListAction : function (){
-			var singleaerialActivitytable1 = $('#single-aerialActivity-table-1').DataTable( {
-				columnDefs: [
-				{	
-					className: 'dt-center',
-					targets: '_all'
-				}],
-				select:true,
-		        order: [[ 1, 'asc' ]],
-				scrollY: "100px",
-		        scrollCollapse: true,		
-				ajax: {
-					type: "POST",
-				    url: "/Drone/operation/QueryAerailActivitiesProcess",  
-				    data: {  
-				    	projectId : aerialActivity_obj.projectId 
-				    }, 
-				    dataSrc: function ( json ) {
-				    	var myarray=new Array(json.length);
-				    	for (i=0; i <json.length; i++){
-				    	    myarray[i]=new Array(4);
-				    	}
-				    	for (i=0; i <json.length; i++){
-			        		var obj = $.parseJSON(json[i]);
-			        		myarray[i][0]='';		        		
-			        		myarray[i][1]=obj.hasOwnProperty("aerialPlanId")?obj.aerialPlanId:'';
-			        		myarray[i][2]=obj.hasOwnProperty("aerialActivityId")?obj.aerialActivityId:'';
-			        		myarray[i][3]=obj.aerialActivityStartDate+'~'+obj.aerialActivityEndDate;
-			        	}
-				    	//aerialActivity_obj.registerAerialActivityListEvent();
-				        return myarray;
-				      }
-				    ,
-			        dataType: 'json'
-				}
-
-			});
-		},
-		registerAerialActivityListEvent : function (){
-
-		},
-		transferAerialActivityMainFormAction : function (){
-			$.post("/Drone/operation/ViewProjectProcess", {
-				id : aerialActivity_obj.projectId
-			}, function(data, status) {
-				if (status == 'success') {
-					var obj = data;
-					var form = $("#dialog-aerialActivity-form-2");
-					$.each(obj, function(key, value) {
-						form.find("#" + key).val(value);
-					});
-					form.find("#projectId").prop("disabled", true);
-					form.find("#name").prop("disabled", true);
-				}
-
-			});
-			
-			var container = document.getElementById('root-activity');
-			ReactDOM.render(React.createElement(Steps_activity, {}), container);
-			container = document.getElementById('firstStep-activity');
-			ReactDOM.render(React.createElement(FirstStep_activity, {}), container);
-			container = document.getElementById('secondStep-activity');
-			ReactDOM.render(React.createElement(SecondStep_activity, {}), container);
-			container = document.getElementById('thirdStep-activity');
-			ReactDOM.render(React.createElement(ThirdStep_activity, {}), container);
-			
-			$.ajax({
-				url : "/Drone/operation/QueryAerailPlansIDsByProjectId",
-				type : "POST",
-				data: {  
-			    	projectId: aerialActivity_obj.projectId 
-			    }, 
-				success : function(tag) {  
-					$("#dialog-aerialActivity-form-2").find("#aerialPlanId").append(tag);
-					aerialActivity_obj.registerAerialPlanIdEvent();
-		        }
-			});	
-			
-			
-		},
-		registerAerialPlanIdEvent : function (){
-			$("#dialog-aerialActivity-form-2").find("#aerialPlanId").change(function() {		
-				var id = $("#dialog-aerialActivity-form-2").find("#aerialPlanId").val();
-				//aerialPlanId change,ajax bring other data in form2
-				$.ajax({
-					url : "/Drone/operation/ViewAerialPlanByAerialPlanId",
-					type : "POST",	
-					data : {
-						"id" : id
-					},
-					success : function(json) {   
-						$("#dialog-aerialActivity-form-2").find("#usage").val(json.usage);
-						$("#dialog-aerialActivity-form-2").find("#startDate").val(json.startDate);
-						$("#dialog-aerialActivity-form-2").find("#endDate").val(json.endDate);
-		            }
-				});
-				//aerialPlanId change,ajax refresh the table in form3
-				aerialActivity_obj.aerialPlanId = id;
-			});
+		removeState : function (){
+			store_obj.projectId = '';
 		},
 		
-		transferEquipmentInPlanListAction : function(){
-			var singleaerialActivitytable31 = $('#single-aerialActivity-table-3-1').DataTable( {
-				"select":true,
-		        "order": [[ 1, 'asc' ]],
-				"scrollY": "100px",
-		        "scrollCollapse": true
-			});
+		initReactComponent : function (action){	
+			var container;
+			container = document.getElementById('aerialActivityDialog_'+action);
+			aerialActivity_obj.aerialActivityDialog = ReactDOM.render(React.createElement(aerialActivityDialog, {domId:action}), container);
+			action_obj.aerialActivityList_select_Action_subscribe(aerialActivity_obj.aerialActivityDialog);
+			action_obj.aerialActivityList_deselect_Action_subscribe(aerialActivity_obj.aerialActivityDialog);
 			
-		},
-		
-		initializeAerialActivityListState : function (){
+			container = document.getElementById('aerialActivityList_'+action);
+			aerialActivity_obj.aerialActivityList = ReactDOM.render(React.createElement(aerialActivityList, {domId:action}), container);
 			
+			container = document.getElementById('aerialActivityTabs_'+action);
+			aerialActivity_obj.tabs = ReactDOM.render(React.createElement(aerialActivityTabs, {domId:action}), container);				
+						
+			container = document.getElementById('aerialActivityEPList_'+action);
+			aerialActivity_obj.aerialActivityEPList = ReactDOM.render(React.createElement(aerialActivityEPList, {domId:action}), container);
+			action_obj.aerialActivitySteps_clickFinish_Action_subscribe(aerialActivity_obj.aerialActivityEPList);
+			action_obj.aerialActivityList_select_Action_subscribe(aerialActivity_obj.aerialActivityEPList);
+			action_obj.aerialActivityList_deselect_Action_subscribe(aerialActivity_obj.aerialActivityEPList);
+			
+			container = document.getElementById('aerialActivityForm_'+action);
+			aerialActivity_obj.aerialActivityForm = ReactDOM.render(React.createElement(aerialActivityForm, {domId:action,projectId:store_obj.projectId}), container); 
+			action_obj.aerialActivityList_select_Action_subscribe(aerialActivity_obj.aerialActivityForm);
+			action_obj.aerialActivityList_deselect_Action_subscribe(aerialActivity_obj.aerialActivityForm);
+			
+			container = document.getElementById('aerialActivitySteps_'+action);
+			aerialActivity_obj.steps = ReactDOM.render(React.createElement(aerialActivitySteps, {domId:action}), container);
+			action_obj.aerialActivityEPList_add_Action_subscribe(aerialActivity_obj.steps);			
+			
+			container = document.getElementById('firstStep_'+action);
+			aerialActivity_obj.firstStep = ReactDOM.render(React.createElement(firstStep, {domId:action}), container);
+			action_obj.aerialActivityForm_planIdChange_Action_subscribe(aerialActivity_obj.firstStep);
+			
+			container = document.getElementById('secondStep_'+action);
+			aerialActivity_obj.secondStep = ReactDOM.render(React.createElement(secondStep, {domId:action}), container);
+			action_obj.equipmentList_select_Action_subscribe(aerialActivity_obj.secondStep);
+			action_obj.equipmentList_deselect_Action_subscribe(aerialActivity_obj.secondStep);
+			
+			container = document.getElementById('thirdStep_'+action);
+			aerialActivity_obj.thirdStep = ReactDOM.render(React.createElement(thirdStep, {domId:action}), container);
+			action_obj.equipmentList_select_Action_subscribe(aerialActivity_obj.thirdStep);
+			action_obj.equipmentList_deselect_Action_subscribe(aerialActivity_obj.thirdStep);
+			action_obj.personList_select_Action_subscribe(aerialActivity_obj.thirdStep);
+			action_obj.personList_deselect_Action_subscribe(aerialActivity_obj.thirdStep);
+			//debugger;			
 		},
+		removeReactComponent : function (action){
+			var container = document.getElementById('firstStep_'+action);
+			ReactDOM.unmountComponentAtNode(container);
+			container = document.getElementById('secondStep_'+action);
+			ReactDOM.unmountComponentAtNode(container);
+			container = document.getElementById('thirdStep_'+action);
+			ReactDOM.unmountComponentAtNode(container);
+			container = document.getElementById('aerialActivitySteps_'+action);
+			ReactDOM.unmountComponentAtNode(container);
+			container = document.getElementById('aerialActivityEPList_'+action);
+			ReactDOM.unmountComponentAtNode(container);
+			container = document.getElementById('aerialActivityForm_'+action);
+			ReactDOM.unmountComponentAtNode(container);
+			container = document.getElementById('aerialActivityTabs_'+action);
+			ReactDOM.unmountComponentAtNode(container);
+			container = document.getElementById('aerialActivityList_'+action);
+			ReactDOM.unmountComponentAtNode(container);			
+			container = document.getElementById('aerialActivityDialog_'+action);
+			ReactDOM.unmountComponentAtNode(container);
+			
+			action_obj.aerialActivityList_select_Action_handler = [];
+			action_obj.aerialActivityList_deselect_Action_handler = [];
+			action_obj.aerialActivitySteps_clickFinish_Action_handler = [];
+			action_obj.aerialActivityEPList_add_Action_handler = [];
+			action_obj.aerialActivityForm_planIdChange_Action_handler = [];
+			action_obj.equipmentList_select_Action_handler = [];
+			action_obj.equipmentList_deselect_Action_handler = [];
+			action_obj.personList_select_Action_handler = [];
+			action_obj.personList_deselect_Action_handler = [];
 
-		initializeAerialActivityMainFormState : function (){
-			
-		}	
+		},		
 }
-
-$(function() {
-	aerialActivity_obj.prepareAerialActivityDomAction();
-});
-
 
 function aerialActivity(id){	
-	aerialActivity_obj.viewDomFinishState(id);	
-	aerialActivity_obj.transferAerialActivityListAction();
-	aerialActivity_obj.transferAerialActivityMainFormAction();
-	aerialActivity_obj.transferEquipmentInPlanListAction();
-	aerialActivity_obj.initializeAerialActivityListState();		
-	$("#dialog-aerialActivity-form").dialog("open");
-
+	aerialActivity_obj.initState(id);
+	aerialActivity_obj.initReactComponent('aerialActivity');		
 }
 </script>
-<div id="dialog-aerialActivity-form" title="檢視航拍活動資料" style="display: none;">
-	<div id="dialog-aerialActivity-form-1">
-		<table id="single-aerialActivity-table-1">
-			<%@ include file="./pages/AerialActivity_list.jsp"%>
-		</table>
-	</div>
-	<div id="dialog-aerialActivity-tabs">
-		<ul>
-			<li><a href="#dialog-aerialActivity-form-2">主要資訊</a></li>
-			<li><a href="#dialog-aerialActivity-form-3">使用設備資訊</a></li>
-		</ul>
-		<form id="aerialActivity-form">
-			<div id="dialog-aerialActivity-form-2">
-				<table id="single-aerialActivity-table-2-1" class="display" 
-					style="width: 100%">
-					<%@ include file="./pages/AerialActivity_main_form.jsp"%>
-				</table>
-			</div>
-			<div id="dialog-aerialActivity-form-3">
-				<table id="single-aerialActivity-table-3-1" class="display"
-					style="width: 100%">
-					<%@ include file="./pages/EquipmentInActivity_list.jsp"%>
-				</table>
-				<div id="root-activity"></div>
-			</div>
-		</form>
-	</div>	
+<div id="aerialActivityDialog_aerialActivity" title="檢視航拍活動資料" style="display: none;">
 </div>
-<script src="/Drone/js/aerialActivity.steps.js" charset="utf-8"></script>
+<script src="/Drone/js/operation/aerialActivity.main.js" charset="utf-8"></script>
+<script src="/Drone/js/operation/aerialActivity.form.js" charset="utf-8"></script>
+<script src="/Drone/js/operation/aerialActivity.steps.js" charset="utf-8"></script>

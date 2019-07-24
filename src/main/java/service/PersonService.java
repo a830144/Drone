@@ -49,30 +49,31 @@ public interface PersonService {
 
 	void delete(Integer id);
 	
-	public void checkCertificate(Integer personId,Integer trainingId);
+	public void checkCertificate(Integer targetId);
 	
-	public void approveCertificate(Integer personId,Integer trainingId);
+	public void approveCertificate(Integer targetId);
 	
-	public void rejectCertificate(Integer personId,Integer trainingId);
+	public void rejectCertificate(Integer targetId);
 
-	public void deleteCertificate(Integer personId,Integer trainingId);	
+	public void deleteCertificate(Integer targetId);	
 	
-	public void checkPersonLicense(Integer personId, Integer licenseId);
+	public void checkPersonLicense(Integer targetId);
 	
-	public void approvePersonLicense(Integer personId, Integer licenseId);
+	public void approvePersonLicense(Integer targetId);
 	
-	public void rejectPersonLicense(Integer personId, Integer licenseId);
+	public void rejectPersonLicense(Integer targetId);
 
-	public void deletePersonLicense(Integer personId, Integer licenseId);	
+	public void deletePersonLicense(Integer targetId);	
 	
-	public void checkParticipation(Integer personId,Integer eventId);
+	public void checkParticipation(Integer targetId);
 	
-	public void approveParticipation(Integer personId,Integer eventId);
+	public void approveParticipation(Integer targetId);
 	
-	public void rejectParticipation(Integer personId,Integer eventId);
+	public void rejectParticipation(Integer targetId);
 
-	public void deleteParticipation(Integer personId,Integer eventId);	
+	public void deleteParticipation(Integer targetId);	
 	
 	public JsonArray queryPersonsByMissionInfo(Integer aerialPlanId,Integer equipmentId);
+
 	
 }

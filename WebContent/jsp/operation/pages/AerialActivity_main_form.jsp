@@ -25,16 +25,31 @@
 					class="text ui-widget-content ui-corner-all"></td>
 			</tr>
 			<tr>
-				<td>計畫作業日期及時間(最多三個月、政府單位可延長至6個月)</td>
-				<td>開始<input type="text" name="aerialActivityStartDate" id="aerialActivityStartDate"
+				<td>計畫核准作業日期及時間(最多三個月、政府單位可延長至6個月)</td>
+				<td>開始<input type="text" name="aerialPlanStartDate" id="aerialPlanStartDate"
 					class="text ui-widget-content ui-corner-all">
-					~<br>結束<input type="text" name="aerialActivityEndDate" id="aerialActivityEndDate"
+					~<br>結束<input type="text" name="aerialPlanEndDate" id="aerialPlanEndDate"
 					class="text ui-widget-content ui-corner-all">
 				</td>
 			</tr>
 			<tr>
 				<td>計畫核准資料</td>
 				<td>
+				</td>
+				
+			</tr>
+			<tr>
+				<td>航拍活動編號</td>
+				<td id="aerialActivityIdTD"></td>
+				<td>航拍活動資料狀態</td>
+				<td id="aerialActivityStateTD"></td>
+			</tr>
+			<tr>
+				<td>活動作業日期及時間(須於核准計畫最業日期內)</td>
+				<td>開始<input type="text" name="aerialActivityStartDate" id="aerialActivityStartDate"
+					class="text ui-widget-content ui-corner-all">
+					~<br>結束<input type="text" name="aerialActivityEndDate" id="aerialActivityEndDate"
+					class="text ui-widget-content ui-corner-all">
 				</td>
 			</tr>
 			
