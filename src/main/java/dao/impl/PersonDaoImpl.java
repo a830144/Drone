@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -95,6 +96,28 @@ public class PersonDaoImpl implements PersonDao{
 		Persons Persons = findById(id);
 		delete(Persons);
 	}
+	
+	@Override
+	public List<Object[]> findLicenseDetail(Integer personId) {
+		// TODO
+		String sql = "SELECT pl.State,l.License_ID,pl.got_Date,c.Code_Content,pl.Persons_Licenses_ID,pl.Construction_Type,"
+				+ " (SELECT code_content FROM drone.code where code.code = pl.Construction_Type"
+                + "  AND code.Code_Type = 'Construction_type') as Construction_Type_name"
+				+ " FROM drone.persons p,drone.persons_licenses pl, drone.licenses l, drone.code c"
+				+ " WHERE p.person_id = pl.Person_ID"
+				+ " and pl.License_ID = l.License_ID" 
+				+ " and l.type = c.code"
+				+ " and c.Code_Type = 'License_type'" 
+				+ " and p.person_id =:personId"  ;
+		Session session = this.sessionFactory.getCurrentSession();
+		NativeQuery<Object[]> query = session.createNativeQuery(sql);
+		query.setParameter("personId", personId);
+		List<Object[]> results = query.list();
+		return results;
+		
+		
+		
+	}
 
 	@Override
 	public PersonsLicenses findLicenseInfo(Integer personId, Integer licenseId) {
@@ -131,12 +154,25 @@ public class PersonDaoImpl implements PersonDao{
 		return results.get(0);
 	}
 	@Override
-	public List<Persons> findPersonWithLicense(Set<String> type) {
-		String hql = "SELECT distinct P FROM entity.Persons P join P.personsLicenseses PL where  PL.licenses.type in (:searchField1) ";
-		Session session = this.sessionFactory.getCurrentSession();
-		Query<Persons> query = session.createQuery(hql);
-		query.setParameterList("searchField1", type);
-		List<Persons> results = query.list();
+	public List<Persons> findPersonWithLicense(String constructionType,Set<String> type) {
+		List<Persons> results;
+		if (type == null) {
+			String hql = "SELECT distinct P FROM entity.Persons P join P.personsLicenseses PL "
+					+ "WHERE PL.constructionType = :constructionType " ;
+			Session session = this.sessionFactory.getCurrentSession();
+			Query<Persons> query = session.createQuery(hql);
+			query.setParameter("constructionType", constructionType);
+			results = query.list();
+		} else {
+			String hql = "SELECT distinct P FROM entity.Persons P join P.personsLicenseses PL "
+					+ "WHERE  PL.licenses.type in (:searchField1) " 
+					+ "AND PL.constructionType = :constructionType";
+			Session session = this.sessionFactory.getCurrentSession();
+			Query<Persons> query = session.createQuery(hql);
+			query.setParameterList("searchField1", type);
+			query.setParameter("constructionType", constructionType);
+			results = query.list();
+		}
 		return results;
 	}
 	@Override

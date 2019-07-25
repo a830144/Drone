@@ -1,10 +1,6 @@
 package service;
 
-import java.util.List;
-
 import com.google.gson.JsonArray;
-
-import entity.Persons;
 
 public interface PersonService {
 	public void persist(String jsonString);
@@ -33,7 +29,7 @@ public interface PersonService {
 	
 	public JsonArray queryEventsById(Integer id);
 	
-	public JsonArray queryPersonsByLicenseType(String operationLimit);
+	public JsonArray queryPersonsByLicenseType(String constructionType ,boolean operationLimit);
 	
 	public String queryLicenseInfo(Integer personId,Integer licenseId);
 	

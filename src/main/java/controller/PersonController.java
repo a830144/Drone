@@ -212,10 +212,19 @@ public class PersonController {
 		return jsonString;
 	}
 	
-	
+	/**
+	 * 1. when we use name , we use the person name to query person
+	 * 2. when we use operationLimit and constructionType, these two parameter will be used to filter the person list who own the mapping license
+	 * 3. when we use aerialPlanID and equipmentID, these two factor will be used to query the mission table
+	 * @param name
+	 * @param operationLimit
+	 * @param aerialPlanId
+	 * @param equipmentId
+	 * @return
+	 */
 	@RequestMapping(value="/person/QueryPersonProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public String showQueryPerson(String name,String operationLimit,String aerialPlanId, String equipmentId) {		
+	public String showQueryPerson(String name,String constructionType,boolean operationLimit,String aerialPlanId, String equipmentId) {		
 		System.out.println("here: name :"+name+";operationLimit="+operationLimit+";aerialPlanId:"+aerialPlanId);
 		if(!"".equals(name)&& name!=null&&!"empty".equals(name)){
 			JsonArray jsonArray = personService.queryPersons(name);
@@ -227,11 +236,11 @@ public class PersonController {
 			String jsonString =jsonArray.toString();	
 			System.out.println(jsonString);
 			return jsonString;
-		}else if(!"".equals(operationLimit) && operationLimit!=null){
-			JsonArray jsonArray = personService.queryPersonsByLicenseType(operationLimit);
+		}else if(!"".equals(constructionType) && constructionType!=null){
+			JsonArray jsonArray = personService.queryPersonsByLicenseType(constructionType,operationLimit);
 			String jsonString =jsonArray.toString();	
 			return jsonString;
-		}else if(!"".equals(aerialPlanId) && aerialPlanId!=null){
+		}else if(!"".equals(aerialPlanId) && aerialPlanId!=null && !"".equals(equipmentId) && equipmentId!=null){
 			JsonArray jsonArray = personService.queryPersonsByMissionInfo(new Integer(aerialPlanId),new Integer(equipmentId));
 			String jsonString =jsonArray.toString();	
 			return jsonString;

@@ -22,13 +22,13 @@ $(document).ready(
 			    	   			 myarray[i]=new Array(7);
 			    			}
 			    			for(i=0;i<json.length;i++){
-		        				var obj = json[i];
+		        				var obj = $.parseJSON(json[i]);
 		        				myarray[i][0]=obj.hasOwnProperty("projectId")?obj.projectId:'';
 		        				myarray[i][1]=obj.hasOwnProperty("name")?obj.name:'';		        			
 		        				myarray[i][2]=obj.hasOwnProperty("company")?obj.company:'';
 		        				myarray[i][3]=obj.hasOwnProperty("projectEndDate")?obj.projectEndDate:'';
 		        				myarray[i][4]=obj.hasOwnProperty("projectManager")?obj.projectManager:'';
-		        				myarray[i][5]=obj.hasOwnProperty("status")?obj.status:'';
+		        				myarray[i][5]=obj.hasOwnProperty("state")?obj.state:'';
 		        				var view_btn = "<button name='view"+ obj.projectId +"' id='" + obj.projectId +"' class='view ui-button ui-corner-all ui-widget' value='view'>檢視</button>";
 		        				var update_btn = "<button name='update"+ obj.projectId +"' id='" + obj.projectId +"' class='update ui-button ui-corner-all ui-widget' value='update'>修改</button>";
 		        				var aerial_plan_btn = "<button name='aerialPlan"+ obj.projectId +"' id='" + obj.projectId +"' class='aerialPlan ui-button ui-corner-all ui-widget' value='aerialPlan'>航拍計畫</button>";

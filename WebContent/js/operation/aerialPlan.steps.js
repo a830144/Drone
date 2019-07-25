@@ -53,7 +53,6 @@ var aerialPlanSteps = React.createClass({
 var p_firstStep = React.createClass({
 	getInitialState: function() {
         return {
-       	   aerialPlanId:'',
         };
     },
     onConstructionChange: function(event) {
@@ -61,14 +60,13 @@ var p_firstStep = React.createClass({
     },
 
     notify: function(obj){
-       this.setState({ 
-       	  aerialPlanId: obj.aerialPlanId 
+       this.setState({  
        });
     },
     render: function() {
         return  React.createElement("div",  {id:"p_firstStep_"+this.props.domId},
         			React.createElement(selectConstruction,{onConstructionChange: this.onConstructionChange}),
-                    React.createElement(p_equipmentList,{aerialPlanId:this.state.aerialPlanId})
+                    React.createElement(p_equipmentList,{type:this.state.type })
                 );
     }
 
@@ -91,10 +89,10 @@ var selectConstruction = React.createClass({
     },
     render: function() {
         return  React.createElement("select",  {name:"constructionType",onChange: this.handleChange},
-                React.createElement("option",  {value: "A"},'鐒′汉椋涙(Aircraft)'),
-                React.createElement("option",  {value: "H"},'鐒′汉鐩存槆姗?Helicopter)'),
-                React.createElement("option",  {value: "M"},'鐒′汉澶氭棆缈兼(Muti-Rotors)'),
-                React.createElement("option",  {value: "O"},'鍏朵粬Other')
+                React.createElement("option",  {value: "A"},'無人飛機(Aircraft)'),
+                React.createElement("option",  {value: "H"},'無人直升機(Helicopter)'),
+                React.createElement("option",  {value: "M"},'無人多旋翼機(Muti-Rotors)'),
+                React.createElement("option",  {value: "O"},'其他Other')
         );
     }
 
@@ -113,7 +111,7 @@ var p_equipmentList = React.createClass({
     },
     componentDidUpdate(prevProps, prevState){
     	var tableName = "#p_equipmentList";
-    	if(this.props.aerialPlanId!==prevProps.aerialPlanId){
+    	if(this.props.type!==prevProps.type){
     		$(tableName).unbind( "select" );
     		var table = $(tableName).DataTable();
     		table.destroy();
@@ -134,7 +132,7 @@ var p_equipmentList = React.createClass({
     				type: "POST",
     				url: "/Drone/equipment/QueryEquipmentProcess",   
     				data: {  
-    					aerialPlanId: this.props.aerialPlanId 
+    					type: this.props.type 
     				}, 
     				dataSrc: function ( json ) {
     					var myarray=new Array(json.length);
@@ -154,7 +152,9 @@ var p_equipmentList = React.createClass({
     					t.on( 'select', function ( e, dt, type, indexes ) {		            		
 			                var cell =t.cell( indexes ,1);
 			                var equipmentId = cell.data();
-			                action_obj.equipmentAPList_select_Action(equipmentId);
+			                cell =t.cell( indexes ,3);
+			                var constructionType = cell.data();
+			                action_obj.equipmentAPList_select_Action(equipmentId,constructionType);
     					});
     					t.on( 'deselect', function ( e, dt, type, indexes ) {
     						if ( type === 'row' ) {				
@@ -242,10 +242,10 @@ var operationLimitCheckBox = React.createClass({
     },
     handleClick: function(event) {
         if(event.target.value==='y'){
-            window.operationLimit= 'true';
+        	action_obj.operationLimit_check_Action(true);
         }else{
             $("input[type='checkbox']").prop("checked", false ).checkboxradio('refresh');
-            window.operationLimit= 'false';
+            action_obj.operationLimit_check_Action(false);
         }
     },
     
@@ -298,12 +298,14 @@ var p_thirdStep = React.createClass({
         };
     },
     notify: function(obj){
-       this.setState({ 
+       this.setState({
+    	   constructionType: obj.constructionType,
+       	   operationLimit: obj.operationLimit
        });
     },
 	render: function() {
         return  React.createElement("div",  {id:'p_thirdStep_'+this.props.domId},
-        		React.createElement(p_personList,{aerialPlanId: this.state.aerialPlanId,equipmentId:this.state.equipmentId})
+        		React.createElement(p_personList,{constructionType: this.state.constructionType,operationLimit:this.state.operationLimit})
                 );
     }
 
@@ -312,19 +314,17 @@ var p_thirdStep = React.createClass({
 var p_personList = React.createClass({
 	getDefaultProps: function() {
         return {
-        	aerialPlanId:'',
-        	equipmentId:''
+        	constructionType:'',
+        	operationLimit:false
         };
     },
     getInitialState: function() {
          return {
-        	 aerialPlanId:store_obj.aerialPlanId,
-        	 equipmentId: store_obj.equipmentId 
          };
     },
     componentDidUpdate(prevProps, prevState){
     	var tableName = "#p_personList";
-        if((this.props.equipmentId!==prevProps.equipmentId)&&(this.props.equipmentId!=='-'&&(this.props.equipmentId!==null))){
+        if((this.props.constructionType!==prevProps.constructionType)||(this.props.operationLimit!==prevProps.operationLimit)){
             $(tableName).unbind( "select" );
             var table = $(tableName).DataTable();
             table.destroy();
@@ -344,8 +344,8 @@ var p_personList = React.createClass({
 				    type: "POST",
 			        url: "/Drone/person/QueryPersonProcess",   
 			        data: {
-			        	aerialPlanId : this.props.aerialPlanId,
-			            equipmentId: this.props.equipmentId
+			        	constructionType : this.props.constructionType,
+			        	operationLimit : this.props.operationLimit
 			        }, 
 			        dataSrc: function ( json ) {
 			    	    var myarray=new Array(json.length);
@@ -365,12 +365,12 @@ var p_personList = React.createClass({
 		                t.on( 'select', function ( e, dt, type, indexes ) {
 			                var cell =t.cell( indexes ,1);
                             var personId = cell.data();
-                            aerialPlan_obj.personTable_select_Action(personId);                            
+                            action_obj.personAPList_select_Action(personId);                            
                         });
                         t.on( 'deselect', function ( e, dt, type, indexes ) {
 			                var cell =t.cell( indexes ,1);
 			                var personId = cell.data();
-			                aerialPlan_obj.personTable_deselect_Action(personId);
+			                action_obj.personAPList_deselect_Action(personId);
 		                });
 
 			        return myarray;

@@ -33,6 +33,8 @@ public interface PersonDao{
     
     public PersonsLicenses findLicenseInfo(Integer targetId);
     
+    public List<Object[]> findLicenseDetail(Integer personId);
+    
     public Certificates findTrainingInfo(Integer personId,Integer trainingId);
     
     public Certificates findTrainingInfo(Integer targetId);
@@ -41,7 +43,7 @@ public interface PersonDao{
     
     public Participations findEventInfo(Integer targetId);
     
-    public List<Persons> findPersonWithLicense(Set<String> type);
+    public List<Persons> findPersonWithLicense(String constructionType,Set<String> type);
     
     public List<Persons> findAll();
     

@@ -12,7 +12,21 @@ public class LicenseInPerson extends Person{
 	private Integer licenseId;
 	private String type;
 	private String subType;
+	private String codeContent;
+	private String constructionType;
 	
+	public String getConstructionType() {
+		return constructionType;
+	}
+	public void setConstructionType(String constructionType) {
+		this.constructionType = constructionType;
+	}
+	public String getCodeContent() {
+		return codeContent;
+	}
+	public void setCodeContent(String codeContent) {
+		this.codeContent = codeContent;
+	}
 	private Integer personsLicensesId;
 	
 	public Integer getPersonsLicensesId() {

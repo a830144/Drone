@@ -47,6 +47,15 @@ public class AerialPlan {
 	private Float takeOffESecond;
 	//作業範圍中心點
 	private Integer areaCenterNDegree;
+	private stateMachine.States state;
+	public stateMachine.States getState() {
+		return state;
+	}
+
+	public void setState(stateMachine.States state) {
+		this.state = state;
+	}
+
 	public Integer getTakeOffNDegree() {
 		return takeOffNDegree;
 	}
@@ -304,5 +313,6 @@ public class AerialPlan {
 			this.personId_2 = personId_2;
 		}
 	}
+	
 
 }

@@ -6,7 +6,8 @@ var aerialActivityForm = React.createClass({
     },
     notify: function(obj){    	
     	this.setState({ 
-    		aerialActivityId:obj.aerialActivityId
+    		aerialActivityId:obj.aerialActivityId,
+    		state:obj.state
     	});
     },
 	
@@ -61,7 +62,7 @@ var aerialActivityForm = React.createClass({
     componentDidUpdate(prevProps, prevState){
     	var form = $("#aerialActivityForm_"+this.props.domId+"_sub");
 		if(this.state.state!==prevState.state){
-			form.find("#aerialActivityState").val(this.state.state);
+			form.find("#state").val(this.state.state);
 		}
 
     	if(this.state.aerialActivityId!==prevState.aerialActivityId){
@@ -84,7 +85,7 @@ var aerialActivityForm = React.createClass({
   				  success: function(data){	
   					  var obj = data;
   					  form.find("#aerialActivityIdTD").empty().append("<input type='text' name='aerialActivityId' id='aerialActivityId' class='text ui-widget-content ui-corner-all ui-state-disabled'>");
-  					  form.find("#aerialActivityStateTD").empty().append("<input type='text' name='aerialActivityState' id='aerialActivityState' class='text ui-widget-content ui-corner-all ui-state-disabled'>");
+  					  form.find("#aerialActivityStateTD").empty().append("<input type='text' name='state' id='state' class='text ui-widget-content ui-corner-all ui-state-disabled'>");
   					  $.each(obj, function(key, value) {
   						  form.find("#" + key).val(value);	
   						  form.find("input[name='" + key +"']").val(value);
@@ -169,11 +170,8 @@ var aerialActivityForm = React.createClass({
                                         "~結束",
                                         React.createElement("input",  {type:"text",id:"aerialActivityEndDate"})
                                     )
-                            ),
-                            React.createElement("tr",  {},
-                                    React.createElement("td",  {},"資料狀態"),
-                                    React.createElement("td",  {id:"aerialActivityStateTD"})
                             )
+                            
                         )
                     )
                    );

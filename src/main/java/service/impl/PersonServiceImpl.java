@@ -1,6 +1,7 @@
 package service.impl;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -314,28 +315,31 @@ public class PersonServiceImpl implements PersonService {
 
 	@Override
 	public JsonArray queryLicensesById(Integer id) {
-		Persons entity_persons = personDao.findById(id);
-		Iterator<PersonsLicenses> iterator_personsLicensess = entity_persons.getPersonsLicenseses().iterator();
+		/*
+		 * State,type,got_Date,Code_Content,personsLicensesId,construction_type,construction_type description
+		 */
+		List<Object[]> resultlist= personDao.findLicenseDetail(id);
 		JsonArray jsonArray = new JsonArray();
-
-		while (iterator_personsLicensess.hasNext()) {
+		for(Object[] result : resultlist) {
 			LicenseInPerson vo = new LicenseInPerson();
-			PersonsLicenses entity_personsLicenses = (PersonsLicenses)iterator_personsLicensess.next();
-			try {
-				BeanUtils.copyProperties(vo, entity_personsLicenses);
-				BeanUtils.copyProperties(vo, entity_personsLicenses.getLicenses());
-				if (entity_personsLicenses.getPersonsLicensesFlow() != null) {
-					BeanUtils.copyProperties(vo, entity_personsLicenses.getPersonsLicensesFlow());
-				}
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
-			}
-
-			jsonArray.add(gson.toJson(vo));
-
+			String state = (String) result[0];
+		    Integer licenseId = (Integer) result[1];
+		    Date gotDate = (Date)result[2];
+		    String codeContent = (String) result[3];
+		    Integer personsLicensesId = (Integer) result[4];
+		    String constructionType = (String) result[6];
+		    
+		    vo.setState(stateMachine.States.valueOf(state));
+		    vo.setLicenseId(licenseId);
+		    vo.setGotDate(gotDate);
+		    vo.setCodeContent(codeContent);
+		    vo.setPersonsLicensesId(personsLicensesId);
+		    vo.setConstructionType(constructionType);
+		
+		    jsonArray.add(gson.toJson(vo));
 		}
+		
+		
 		return jsonArray;
 	}
 
@@ -458,34 +462,36 @@ public class PersonServiceImpl implements PersonService {
 	}
 
 	@Override
-	public JsonArray queryPersonsByLicenseType(String operationLimit) {
-		List<Persons> personsList;
-		if ("true".equals(operationLimit)){
-			Set<String> typesStr = new HashSet<String>();
-			typesStr.add("13");
-			typesStr.add("14");
-			typesStr.add("15");
-			typesStr.add("16");
-			typesStr.add("17");
-			personsList = personDao.findPersonWithLicense(typesStr);
-		}else{
-			personsList = personDao.findAll();
-		}
-		Iterator<Persons> iterator = personsList.iterator();
+	public JsonArray queryPersonsByLicenseType(String constructionType ,boolean operationLimit) {
 		JsonArray jsonArray = new JsonArray();
-
-		while (iterator.hasNext()) {
-			Persons entity_persons = (Persons)iterator.next();
-			Person vo = new Person();
-			try {
-				BeanUtils.copyProperties(vo, entity_persons);
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
+		if(constructionType!=null){
+			List<Persons> personsList;
+			if (operationLimit) {
+				Set<String> typesStr = new HashSet<String>();
+				typesStr.add("13");
+				typesStr.add("14");
+				typesStr.add("15");
+				typesStr.add("16");
+				typesStr.add("17");
+				personsList = personDao.findPersonWithLicense(constructionType,typesStr);
+			} else {
+				personsList = personDao.findPersonWithLicense(constructionType,null);
 			}
-			jsonArray.add(gson.toJson(vo));
+			Iterator<Persons> iterator = personsList.iterator();
 
+			while (iterator.hasNext()) {
+				Persons entity_persons = (Persons) iterator.next();
+				Person vo = new Person();
+				try {
+					BeanUtils.copyProperties(vo, entity_persons);
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					e.printStackTrace();
+				}
+				jsonArray.add(gson.toJson(vo));
+
+			}
 		}
 		return jsonArray;
 	}

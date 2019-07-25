@@ -12,6 +12,13 @@ public class Project {
 	private String result;
 	private byte[] areaData;
 	private byte[] otherData;
+	private stateMachine.States state;
+	public stateMachine.States getState() {
+		return state;
+	}
+	public void setState(stateMachine.States state) {
+		this.state = state;
+	}
 	public Integer getProjectId() {
 		return projectId;
 	}

@@ -111,7 +111,7 @@ var aerialPlanList = React.createClass({
 			    	};
 			    	for (i=0; i <json.length; i++){
 		        		var obj = $.parseJSON(json[i]);
-		        		myarray[i][0]='';		        		
+		        		myarray[i][0]=obj.hasOwnProperty("state")?obj.state:'';		        		
 		        		myarray[i][1]=obj.hasOwnProperty("aerialPlanId")?obj.aerialPlanId:'';
 		        		myarray[i][2]=obj.hasOwnProperty("usage")?obj.usage:'';
 		        		myarray[i][3]=obj.aerialPlanStartDate+'~'+obj.aerialPlanEndDate;	        		

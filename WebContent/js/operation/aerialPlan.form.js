@@ -5,9 +5,9 @@ var aerialPlanForm = React.createClass({
         };
     },
     notify: function(obj){
-    	alert(obj.aerialPlanId);
     	this.setState({ 
-    		aerialPlanId:obj.aerialPlanId
+    		aerialPlanId:obj.aerialPlanId,
+    		state:obj.state
     	});
     },
 	
@@ -40,7 +40,7 @@ var aerialPlanForm = React.createClass({
     componentDidUpdate(prevProps, prevState){
     	var form = $("#aerialPlanForm_"+this.props.domId+"_sub");
     	if(this.state.state!==prevState.state){
-			form.find("#aerialPlanState").val(this.state.state);
+			form.find("#state").val(this.state.state);
 		}
     	if(this.state.aerialPlanId!==prevState.aerialPlanId){
     		if(this.state.aerialPlanId==='-'){
@@ -59,7 +59,7 @@ var aerialPlanForm = React.createClass({
   				  success: function(data){	
   					  var obj = data;
   					  form.find("#aerialPlanIdTD").empty().append("<input type='text' name='aerialPlanId' id='aerialPlanId' class='text ui-widget-content ui-corner-all ui-state-disabled'>");
-  					  form.find("#aerialPlanStateTD").empty().append("<input type='text' name='aerialPlanState' id='aerialPlanState' class='text ui-widget-content ui-corner-all ui-state-disabled'>");
+  					  form.find("#aerialPlanStateTD").empty().append("<input type='text' name='state' id='state' class='text ui-widget-content ui-corner-all ui-state-disabled'>");
   					  $.each(obj, function(key, value) {
   						  form.find("#" + key).val(value);	
   						  form.find("input[name='" + key +"']").val(value);
@@ -373,7 +373,7 @@ var aerialPlanEPList = React.createClass({
 			            {
 			                text: '新增使用設備',
 			                action: function ( e, dt, node, config ) {
-			                	aerialPlan_obj.equipmentPersonList_add_Action();
+			                	action_obj.aerialPlanEPList_add_Action();
 			                }
 			            }
 			        ],
@@ -389,13 +389,13 @@ var aerialPlanEPList = React.createClass({
 					    	id : this.state.aerialPlanId 
 					    }, 
 					    dataSrc: function ( json ) {
-					    	console.log(json.equipmentPersonArray);
-					    	var myarray=new Array(json.equipmentPersonArray.length);
-					    	for (i=0; i <json.equipmentPersonArray.length; i++){
+					    	console.log(json.equipmentsArray);
+					    	var myarray=new Array(json.equipmentsArray.length);
+					    	for (i=0; i <json.equipmentsArray.length; i++){
 					    	    myarray[i]=new Array(8);
 					    	}
-					    	for (i=0; i <json.equipmentPersonArray.length; i++){
-				        		var obj = json.equipmentPersonArray[i];
+					    	for (i=0; i <json.equipmentsArray.length; i++){
+				        		var obj = json.equipmentsArray[i];
 				        		myarray[i][0]='';		        		
 				        		myarray[i][1]=obj.hasOwnProperty("equipmentId")?obj.equipmentId:'';
 				        		myarray[i][2]=obj.hasOwnProperty("manufactoryName")?obj.manufactoryName:'';

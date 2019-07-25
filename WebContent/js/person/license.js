@@ -144,15 +144,16 @@ var licenseList = React.createClass({
 			    dataSrc: function ( json ) {
 			    	var myarray=new Array(json.length);
 			    	for (i=0; i <json.length; i++){
-			    	    myarray[i]=new Array(5);
+			    	    myarray[i]=new Array(6);
 			    	}
 			    	for (i=0; i <json.length; i++){
 		        		var obj = $.parseJSON(json[i]);
 		        		myarray[i][0]=obj.hasOwnProperty("state")?obj.state:'';
 		        		myarray[i][1]=obj.hasOwnProperty("licenseId")?obj.licenseId:'';
 		        		myarray[i][2]=obj.hasOwnProperty("gotDate")?obj.gotDate:'';
-		        		myarray[i][3]=obj.hasOwnProperty("type")?obj.type:'';
+		        		myarray[i][3]=obj.hasOwnProperty("codeContent")?obj.codeContent:'';
 		        		myarray[i][4]=obj.hasOwnProperty("personsLicensesId")?obj.personsLicensesId:'';
+		        		myarray[i][5]=obj.hasOwnProperty("constructionType")?obj.constructionType:'';
 		        	}
 			    	var table = $(tableName).DataTable();
 			    	table.on( 'select', function ( e, dt, type, indexes ) {
@@ -195,8 +196,9 @@ var licenseList = React.createClass({
                              React.createElement('th', {}, '狀態'),
                              React.createElement('th', {}, '操作證類別編號'),
                              React.createElement('th', {}, '操作證取得日期'),
-                             React.createElement('th', {}, '操作證類別'),
-                             React.createElement('th', {}, 'mapping資料表編號')
+                             React.createElement('th', {}, '操作證級別'),
+                             React.createElement('th', {}, 'mapping資料表編號'),
+                             React.createElement('th', {}, '操作證類別')
             )));
    }
 });
@@ -254,7 +256,7 @@ var licenseForm = React.createClass({
 	componentDidUpdate(prevProps, prevState){	
 		var form = $("#licenseForm_"+this.props.domId+"_sub");
 		if(this.state.state!==prevState.state){
-			form.find("#licenseState").val(this.state.state);
+			form.find("#state").val(this.state.state);
 		}
 
 		if(this.state.licenseId!==prevState.licenseId){
@@ -273,7 +275,7 @@ var licenseForm = React.createClass({
     				dataType: "json",
     				success: function(data){				  
     					var obj = data;
-    					form.find("#licenseStateTD").empty().append("<input type='text' name='licenseState' id='licenseState' class='text ui-widget-content ui-corner-all ui-state-disabled'>");
+    					form.find("#licenseStateTD").empty().append("<input type='text' name='state' id='state' class='text ui-widget-content ui-corner-all ui-state-disabled'>");
     					$.each(obj, function(key, value) {
     						form.find("#" + key).val(value);	
     						form.find("input[name='" + key +"']").val(value);
@@ -300,6 +302,17 @@ var licenseForm = React.createClass({
                                     React.createElement("td",  {},"人員名稱"),
                                     React.createElement("td",  {},
                                         React.createElement("input",  {type:"text",id:"name",className:"text ui-widget-content ui-corner-all ui-state-disabled"})
+                                    )
+                            ),
+                            React.createElement("tr",  {},
+                                    React.createElement("td",  {},"類別"),
+                                    React.createElement("td",  {},
+                                            React.createElement("select",  {id:"constructionType"},
+                                            		React.createElement("option",  {value:"A"},"無人飛機(Aircraft)"),
+                                            		React.createElement("option",  {value:"H"},"無人直昇機(Helicopter)"),
+                                            		React.createElement("option",  {value:"M"},"無人多旋翼機(Muti-Rotors)"),
+                                            		React.createElement("option",  {value:"O"},"其他Other")
+                                            )
                                     )
                             ),
                             React.createElement("tr",  {},

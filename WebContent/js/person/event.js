@@ -268,7 +268,7 @@ var eventForm = React.createClass({
 	componentDidUpdate(prevProps, prevState){	
 		var form = $("#eventForm_"+this.props.domId+"_sub");
 		if(this.state.state!==prevState.state){
-			form.find("#eventState").val(this.state.state);
+			form.find("#state").val(this.state.state);
 		}
 		
 		if(this.state.eventId!==prevState.eventId){
@@ -289,7 +289,7 @@ var eventForm = React.createClass({
     				dataType: "json",
     				success: function(data){				  
     					var obj = data;
-    					form.find("#eventStateTD").empty().append("<input type='text' name='eventState' id='eventState' class='text ui-widget-content ui-corner-all ui-state-disabled'>");
+    					form.find("#eventStateTD").empty().append("<input type='text' name='state' id='state' class='text ui-widget-content ui-corner-all ui-state-disabled'>");
     					$.each(obj, function(key, value) {
     						form.find("#" + key).val(value);	
     						form.find("input[name='" + key +"']").val(value);

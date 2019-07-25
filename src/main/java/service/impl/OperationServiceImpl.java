@@ -11,6 +11,8 @@ import java.util.Set;
 import org.apache.commons.beanutils.BeanUtils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
@@ -23,14 +25,23 @@ import dao.EquipmentDao;
 import dao.PersonDao;
 import dao.ProjectDao;
 import entity.AerialActivities;
+import entity.AerialActivityFlow;
+import entity.AerialPlanFlow;
 import entity.AerialPlans;
 import entity.Equipments;
 import entity.Missions;
 import entity.Operations;
 import entity.Persons;
+import entity.ProjectFlow;
 import entity.Projects;
 import entity.RealMissions;
 import service.OperationService;
+import stateMachine.Events;
+import stateMachine.States;
+import stateMachine.aerialactivity.AerialactivityPersistStateMachineHandler;
+import stateMachine.aerialplan.AerialplanPersistStateMachineHandler;
+import stateMachine.project.ProjectPersistStateMachineHandler;
+import util.EntityConstants;
 import vo.AerialActivity;
 import vo.AerialActivity.EquipmentPersonInActivity;
 import vo.AerialPlan;
@@ -54,18 +65,36 @@ public class OperationServiceImpl implements OperationService {
 	private PersonDao personDao;
 	
 	@Autowired
-	private ProjectDao projectDao;		
+	private ProjectDao projectDao;
+	
+	@Autowired
+	@Qualifier("projectPersistStateMachineHandler")
+	private ProjectPersistStateMachineHandler projectPersistStateMachineHandler;
+	
+	@Autowired
+	@Qualifier("aerialplanPersistStateMachineHandler")
+	private AerialplanPersistStateMachineHandler aerialplanPersistStateMachineHandler;
+	
+	@Autowired
+	@Qualifier("aerialactivityPersistStateMachineHandler")
+	private AerialactivityPersistStateMachineHandler aerialactivityPersistStateMachineHandler;	
 
+	/**
+	 * 1. Project : AerialPlan = 1:m
+	 * 2. set AerialPlan status information as initial, which is 'PROCESSING'
+	 * 3. also persist mission information
+	 */
 	@Override
 	public void persistAerialPlan(String jsonString) {
 		AerialPlan vo = gson.fromJson(jsonString, AerialPlan.class);
 		Projects entity_projects = projectDao.findById(vo.getProjectId(),false);
 		AerialPlans entity_aerialPlans = new AerialPlans();
-		System.out.println(vo);
 		List<EquipmentPerson> equipmentPersonList = vo.getEquipmentsArray();
 		try {
 			BeanUtils.copyProperties(entity_aerialPlans, vo);
-			
+			AerialPlanFlow entity_aerialPlanFlow = gson.fromJson(jsonString, AerialPlanFlow.class);
+			entity_aerialPlanFlow.setState(States.PROCESSING);
+			entity_aerialPlans.setAerialPlanFlow(entity_aerialPlanFlow);			
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
@@ -73,8 +102,12 @@ public class OperationServiceImpl implements OperationService {
 		}
 		for(int i =0;i<equipmentPersonList.size();i++){
 			EquipmentPerson equipmentPerson = equipmentPersonList.get(i);
-			persistMission(entity_aerialPlans,Integer.parseInt(equipmentPerson.getEquipmentId()),Integer.parseInt(equipmentPerson.getPersonId_1()));
-			persistMission(entity_aerialPlans,Integer.parseInt(equipmentPerson.getEquipmentId()),Integer.parseInt(equipmentPerson.getPersonId_2()));
+			if(equipmentPerson.getPersonId_1()!=null&& !"".equals(equipmentPerson.getPersonId_1())){
+				persistMission(entity_aerialPlans,Integer.parseInt(equipmentPerson.getEquipmentId()),Integer.parseInt(equipmentPerson.getPersonId_1()));
+			}
+			if(equipmentPerson.getPersonId_2()!=null&& !"".equals(equipmentPerson.getPersonId_2())){
+				persistMission(entity_aerialPlans,Integer.parseInt(equipmentPerson.getEquipmentId()),Integer.parseInt(equipmentPerson.getPersonId_2()));
+			}
 		}
 		entity_aerialPlans.setProjects(entity_projects);
 		aerialPlanDao.persist(entity_aerialPlans);
@@ -141,6 +174,9 @@ public class OperationServiceImpl implements OperationService {
 			AerialPlans entity_aerialPlans = (AerialPlans) iterator_aerialPlanses.next();
 			try {
 				BeanUtils.copyProperties(vo, entity_aerialPlans);
+				if(entity_aerialPlans.getAerialPlanFlow()!=null){
+					BeanUtils.copyProperties(vo, entity_aerialPlans.getAerialPlanFlow());
+				}
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
@@ -153,17 +189,69 @@ public class OperationServiceImpl implements OperationService {
 		return jsonArray;
 	}
 
+	/**
+	 * 1. project : aerialPlan = 1: m
+	 * 2. get aerialActivity data, but we don't need project data in this case
+	 * 3. get the mission data from the aerialPlan ID
+	 * 		3.1 for online update, this data must include default and selectable options
+	 * 		3.2 aggregate to display in value object
+	 */
 	@Override
 	public String queryAerialPlanByAerialPlanId(Integer aerialPlanId) {
 		AerialPlans entity_aerialPlans = aerialPlanDao.findById(aerialPlanId);
 		AerialPlan vo = new AerialPlan();
 		try {
 			BeanUtils.copyProperties(vo, entity_aerialPlans);
+			if(entity_aerialPlans.getAerialPlanFlow()!=null){
+				BeanUtils.copyProperties(vo, entity_aerialPlans.getAerialPlanFlow());
+			}
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 		}
+		
+		List<Object[]> resultlist = aerialPlanDao.findMission(aerialPlanId);
+		Map<Integer,LinkedList<String>> map = new HashMap<Integer,LinkedList<String>>();
+		for(Object[] result : resultlist) {
+		    Number equipmentId = (Number) result[0];
+		    Number personId = (Number) result[1];
+		    LinkedList<String> list;
+			if(map.get(equipmentId)==null){
+				list = new LinkedList<String>();
+			}else{
+				list = map.get(equipmentId);			
+			}
+			String[] availPersonIds = ((String)result[2]).split(",");
+			String tag ="<select>";
+			for(int i=0;i<availPersonIds.length;i++){
+				if(availPersonIds[i].equals(personId.toString())){
+					tag+="<option value='"+availPersonIds[i]+"' selected>"+availPersonIds[i]+"</option>";
+				}else{
+					tag+="<option value='"+availPersonIds[i]+"'>"+availPersonIds[i]+"</option>";
+				}
+			}
+			tag+="<select>";
+			list.add(tag);
+			map.put(equipmentId.intValue(),list);
+		}
+		
+		Set<Integer> keySet = map.keySet();
+		Iterator<Integer> iterator_keySet = keySet.iterator();
+		List<EquipmentPerson> resultList = new LinkedList<EquipmentPerson>();
+		while(iterator_keySet.hasNext()){
+			Integer key = iterator_keySet.next();
+			LinkedList<String> value = map.get(key);
+			AerialPlan.EquipmentPerson vo_equipmentPerson = new AerialPlan().new EquipmentPerson();
+			vo_equipmentPerson.setEquipmentId(key.toString());
+			vo_equipmentPerson.setPersonId_1(value.get(0).toString());
+			if(value.size()>1){
+				vo_equipmentPerson.setPersonId_2(value.get(1).toString());
+			}
+			resultList.add(vo_equipmentPerson);
+		}
+		vo.setEquipmentsArray(resultList);
+		
 		String jsonString = "";
 		jsonString = gson.toJson(vo);
 		return jsonString;
@@ -180,24 +268,39 @@ public class OperationServiceImpl implements OperationService {
 
 	}
 
+	/**
+	 * 1. persist project
+	 * 2. set project state as 'PROCESSING'
+	 */
 	@Override
 	public void persistProject(String jsonString) {
 		Projects entity = gson.fromJson(jsonString, Projects.class);
+		ProjectFlow entity_projectFlow = gson.fromJson(jsonString, ProjectFlow.class);
+		entity_projectFlow.setState(States.PROCESSING);
+		entity.setProjectFlow(entity_projectFlow);
 		projectDao.persist(entity);
 	}
 
 	@Override
 	public void updateProject(String jsonString) {
 		Project vo = gson.fromJson(jsonString, Project.class);
-		Projects entity = projectDao.findById(vo.getProjectId(),false);
+		Projects entity_projects = projectDao.findById(vo.getProjectId(),false);
 		try {
-			BeanUtils.copyProperties(entity, vo);
+			BeanUtils.copyProperties(entity_projects, vo);
+			if(entity_projects.getProjectFlow()!=null){
+				BeanUtils.copyProperties( entity_projects.getProjectFlow(),vo);
+			}else{
+				ProjectFlow entity_projectFlow = new ProjectFlow();
+				BeanUtils.copyProperties( entity_projectFlow,vo);
+				entity_projects.setProjectFlow(entity_projectFlow);
+			}
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 		}
-		projectDao.update(entity);
+		updateProjectState(entity_projects, stateMachine.Events.UPDATE);
+		projectDao.update(entity_projects);
 	}
 
 	@Override
@@ -207,23 +310,51 @@ public class OperationServiceImpl implements OperationService {
 
 	@Override
 	public String queryProjectById(Integer id) {
-		Projects projects = projectDao.findById(id,true);
-		// get through the result set
+		Projects entity_projects = projectDao.findById(id,false);
+		Project vo = new Project();
+		try {
+			BeanUtils.copyProperties(vo, entity_projects);
+			if(entity_projects.getProjectFlow()!=null){
+				BeanUtils.copyProperties(vo, entity_projects.getProjectFlow());
+			}
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
 		String jsonString = "";
-		JSONObject jsonObj = new JSONObject(projects);
-		jsonString = jsonObj.toString();
+		jsonString = gson.toJson(vo);
+
 		return jsonString;
 	}
 
 	@Override
-	public List<Projects> queryProjects(String ename) {
+	public JsonArray queryProjects(String ename) {
 		List<Projects> projectList;
 		if ("".equals(ename) || ename == null) {
 			projectList = projectDao.findAll();
 		} else {
 			projectList = projectDao.findByName(ename);
 		}
-		return projectList;
+		Iterator<Projects> iterator = projectList.iterator();
+		JsonArray jsonArray = new JsonArray();
+		while (iterator.hasNext()) {
+			Projects entity_projects = (Projects) iterator.next();
+			Project vo = new Project();
+			try {
+				BeanUtils.copyProperties(vo, entity_projects);
+				if (entity_projects.getProjectFlow() != null) {
+					BeanUtils.copyProperties(vo, entity_projects.getProjectFlow());
+				}
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}
+			JSONObject jsonObj = new JSONObject(vo);
+			jsonArray.add(jsonObj.toString());
+		}
+		return jsonArray;
 	}
 
 
@@ -246,6 +377,9 @@ public class OperationServiceImpl implements OperationService {
 			try {
 				BeanUtils.copyProperties(vo, entity_aerialActivities);
 				vo.setAerialPlanId(entity_aerialActivities.getAerialPlans().getAerialPlanId());
+				if(entity_aerialActivities.getAerialActivityFlow()!=null){
+					BeanUtils.copyProperties(vo, entity_aerialActivities.getAerialActivityFlow());
+				}
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
@@ -256,6 +390,13 @@ public class OperationServiceImpl implements OperationService {
 		return jsonArray;
 	}
 
+	/**
+	 * 1. aerialPlan : aerialActivity = 1: m
+	 * 2. get aerialActivity data, also get the aerialPlan data at the same time
+	 * 3. get the real mission data from the aerialActivity ID
+	 * 		3.1 for online update, this data must include default and selectable options
+	 * 		3.2 aggregate to display in value object
+	 */
 	@Override
 	public String queryAerialActivityByAerialActivityId(Integer aerialActivityId) {
 		AerialActivities entity_aerialActivities = aerialActivityDao.findById(aerialActivityId);
@@ -263,6 +404,9 @@ public class OperationServiceImpl implements OperationService {
 		try {
 			BeanUtils.copyProperties(vo, entity_aerialActivities);
 			BeanUtils.copyProperties(vo, entity_aerialActivities.getAerialPlans());
+			if(entity_aerialActivities.getAerialActivityFlow()!=null){
+				BeanUtils.copyProperties(vo, entity_aerialActivities.getAerialActivityFlow());
+			}
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
@@ -270,7 +414,6 @@ public class OperationServiceImpl implements OperationService {
 		}
 		
 		List<Object[]> resultlist = aerialActivityDao.findRealMission(aerialActivityId);
-		System.out.println("list size::"+resultlist.size());
 		Map<Integer,LinkedList<String>> map = new HashMap<Integer,LinkedList<String>>();
 		for(Object[] result : resultlist) {
 		    Number equipmentId = (Number) result[0];
@@ -321,16 +464,21 @@ public class OperationServiceImpl implements OperationService {
 	/**
 	 * This function is for saving aerialActivity entity.
 	 * The relationship between project-->aerialPlan-->aerialActivity is 1:n-->1:n-->1:n
+	 * 1. aerialPlan : aerialActivity = 1:m
+	 * 2. set aerialActivity state as 'PROCESSING'
+	 * 3. also persist real mission information
 	 */
 	@Override
 	public void persistAerialActivity(String jsonString) {
 		AerialActivity vo = gson.fromJson(jsonString, AerialActivity.class);
-		System.out.println(jsonString+";"+vo);
 		AerialPlans entity_aerialPlans = aerialPlanDao.findById(vo.getAerialPlanId());
 		AerialActivities entity_aerialActivities = new AerialActivities();
 		List<EquipmentPersonInActivity> equipmentPersonList = vo.getEquipmentPersonArray();
 		try {
-			BeanUtils.copyProperties(entity_aerialActivities, vo);			
+			BeanUtils.copyProperties(entity_aerialActivities, vo);
+			AerialActivityFlow entity_aerialActivityFlow = gson.fromJson(jsonString, AerialActivityFlow.class);
+			entity_aerialActivityFlow.setState(States.PROCESSING);
+			entity_aerialActivities.setAerialActivityFlow(entity_aerialActivityFlow);
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
@@ -338,14 +486,147 @@ public class OperationServiceImpl implements OperationService {
 		}
 		for(int i =0;i<equipmentPersonList.size();i++){
 			EquipmentPersonInActivity equipmentPerson = equipmentPersonList.get(i);
-			persistRealMission(entity_aerialActivities,Integer.parseInt(equipmentPerson.getEquipmentId()),Integer.parseInt(equipmentPerson.getPersonId_1()));
-			persistRealMission(entity_aerialActivities,Integer.parseInt(equipmentPerson.getEquipmentId()),Integer.parseInt(equipmentPerson.getPersonId_2()));
+			if(equipmentPerson.getPersonId_1()!=null&& !"".equals(equipmentPerson.getPersonId_1())){
+				persistRealMission(entity_aerialActivities,Integer.parseInt(equipmentPerson.getEquipmentId()),Integer.parseInt(equipmentPerson.getPersonId_1()));
+			}
+			if(equipmentPerson.getPersonId_2()!=null&& !"".equals(equipmentPerson.getPersonId_2())){
+				persistRealMission(entity_aerialActivities,Integer.parseInt(equipmentPerson.getEquipmentId()),Integer.parseInt(equipmentPerson.getPersonId_2()));
+			}
 		}
 		entity_aerialActivities.setAerialPlans(entity_aerialPlans);
 		aerialActivityDao.persist(entity_aerialActivities);
 		
 	}
 
+	@Override
+	public void check(Integer id) {
+		updateProjectState(id, Events.CHECK);
+		
+	}
 
+	@Override
+	public void approve(Integer id) {
+		updateProjectState(id, Events.APPROVE);
+		
+	}
+
+	@Override
+	public void reject(Integer id) {
+		updateProjectState(id, Events.REJECT);
+		
+	}
+
+	@Override
+	public void delete(Integer id) {
+		updateProjectState(id, Events.DELETE);
+		
+	}
+	
+	public Boolean updateProjectState(Integer id, stateMachine.Events event) {
+		System.out.println("use updateProjectState!!!");
+		Projects entity_projects = projectDao.findById(id,false);
+		return projectPersistStateMachineHandler
+				.handleEventWithState(
+						MessageBuilder.withPayload(event.name())
+								.setHeader(EntityConstants.entityHeader, entity_projects).build(),
+						entity_projects.getProjectFlow().getState().name());
+	}
+
+	public Boolean updateProjectState(Projects entity_projects, stateMachine.Events event) {
+		System.out.println("use updateProjectState!!!");
+		return projectPersistStateMachineHandler
+				.handleEventWithState(
+						MessageBuilder.withPayload(event.name())
+								.setHeader(EntityConstants.entityHeader, entity_projects).build(),
+						entity_projects.getProjectFlow().getState().name());
+	}
+
+	@Override
+	public void checkAerialActivity(Integer id) {
+		updateAerialActivityState(id, Events.CHECK);
+		
+	}
+
+	@Override
+	public void approveAerialActivity(Integer id) {
+		updateAerialActivityState(id, Events.APPROVE);
+		
+	}
+
+	@Override
+	public void rejectAerialActivity(Integer id) {
+		updateAerialActivityState(id, Events.REJECT);
+		
+	}
+
+	@Override
+	public void deleteAerialActivity(Integer id) {
+		updateAerialActivityState(id, Events.DELETE);
+		
+	}
+	
+	public Boolean updateAerialActivityState(Integer id, stateMachine.Events event) {
+		System.out.println("use updateAerialActivityState!!!");
+		AerialActivities entity_aerialActivities = aerialActivityDao.findById(id);
+		return aerialactivityPersistStateMachineHandler
+				.handleEventWithState(
+						MessageBuilder.withPayload(event.name())
+								.setHeader(EntityConstants.entityHeader, entity_aerialActivities).build(),
+						entity_aerialActivities.getAerialActivityFlow().getState().name());
+	}
+
+	public Boolean updateAerialActivityState(AerialActivities entity_aerialActivities, stateMachine.Events event) {
+		System.out.println("use updateAerialActivityState!!!");
+		return aerialactivityPersistStateMachineHandler
+				.handleEventWithState(
+						MessageBuilder.withPayload(event.name())
+								.setHeader(EntityConstants.entityHeader, entity_aerialActivities).build(),
+						entity_aerialActivities.getAerialActivityFlow().getState().name());
+	}
+	
+	
+
+	@Override
+	public void checkAerialPlan(Integer id) {
+		updateAerialPlanState(id, Events.CHECK);
+		
+	}
+
+	@Override
+	public void approveAerialPlan(Integer id) {
+		updateAerialPlanState(id, Events.APPROVE);
+		
+	}
+
+	@Override
+	public void rejectAerialPlan(Integer id) {
+		updateAerialPlanState(id, Events.REJECT);
+		
+	}
+
+	@Override
+	public void deleteAerialPlan(Integer id) {
+		updateAerialPlanState(id, Events.DELETE);
+		
+	}
+
+	public Boolean updateAerialPlanState(Integer id, stateMachine.Events event) {
+		System.out.println("use updateAerialPlanState!!!");
+		AerialPlans entity_aerialPlans = aerialPlanDao.findById(id);
+		return aerialplanPersistStateMachineHandler
+				.handleEventWithState(
+						MessageBuilder.withPayload(event.name())
+								.setHeader(EntityConstants.entityHeader, entity_aerialPlans).build(),
+						entity_aerialPlans.getAerialPlanFlow().getState().name());
+	}
+
+	public Boolean updateAerialPlanState(AerialPlans entity_aerialPlans, stateMachine.Events event) {
+		System.out.println("use updateAerialPlanState!!!");
+		return aerialplanPersistStateMachineHandler
+				.handleEventWithState(
+						MessageBuilder.withPayload(event.name())
+								.setHeader(EntityConstants.entityHeader, entity_aerialPlans).build(),
+						entity_aerialPlans.getAerialPlanFlow().getState().name());
+	}
 
 }

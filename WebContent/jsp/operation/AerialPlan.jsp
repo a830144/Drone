@@ -5,24 +5,26 @@
 var aerialPlan_obj = {		
 		
 		addOrUpdate : function (action){
-			  $("#aerialPlan-form").find("#projectId").prop("disabled", false);
-			  $("#aerialPlan-form").find("#name").prop("disabled", false);
-			  $("#aerialPlan-form").find("#aerialPlanId").prop("disabled",false);
-			  $("#aerialPlan-form").find("#usage").prop("disabled",false);							
+			  var form = $("#aerialPlanForm_aerialPlan_sub");
+			  $(form).find("#projectId").prop("disabled", false);
+			  $(form).find("#name").prop("disabled", false);
+			  $(form).find("#aerialPlanId").prop("disabled",false);
+			  $(form).find("#usage").prop("disabled",false);							
 			  			  
 			  var jsonObject = {};
-			  jsonObject.projectId =$("#aerialPlan-form").find("#projectId").val();
-			  jsonObject.name = $("#aerialPlan-form").find("#name").val();
-			  jsonObject.aerialPlanId = $("#aerialPlan-form").find("#aerialPlanId").val();
-			  jsonObject.usage = $("#aerialPlan-form").find("#usage").val();
-			  jsonObject.aerialPlanStartDate = $("#aerialPlan-form").find("#aerialPlanStartDate").val();
-			  jsonObject.aerialPlanEndDate = $("#aerialPlan-form").find("#aerialPlanEndDate").val();
-			  jsonObject.aerialPlanStartDate = $("#aerialPlan-form").find("#aerialPlanStartDate").val();
-			  jsonObject.aerialPlanEndDate = $("#aerialPlan-form").find("#aerialPlanEndDate").val();
+			  jsonObject.projectId =$(form).find("#projectId").val();
+			  jsonObject.name = $(form).find("#name").val();
+			  jsonObject.aerialPlanId = $(form).find("#aerialPlanId").val();
+			  jsonObject.usage = $(form).find("#usage").val();
+			  jsonObject.aerialPlanStartDate = $(form).find("#aerialPlanStartDate").val();
+			  jsonObject.aerialPlanEndDate = $(form).find("#aerialPlanEndDate").val();
+			  jsonObject.aerialPlanStartDate = $(form).find("#aerialPlanStartDate").val();
+			  jsonObject.aerialPlanEndDate = $(form).find("#aerialPlanEndDate").val();
 			  
+			  var tableName = "#aerialPlanEPList_aerialPlan_sub";
 			  var arr = new Array();
-			  jsonObject.equipmentPersonArray = arr;
-			  var table = $('#aerialPlan-form').DataTable();
+			  jsonObject.equipmentsArray = arr;
+			  var table = $(tableName).DataTable();
 			  table.rows().eq(0).each( function ( index ) {
 			    	var row = table.row( index );
 			    	var cell = table.cell( index ,0);
@@ -31,7 +33,7 @@ var aerialPlan_obj = {
 					var personId_1 = cell.data();
 					cell = table.cell( index ,7);
 					var personId_2 = cell.data();
-					jsonObject.equipmentPersonArray.push({
+					jsonObject.equipmentsArray.push({
 						"equipmentId":equipmentId,
 						"personId_1":personId_1,
 						"personId_2":personId_2
@@ -98,6 +100,9 @@ var aerialPlan_obj = {
 			
 			container = document.getElementById('p_thirdStep_'+action);
 			aerialPlan_obj.thirdStep = ReactDOM.render(React.createElement(p_thirdStep, {domId:action}), container);
+			action_obj.equipmentAPList_select_Action_subscribe(aerialPlan_obj.thirdStep);
+			action_obj.equipmentAPList_deselect_Action_subscribe(aerialPlan_obj.thirdStep);
+			action_obj.operationLimit_check_Action_subscribe(aerialPlan_obj.thirdStep);
 			
 			container = document.getElementById('p_fourthStep_'+action);
 			aerialPlan_obj.fourthStep = ReactDOM.render(React.createElement(p_fourthStep, {domId:action}), container);
@@ -138,6 +143,13 @@ var aerialPlan_obj = {
 			action_obj.equipmentAPList_deselect_Action_handler = [];
 			action_obj.personAPList_select_Action_handler = [];
 			action_obj.personAPList_deselect_Action_handler = [];
+			action_obj.operationLimit_check_Action_handler = [];
+			
+			Object.keys(store_obj).forEach(function(index) {
+				if(typeof store_obj[index] !='object'){
+					store_obj[index] = null
+				}
+		    });
 
 		},		
 }

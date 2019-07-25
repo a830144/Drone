@@ -33,6 +33,7 @@ public class PersonsLicenses implements java.io.Serializable {
 	private Persons persons;
 	private Date gotDate;
 	private byte[] photo;
+	private String constructionType;
 	
 	private PersonsLicensesFlow personsLicensesFlow;
 	
@@ -112,6 +113,15 @@ public class PersonsLicenses implements java.io.Serializable {
 
 	public void setPhoto(byte[] photo) {
 		this.photo = photo;
+	}
+	
+	@Column(name = "Construction_Type", nullable = false, length = 2)
+	public String getConstructionType() {
+		return this.constructionType;
+	}
+
+	public void setConstructionType(String constructionType) {
+		this.constructionType = constructionType;
 	}
 
 }

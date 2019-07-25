@@ -4,16 +4,18 @@ import java.util.Date;
 import java.util.List;
 
 public class AerialActivity {
+	
+
+	private Integer projectId;
 	@Override
 	public String toString() {
 		return "AerialActivity [projectId=" + projectId + ", aerialPlanId=" + aerialPlanId + ", aerialActivityId="
 				+ aerialActivityId + ", usage=" + usage + ", aerialPlanStartDate=" + aerialPlanStartDate
 				+ ", aerialPlanEndDate=" + aerialPlanEndDate + ", aerialActivityStartDate=" + aerialActivityStartDate
-				+ ", aerialActivityEndDate=" + aerialActivityEndDate + ", equipmentPersonArray=" + equipmentPersonArray
-				+ "]";
+				+ ", aerialActivityEndDate=" + aerialActivityEndDate + ", state=" + state + ", equipmentPersonArray="
+				+ equipmentPersonArray + "]";
 	}
 
-	private Integer projectId;
 	private Integer aerialPlanId;
 	private int aerialActivityId;
 	private String usage;
@@ -21,6 +23,13 @@ public class AerialActivity {
 	private Date aerialPlanEndDate;
 	private Date aerialActivityStartDate;
 	private Date aerialActivityEndDate;
+	private stateMachine.States state;
+	public stateMachine.States getState() {
+		return state;
+	}
+	public void setState(stateMachine.States state) {
+		this.state = state;
+	}
 	public Date getAerialPlanStartDate() {
 		return aerialPlanStartDate;
 	}

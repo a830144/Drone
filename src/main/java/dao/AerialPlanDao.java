@@ -27,4 +27,6 @@ public interface AerialPlanDao{
     public void persistMission(Missions entity);
     
     public List<AerialPlans> findByProjectId(Integer projectId);
+    
+    public List<Object[]> findMission(Integer aerialPlanId);
 }

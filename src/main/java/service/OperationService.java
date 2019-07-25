@@ -6,7 +6,6 @@ import com.google.gson.JsonArray;
 
 import entity.AerialPlans;
 import entity.Operations;
-import entity.Projects;
 
 public interface OperationService {
 	
@@ -20,7 +19,7 @@ public interface OperationService {
 
 	public String queryProjectById(Integer id);	
 	
-	public List<Projects> queryProjects(String ename);
+	public JsonArray queryProjects(String ename);
 	
 	public List<AerialPlans> queryAerialPlans(String projectId);
 	
@@ -37,5 +36,29 @@ public interface OperationService {
 	public JsonArray queryAerialActivityByProjectId(Integer projectId);
 	
 	public String queryAerialActivityByAerialActivityId(Integer aerialActivityId);
+	
+	public void check(Integer id);
+	
+	public void approve(Integer id);
+	
+	public void reject(Integer id);
+	
+	public void delete(Integer id);
+	
+	public void checkAerialActivity(Integer id);
+	
+	public void approveAerialActivity(Integer id);
+	
+	public void rejectAerialActivity(Integer id);
+	
+	public void deleteAerialActivity(Integer id);
+	
+	public void checkAerialPlan(Integer id);
+	
+	public void approveAerialPlan(Integer id);
+	
+	public void rejectAerialPlan(Integer id);
+	
+	public void deleteAerialPlan(Integer id);
 	
 }

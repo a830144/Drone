@@ -15,7 +15,7 @@ public class AerialactivityPersistHandlerConfig {
 	@Autowired
 	private AerialactivityPersistStateChangeListener aerialactivityPersistStateChangeListener;
 
-	@Bean(name = "aerialplanPersistStateMachineHandler")
+	@Bean(name = "aerialactivityPersistStateMachineHandler")
 	public AerialactivityPersistStateMachineHandler persistStateMachineHandler() {
 		AerialactivityPersistStateMachineHandler aerialactivityPersistStateMachineHandler = new AerialactivityPersistStateMachineHandler(aerialactivitymachine);
 		aerialactivityPersistStateMachineHandler.addPersistStateChangeListener(aerialactivityPersistStateChangeListener);

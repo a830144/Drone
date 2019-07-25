@@ -132,6 +132,12 @@ var aerialActivity_obj = {
 			action_obj.equipmentList_deselect_Action_handler = [];
 			action_obj.personList_select_Action_handler = [];
 			action_obj.personList_deselect_Action_handler = [];
+			
+			Object.keys(store_obj).forEach(function(index) {
+				if(typeof store_obj[index] !='object'){
+					store_obj[index] = null
+				}
+		    });
 
 		},		
 }

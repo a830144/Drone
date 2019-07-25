@@ -31,6 +31,22 @@ var action_obj = {
 
 	},
 	
+	projectForm_load_Action_handler : [],
+	projectForm_load_Action_subscribe : function(fn) {
+		action_obj.projectForm_load_Action_handler.push(fn);
+    },		
+    projectForm_load_Action : function(state,projectId){
+		store_obj.state = state;
+		store_obj.typeId = "project";
+		store_obj.targetId["project"] = projectId;
+		action_obj.projectForm_load_Action_handler.forEach(
+				function(item){
+					item.notify(store_obj);
+				}
+		)
+
+	},
+	
 	maintainList_select_Action_handler : [],
 	maintainList_select_Action_subscribe : function(fn) {
 		action_obj.maintainList_select_Action_handler.push(fn);
@@ -265,6 +281,8 @@ var action_obj = {
 	aerialActivityList_select_Action : function(aerialActivityId,state){
 		store_obj.crud = 'U';		
 		store_obj.aerialActivityId = aerialActivityId;
+		store_obj.typeId = "aerialActivity";
+		store_obj.targetId["aerialActivity"] = aerialActivityId;
 		store_obj.state = state;
 		//notify
 		action_obj.aerialActivityList_select_Action_handler.forEach(
@@ -281,6 +299,8 @@ var action_obj = {
 	aerialActivityList_deselect_Action : function(aerialActivityId){
 		store_obj.crud = 'C';
 		store_obj.aerialActivityId = '-';
+		store_obj.typeId = "-";
+		store_obj.targetId["aerialActivity"] = '-';
 		//notify
 		action_obj.aerialActivityList_deselect_Action_handler.forEach(
 				function(item){
@@ -404,6 +424,8 @@ var action_obj = {
 	aerialPlanList_select_Action : function(aerialPlanId,state){
 		store_obj.crud = 'U';
 		store_obj.aerialPlanId = aerialPlanId;
+		store_obj.typeId = "aerialPlan";
+		store_obj.targetId["aerialPlan"] = aerialPlanId;
 		store_obj.state = state;
 		//notify
 		action_obj.aerialPlanList_select_Action_handler.forEach(
@@ -420,6 +442,8 @@ var action_obj = {
 	aerialPlanList_deselect_Action : function(aerialPlanId){
 		store_obj.crud = 'C';
 		store_obj.aerialPlanId = '-';
+		store_obj.typeId = "-";
+		store_obj.targetId["aerialPlan"] = '-';
 		//notify
 		action_obj.aerialPlanList_deselect_Action_handler.forEach(
 				function(item){
@@ -447,8 +471,9 @@ var action_obj = {
 	equipmentAPList_select_Action_subscribe : function(fn) {
 		action_obj.equipmentAPList_select_Action_handler.push(fn);
     },
-	equipmentAPList_select_Action : function(equipmentId){
+	equipmentAPList_select_Action : function(equipmentId,constructionType){
 		store_obj.equipmentId = equipmentId;
+		store_obj.constructionType = constructionType;
 		//notify			
 		action_obj.equipmentAPList_select_Action_handler.forEach(
 				function(item){
@@ -465,6 +490,21 @@ var action_obj = {
 		store_obj.equipmentId = '-';
 		//notify
 		action_obj.equipmentAPList_deselect_Action_handler.forEach(
+				function(item){
+					item.notify(store_obj);
+				}
+		)
+	},
+	
+	
+	operationLimit_check_Action_handler : [],
+	operationLimit_check_Action_subscribe : function(fn) {
+		action_obj.operationLimit_check_Action_handler.push(fn);
+    },
+    operationLimit_check_Action : function(operationLimit){
+		store_obj.operationLimit = operationLimit;
+		//notify
+		action_obj.operationLimit_check_Action_handler.forEach(
 				function(item){
 					item.notify(store_obj);
 				}

@@ -44,6 +44,26 @@
 </style>
 
 <script>
+
+	window.alert = function(message) {
+		$(document.createElement('div')).attr({
+			title : 'Alert',
+			'class' : 'alert'
+		}).html(message).dialog({
+			buttons : {
+				OK : function() {
+					$(this).dialog('close');
+				}
+			},
+			close : function() {
+				$(this).remove();
+			},
+			draggable : true,
+			modal : true,
+			resizable : false,
+			width : 200
+		});
+	};
 	$.fn.serializeObject = function() {
 		var o = {};
 		var a = this.serializeArray();
@@ -59,37 +79,34 @@
 		});
 		return o;
 	};
-	
 
+	$(document).ready(function() {
+		$("#addDiv").load("./AddProject.jsp");
+		$("#queryDiv").load("./QueryProject.jsp");
+		$("#viewDiv").load("./ViewProject.jsp");
+		$("#updateDiv").load("./UpdateProject.jsp");
+		$("#aerialPlanDiv").load("./AerialPlan.jsp");
+		$("#aerialActivityDiv").load("./AerialActivity.jsp");
+		$(document).on('click', '#add', function() {
+			addProject();
+		});
+		$(document).on('click', '.view', function() {
+			viewProject(this.id);
+		});
+		$(document).on('click', '.update', function() {
+			updateProject(this.id);
+		});
+		$(document).on('click', '.delete', function() {
+			alert("delete :" + this.id);
+		});
+		$(document).on('click', '.aerialPlan', function() {
+			aerialPlan(this.id);
+		});
+		$(document).on('click', '.aerialActivity', function() {
+			aerialActivity(this.id);
+		});
 
-	$(document).ready(
-			function() {
-				$("#addDiv").load("./AddProject.jsp");
-				$("#queryDiv").load("./QueryProject.jsp");
-				$("#viewDiv").load("./ViewProject.jsp");
-				$("#updateDiv").load("./UpdateProject.jsp");
-				$("#aerialPlanDiv").load("./AerialPlan.jsp");
-				$("#aerialActivityDiv").load("./AerialActivity.jsp");
-				$(document).on('click', '#add', function() {
-					addProject();
-				});
-				$(document).on('click', '.view', function() {
-					viewProject(this.id);
-				});
-				$(document).on('click', '.update', function() {
-					updateProject(this.id);
-				});
-				$(document).on('click', '.delete', function() {
-					alert("delete :" + this.id);
-				});
-				$(document).on('click', '.aerialPlan', function() {
-					aerialPlan(this.id);
-				});
-				$(document).on('click', '.aerialActivity', function() {
-					aerialActivity(this.id);
-				});
-
-			});
+	});
 </script>
 </head>
 <body>
