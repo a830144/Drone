@@ -1,5 +1,4 @@
 var store_obj = {
-	state : '',
 	crud : '',
 	equipmentId : '',
 	maintenanceId : '',
@@ -8,6 +7,7 @@ var store_obj = {
 	licenseId : '',
 	trainingId : '',
 	eventId : '',
+	state : {},
 	targetId : {},
 
 	stepHide : 'true',

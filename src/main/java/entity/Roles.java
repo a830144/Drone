@@ -19,16 +19,20 @@ import javax.persistence.Table;
 @Table(name = "roles", catalog = "drone")
 public class Roles implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5437646172736045904L;
 	private Integer roleId;
 	private String roleName;
 	private String roleType;
-	private Set rolesFunctionses = new HashSet(0);
-	private Set usersRoleses = new HashSet(0);
+	private Set<RolesFunctions> rolesFunctionses = new HashSet<RolesFunctions>(0);
+	private Set<UsersRoles> usersRoleses = new HashSet<UsersRoles>(0);
 
 	public Roles() {
 	}
 
-	public Roles(String roleName, String roleType, Set rolesFunctionses, Set usersRoleses) {
+	public Roles(String roleName, String roleType, Set<RolesFunctions> rolesFunctionses, Set<UsersRoles> usersRoleses) {
 		this.roleName = roleName;
 		this.roleType = roleType;
 		this.rolesFunctionses = rolesFunctionses;
@@ -66,20 +70,20 @@ public class Roles implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "roles")
-	public Set getRolesFunctionses() {
+	public Set<RolesFunctions> getRolesFunctionses() {
 		return this.rolesFunctionses;
 	}
 
-	public void setRolesFunctionses(Set rolesFunctionses) {
+	public void setRolesFunctionses(Set<RolesFunctions> rolesFunctionses) {
 		this.rolesFunctionses = rolesFunctionses;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "roles")
-	public Set getUsersRoleses() {
+	public Set<UsersRoles> getUsersRoleses() {
 		return this.usersRoleses;
 	}
 
-	public void setUsersRoleses(Set usersRoleses) {
+	public void setUsersRoleses(Set<UsersRoles> usersRoleses) {
 		this.usersRoleses = usersRoleses;
 	}
 

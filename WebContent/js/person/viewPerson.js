@@ -120,7 +120,7 @@ var personForm = React.createClass({
     },
     notify: function(obj){
     	this.setState({ 
-    		state:obj.state,
+    		state:obj.state["person"],
     		domId:obj.domId
     	});
     },
@@ -130,21 +130,26 @@ var personForm = React.createClass({
     },
     componentDidMount() {
     	var form = $("#personForm_"+this.props.domId+"_sub");
-    	$.ajax({
-			  url:"/Drone/person/ViewPersonProcess",
-			  type:"POST",
-			  data:{
-				  id : store_obj.personId
-			  },
-			  dataType: "json",
-			  success: function(data){				  
-				var obj = data;
-				$.each(obj, function(key, value) {
-					form.find("#" + key).val(value);
-				});	
-				action_obj.personForm_load_Action(form.find("#state").val(),form.find("#personId").val());
-			  }
-		})
+    	if(store_obj.personId!==null && store_obj.personId!==''){
+    		$.ajax({
+    			url:"/Drone/person/ViewPersonProcess",
+    			type:"POST",
+    			data:{
+    				id : store_obj.personId
+    			},
+    			dataType: "json",
+    			success: function(data){				  
+    				var obj = data;
+    				form.find("#personIdTD").empty().append("<input type='text' name='personId' id='personId' class='text ui-widget-content ui-corner-all ui-state-disabled'>");
+    				form.find("#personStateTD").empty().append("<input type='text' name='state' id='state' class='text ui-widget-content ui-corner-all ui-state-disabled'>");
+    				$.each(obj, function(key, value) {
+    					form.find("#" + key).val(value);
+    				});	
+    				action_obj.personForm_load_Action(form.find("#state").val(),form.find("#personId").val());
+    			}
+    		})
+    	};
+    	form.find("#dateOfBirth").datepicker();
     },
     componentDidUpdate(prevProps, prevState){
     	var form = $("#personForm_"+this.props.domId+"_sub");
@@ -163,18 +168,18 @@ var personForm = React.createClass({
                             	React.createElement("td",  {},                                      
                                       "人員內部ID"
                                 ),
-                                React.createElement("td",  {}, 
-                                      React.createElement("input",  {id:"personId"})                  
-                                )
+                                React.createElement("td",  {id:"personIdTD"},
+                                  	  React.createElement("u",  {} ,"系統自動產生") 
+                                )                               
                             ),
                             React.createElement("tr",  {},
                                 React.createElement("td",  {},"姓名"),
                                 React.createElement("td",  {},
-                                    React.createElement("input",  {id:"name"})
+                                    React.createElement("input",  {id:"name",name:"name"})
                                 ),
                                 React.createElement("td",  {},"性別"),
                                 React.createElement("td",  {},
-                                    React.createElement("select",  {id:"sex"},
+                                    React.createElement("select",  {id:"sex",name:"sex"},
                                     		React.createElement("option",  {value:"1"},"男"),
                                     		React.createElement("option",  {value:"2"},"女"),
                                     		React.createElement("option",  {value:"3"},"其他")
@@ -184,56 +189,62 @@ var personForm = React.createClass({
                             React.createElement("tr",  {},
                                     React.createElement("td",  {},"國籍"),
                                     React.createElement("td",  {},
-                                        React.createElement("input",  {id:"nationality"})
+                                        React.createElement("input",  {id:"nationality",name:"nationality"})
                                     ),
                                     React.createElement("td",  {},"身分證號碼"),
                                     React.createElement("td",  {},
-                                    	React.createElement("input",  {type :"text",id:"idNumber"})
+                                    	React.createElement("input",  {type :"text",id:"idNumber",name:"idNumber"})
                                     )
                             ),
                             React.createElement("tr",  {},
                                     React.createElement("td",  {},"出身日期"),
                                     React.createElement("td",  {},
-                                        React.createElement("input",  {id:"dateOfBirth"})
+                                        React.createElement("input",  {id:"dateOfBirth",name:"dateOfBirth"})
                                     ),
                                     React.createElement("td",  {},"辦公電話"),
                                     React.createElement("td",  {},
-                                    	React.createElement("input",  {type :"text",id:"telephone"})
+                                    	React.createElement("input",  {type :"text",id:"telephone",name:"telephone"})
                                     )
                             ),
                             React.createElement("tr",  {},
                                     React.createElement("td",  {},"傳真"),
                                     React.createElement("td",  {},
-                                        React.createElement("input",  {id:"fax"})
+                                        React.createElement("input",  {id:"fax",name:"fax"})
                                     ),
                                     React.createElement("td",  {},"通訊處"),
                                     React.createElement("td",  {},
-                                    	React.createElement("input",  {type :"text",id:"address"})
+                                    	React.createElement("input",  {type :"text",id:"address",name:"address"})
                                     )
                             ),
                             React.createElement("tr",  {},
                                     React.createElement("td",  {},"電子郵件"),
                                     React.createElement("td",  {},
-                                        React.createElement("input",  {id:"email"})
+                                        React.createElement("input",  {id:"email",name:"email"})
                                     )
                                    
                             ),
                             React.createElement("tr",  {},                                   
                                     React.createElement("td",  {},"半身最近照片"),
                                     React.createElement("td",  {},
-                                    	React.createElement("file",  {id:"recentPhoto"})
-                                    ),
+                                    	React.createElement("input",  {type:"text",name:"recentPhoto",id:"recentPhoto"}),
+                                    	React.createElement("input",  {type:"file",name:"file",id:"recentPhoto_file"}),
+                                    	React.createElement("input",  {type:"hidden",name:"photo",id:"person-recentPhoto"})
+                                    )
+                            ),
+                            React.createElement("tr",  {},                                                                       
                                     React.createElement("td",  {},"最近體檢資料"),
                                     React.createElement("td",  {},
-                                    	React.createElement("file",  {id:"investigation"})
+                                    	React.createElement("input",  {type:"text",name:"investigation",id:"investigation"}),
+                                    	React.createElement("input",  {type:"file",name:"file",id:"investigation_file"}),
+                                    	React.createElement("input",  {type:"hidden",name:"photo",id:"person-investigation"})
                                     )
                             ),
                             
                             React.createElement("tr",  {},
                                     React.createElement("td",  {},"資料狀態"),
-                                    React.createElement("td",  {},
-                                        React.createElement("input",  {id:"state"})
-                                    )
+                                    React.createElement("td",  {id:"personStateTD"},
+                                        	  React.createElement("u",  {} ,"系統自動產生") 
+                                      )
                             )
                         )
                     )

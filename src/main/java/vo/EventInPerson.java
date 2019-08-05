@@ -8,7 +8,14 @@ public class EventInPerson extends Person{
 	private Date startDate;
 	private Date endDate;
 	private String description;
+	private String unit;
 	
+	public String getUnit() {
+		return unit;
+	}
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
 	private Integer participationId;
 	
 	
@@ -18,12 +25,12 @@ public class EventInPerson extends Person{
 	public void setParticipationId(Integer participationId) {
 		this.participationId = participationId;
 	}
-	private byte[] photo;
+	private String photo;
 	
-	public byte[] getPhoto() {
+	public String getPhoto() {
 		return photo;
 	}
-	public void setPhoto(byte[] photo) {
+	public void setPhoto(String photo) {
 		this.photo = photo;
 	}
 	public Integer getEventId() {

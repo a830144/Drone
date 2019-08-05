@@ -34,7 +34,7 @@ public class Certificates implements java.io.Serializable {
 	private Date startDate;
 	private Date endDate;
 	private Integer hours;
-	private byte[] photo;
+	private String photo;
 	
 	private CertificateFlow certificateFlow;
 	
@@ -58,7 +58,7 @@ public class Certificates implements java.io.Serializable {
 	}
 
 	public Certificates(Persons persons, Trainings trainings, Date startDate, Date endDate, Integer hours,
-			byte[] photo) {
+			String photo) {
 		this.persons = persons;
 		this.trainings = trainings;
 		this.startDate = startDate;
@@ -129,11 +129,11 @@ public class Certificates implements java.io.Serializable {
 	}
 
 	@Column(name = "Photo")
-	public byte[] getPhoto() {
+	public String getPhoto() {
 		return this.photo;
 	}
 
-	public void setPhoto(byte[] photo) {
+	public void setPhoto(String photo) {
 		this.photo = photo;
 	}
 

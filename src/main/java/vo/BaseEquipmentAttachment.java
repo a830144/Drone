@@ -1,6 +1,5 @@
 package vo;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -181,14 +180,14 @@ public class BaseEquipmentAttachment {
 		private String detailType;
 		private String status;
 		private String comment;
-		private byte[] modificationPhoto;
+		private String modificationPhoto;
 		public TempAttach(String detailType, String status, String comment) {
 			super();
 			this.detailType = detailType;
 			this.status = status;
 			this.comment = comment;
 		}
-		public TempAttach(String detailType, String status, String comment, byte[] modificationPhoto) {
+		public TempAttach(String detailType, String status, String comment, String modificationPhoto) {
 			super();
 			this.detailType = detailType;
 			this.status = status;
@@ -213,17 +212,18 @@ public class BaseEquipmentAttachment {
 		public void setComment(String comment) {
 			this.comment = comment;
 		}
-		public byte[] getModificationPhoto() {
+		public String getModificationPhoto() {
 			return modificationPhoto;
 		}
-		public void setModificationPhoto(byte[] modificationPhoto) {
+		public void setModificationPhoto(String modificationPhoto) {
 			this.modificationPhoto = modificationPhoto;
 		}
 		@Override
 		public String toString() {
 			return "TempAttach [detailType=" + detailType + ", status=" + status + ", comment=" + comment
-					+ ", modificationPhoto=" + Arrays.toString(modificationPhoto) + "]";
+					+ ", modificationPhoto=" + modificationPhoto + "]";
 		}
+		
 		
 	}
 }

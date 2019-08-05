@@ -124,6 +124,13 @@ public class OperationController {
 		operationService.deleteAerialActivity(id);	
 	}
 	
+	@RequestMapping(value="/operation/UpdateAerialActivityProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public void updateAerialActivity(String data) {
+		System.out.println("UpdateAerial Activity");
+		operationService.updateAerialActivity(data);		
+	}
+	
 	@RequestMapping(value="/operation/UpdateAerialPlanProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
 	public void updateAerialPlan(String data) {
@@ -173,7 +180,7 @@ public class OperationController {
 		System.out.println("showQueryAerialPlansIDsByProjectId projectId::"+projectId);
 		List<AerialPlans> list = operationService.queryAerialPlans(projectId);
 		Iterator<AerialPlans> iterator = list.iterator();
-		String tag ="";
+		String tag ="<option value=''></option>";
 		while (iterator.hasNext()) {
 			AerialPlans entity_aerialPlans = (AerialPlans) iterator.next();
 			tag += "<option value='"+entity_aerialPlans.getAerialPlanId()+"'>"+entity_aerialPlans.getAerialPlanId()+"</option>";

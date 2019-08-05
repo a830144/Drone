@@ -47,7 +47,7 @@ var maintain_obj = {
 
 function maintainEquipment(id){	
 	maintain_obj.initState(id);
-	maintain_obj.initReactComponent('maintain');		
+	maintain_obj.initReactComponent('maintain');
 }
 </script>
 <div id="maintainDialog_maintain" title="設備維護" style="display: none;">

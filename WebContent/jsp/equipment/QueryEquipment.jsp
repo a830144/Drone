@@ -28,8 +28,26 @@ function transferQueryListAction(){
 	    			for(i=0;i<json.length;i++){
         				var obj = $.parseJSON(json[i]);
         				myarray[i][0]=obj.hasOwnProperty("equipmentId")?obj.equipmentId:'';
-        				myarray[i][1]=obj.hasOwnProperty("productName")?obj.productName:'';		        			
-        				myarray[i][2]=obj.hasOwnProperty("constructionType")?obj.constructionType:'';
+        				myarray[i][1]=obj.hasOwnProperty("productName")?obj.productName:'';	
+        				if(obj.hasOwnProperty("constructionType")){
+        					switch(obj.constructionType){
+        					case 'A':
+        						myarray[i][2] = '無人飛機';
+        						break;
+        					case 'H':
+        						myarray[i][2] = '無人直昇機';
+        						break;
+        					case 'M':
+        						myarray[i][2] = '無人多旋翼機';
+        						break;
+        					case 'O':
+        						myarray[i][2] = '其它';
+        						break;
+        					default:
+        						myarray[i][2] = '';
+        					}
+        				}
+
         				myarray[i][3]=obj.hasOwnProperty("sendDate")?obj.sendDate:'';
         				myarray[i][4]=obj.hasOwnProperty("state")?obj.state:'';
         				var maintain_btn = "<button name='maintain"+ obj.equipmentId +"' id='" + obj.equipmentId +"' class='maintain ui-button ui-corner-all ui-widget' value='maintain'>保養</button>";

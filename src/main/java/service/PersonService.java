@@ -25,17 +25,21 @@ public interface PersonService {
 	
 	public JsonArray queryLicensesById(Integer id);
 	
+	public String queryLicenseByType(String type);
+	
 	public JsonArray queryTrainingsById(Integer id);
 	
 	public JsonArray queryEventsById(Integer id);
 	
 	public JsonArray queryPersonsByLicenseType(String constructionType ,boolean operationLimit);
 	
+	public String queryLicenseInfo(Integer targetId);		
+	
 	public String queryLicenseInfo(Integer personId,Integer licenseId);
 	
-	public String queryTrainingInfo(Integer personId,Integer trainingId);
+	public String queryTrainingInfo(Integer targetId);
 	
-	public String queryEventInfo(Integer personId,Integer eventId);
+	public String queryEventInfo(Integer targetId);
 
 	void check(Integer id);
 

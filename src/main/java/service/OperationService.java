@@ -27,6 +27,8 @@ public interface OperationService {
 	
 	public void updateAerialPlan(String jsonString);
 	
+	public void updateAerialActivity(String jsonString);
+	
 	public void persistAerialActivity(String jsonString);
 	
 	public JsonArray queryAerialPlanByProjectId(Integer projectId);

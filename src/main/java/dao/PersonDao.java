@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Set;
 
 import entity.Certificates;
+import entity.Missions;
 import entity.Participations;
-import entity.PersonsLicenses;
 import entity.Persons;
+import entity.PersonsLicenses;
+import entity.RealMissions;
 
 public interface PersonDao{
 
@@ -50,4 +52,8 @@ public interface PersonDao{
     public List<Persons> findByName(String name);
     
     public List<Persons> findByMission(Integer aerialPlanId,Integer equipmentId);
+    
+    public void deleteMission(Missions entity);
+    
+    public void deleteRealMission(RealMissions entity);
 }

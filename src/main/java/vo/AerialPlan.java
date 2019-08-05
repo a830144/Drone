@@ -47,6 +47,18 @@ public class AerialPlan {
 	private Float takeOffESecond;
 	//作業範圍中心點
 	private Integer areaCenterNDegree;
+	
+	//照片
+	private String photo;
+	public String getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
+
+
 	private stateMachine.States state;
 	public stateMachine.States getState() {
 		return state;

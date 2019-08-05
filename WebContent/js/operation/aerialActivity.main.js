@@ -112,18 +112,22 @@ var aerialActivityList = React.createClass({
 		        	}
 			    	var table = $(tableName).DataTable();
 					table.on( 'select', function ( e, dt, type, indexes ) {
-						var cell = table.cell( indexes ,2);
+						var cell = table.cell( indexes ,1);
+						var aerialPlanId = cell.data();
+						cell = table.cell( indexes ,2);
 						var aerialActivityId = cell.data();
 						cell = table.cell( indexes ,0);
 						var state = cell.data();
 						alert('您選取了航拍活動編號 :'+ aerialActivityId);
-						action_obj.aerialActivityList_select_Action(aerialActivityId,state);
+						action_obj.aerialActivityList_select_Action(aerialPlanId,aerialActivityId,state);
 					});
 					table.on( 'deselect', function ( e, dt, type, indexes ) {
-						var cell = table.cell( indexes ,2);
+						var cell = table.cell( indexes ,1);
+						var aerialPlanId = cell.data();
+						cell = table.cell( indexes ,2);
 						var aerialActivityId = cell.data();
 						if ( type === 'row' ) {
-							action_obj.aerialActivityList_deselect_Action(aerialActivityId);
+							action_obj.aerialActivityList_deselect_Action();
 						}
 					});
 			        return myarray;

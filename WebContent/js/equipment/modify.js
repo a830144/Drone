@@ -17,7 +17,7 @@ var modifyDialog = React.createClass({
     	var domId = this.props.domId;
     	$(dialog).dialog({
 			autoOpen : false,
-			height : 600,
+			height : 750,
 			width : 1250,
 			modal : true,
 			buttons : [
@@ -27,23 +27,58 @@ var modifyDialog = React.createClass({
 				          id: "updateModificationBtn_"+domId,
 				          click: function() {
 				        	  var form = $(formName);
-				        	  window.radioValue(form);
-							  var obj = form.serializeObject();
-							  obj.equipmentId = $(form).find("#equipmentId").val();
-							  obj.modificationDate = $(form).find("#modificationDate").val();
-							  obj.modificationPerson = $(form).find("#modificationPerson").val();
-							  var myJson = JSON.stringify(obj);
-							  $.ajax({
-								 url : "/Drone/equipment/UpdateModifyEquipmentProcess",
-								 type : "POST",
-								 data : {
-									data : myJson
-								 },
-								 success : function() {
-									alert('修改改裝紀錄成功');
-								  }
-							   })
-				           }			 
+				        	  var validator =form.validate({
+				        	  		rules: {
+				        	  			modificationPerson: {
+				        	  				 required: true,
+				        	  				 minlength: 2
+				        	  			},
+				        	  			modificationDate: {
+				        	  				 required: true
+				        	  			}
+				        	  		}
+				        	  });
+				        	  if(form.valid()){
+				        		  var form = $(formName);
+				        		  window.radioValue(form);			        		 
+				        		  var obj = form.serializeObject();
+				        		  obj.equipmentId = $(form).find("#equipmentId").val();
+				        		  obj.modificationDate = $(form).find("#modificationDate").val();
+				        		  obj.modificationPerson = $(form).find("#modificationPerson").val();
+				        		  var myJson = JSON.stringify(obj);
+				        		  $.ajax({
+				        			  url : "/Drone/equipment/UpdateModifyEquipmentProcess",
+				        			  type : "POST",
+				        			  data : {
+				        				  data : myJson
+				        			  },
+				        			  success : function() {
+				        				  alert('修改改裝紀錄成功');
+				        			  }
+				        		  });
+				        		  
+				        		  window.fileValue(form);
+				        		  var fileData = new FormData(document.getElementById("modifyForm_modify_sub"));				 
+								  fileData.append("action","modify");
+								 
+								  $.ajax({
+								            type: "POST",
+								            enctype: 'multipart/form-data',
+								            url: "/Drone/other/uploadMultipleFile",
+								            data: fileData,
+								            processData: false,
+								            contentType: false,
+								            cache: false,
+								            timeout: 600000,
+								            success: function (data) {
+								                console.log("SUCCESS : ", data);
+								            },
+								            error: function (e) {
+								                console.log("ERROR : ", e);
+								            }
+								   });
+				        	  }	
+				          }
 			 		    },
 			    		{
 			      		  text: "新增改裝資料",
@@ -51,22 +86,57 @@ var modifyDialog = React.createClass({
 			              id: "addModificationBtn_"+this.props.domId,
 			              click: function() {
 			            	  var form = $(formName);
-				        	  window.radioValue(form);
-							  var obj = form.serializeObject();
-							  obj.equipmentId = $(form).find("#equipmentId").val();
-							  obj.modificationDate = $(form).find("#modificationDate").val();
-							  obj.modificationPerson = $(form).find("#modificationPerson").val();
-						     var myJson = JSON.stringify(obj);
-						     $.ajax({
-							    url : "/Drone/equipment/ModifyEquipmentProcess",
-							    type : "POST",
-							    data : {
-								  data : myJson
-							    },
-							    success : function() {
-								  alert('新增改裝紀錄成功');
-							    }
-						    })
+				        	  var validator =form.validate({
+				        	  		rules: {
+				        	  			modificationPerson: {
+				        	  				 required: true,
+				        	  				 minlength: 2
+				        	  			},
+				        	  			modificationDate: {
+				        	  				 required: true
+				        	  			}
+				        	  		}
+				        	  });
+				        	  if(form.valid()){
+				        		  var form = $(formName);
+				        		  window.radioValue(form);
+				        		  var obj = form.serializeObject();
+				        		  obj.equipmentId = $(form).find("#equipmentId").val();
+				        		  obj.modificationDate = $(form).find("#modificationDate").val();
+				        		  obj.modificationPerson = $(form).find("#modificationPerson").val();
+				        		  var myJson = JSON.stringify(obj);
+				        		  $.ajax({
+				        			  url : "/Drone/equipment/ModifyEquipmentProcess",
+				        			  type : "POST",
+				        			  data : {
+				        				  data : myJson
+				        			  },
+				        			  success : function() {
+				        				  alert('新增改裝紀錄成功');
+				        			  }
+				        		  })
+				        	  };
+				        	  
+				        	  window.fileValue(form);
+			        		  var fileData = new FormData(document.getElementById("modifyForm_modify_sub"));				 
+							  fileData.append("action","modify");
+							 
+							  $.ajax({
+							            type: "POST",
+							            enctype: 'multipart/form-data',
+							            url: "/Drone/other/uploadMultipleFile",
+							            data: fileData,
+							            processData: false,
+							            contentType: false,
+							            cache: false,
+							            timeout: 600000,
+							            success: function (data) {
+							                console.log("SUCCESS : ", data);
+							            },
+							            error: function (e) {
+							                console.log("ERROR : ", e);
+							            }
+							   });
 			              }
 			            },
 					    {
@@ -217,7 +287,7 @@ var modifyForm = React.createClass({
     notify: function(obj){    	
     	this.setState({ 
     		modificationId:obj.modificationId,
-    		state:obj.state
+    		state:obj.state["modify"]
     	});
     },
 
@@ -294,11 +364,15 @@ var modifyForm = React.createClass({
                                 React.createElement("td",  {},"設備ID"),
                                 React.createElement("td",  {},
                                     React.createElement("input",  {type:"text",id:"equipmentId",className:"text ui-widget-content ui-corner-all ui-state-disabled"})
-                                ),
+                                )
+                            ),
+                            React.createElement("tr",  {},
                                 React.createElement("td",  {},"製造廠名稱"),
                                 React.createElement("td",  {},
                                     React.createElement("input",  {type:"text",id:"manufactoryName",className:"text ui-widget-content ui-corner-all ui-state-disabled"})
-                                ),
+                                )
+                            ),
+                            React.createElement("tr",  {},
                                 React.createElement("td",  {},"型式名稱"),
                                 React.createElement("td",  {},
                                     React.createElement("input",  {type:"text",id:"productName",className:"text ui-widget-content ui-corner-all ui-state-disabled"})
@@ -306,14 +380,18 @@ var modifyForm = React.createClass({
                             ),
                             React.createElement("tr",  {},
                                 React.createElement("td",  {},"改裝編號"),
-                                React.createElement("td",  {id:"modificationIdTD"}),
+                                React.createElement("td",  {id:"modificationIdTD"})
+                            ),
+                            React.createElement("tr",  {},
                                 React.createElement("td",  {},"改裝日期"),
                                 React.createElement("td",  {},
-                                    React.createElement("input",  {type:"text",id:"modificationDate"})
-                                ),
+                                    React.createElement("input",  {type:"text",id:"modificationDate",name:"modificationDate"})
+                                )
+                            ),
+                           React.createElement("tr",  {},
                                 React.createElement("td",  {},"改裝人員"),
                                 React.createElement("td",  {},
-                                    React.createElement("input",  {type:"text",id:"modificationPerson"})
+                                    React.createElement("input",  {type:"text",id:"modificationPerson",name:"modificationPerson"})
                                 )
                             ),
                             React.createElement("tr",  {},                       
@@ -329,9 +407,14 @@ var modifyForm = React.createClass({
                                 			 React.createElement("label",  {htmlFor:"airframe_m"} ,"modify"),
                                 			 React.createElement("input",  {type:"radio",name:"airframe_radio",id:"airframe_m",value:"M"}),
                                 			 React.createElement("input",  {type:"text",name:"airframe_comment",id:"mo-airframe_comment"}),
-                                			 React.createElement("input",  {type:"hidden",name:"airframe",id:"mo-airframe"})
-                                	 )
-                                ),
+                                			 React.createElement("input",  {type:"hidden",name:"airframe",id:"mo-airframe"}),
+                                			 "照片",                  	 
+                                			 React.createElement("input",  {type:"text",name:"airframe_photo",id:"airframe_photo"}),                             	 
+                                			 React.createElement("input",  {type:"file",name:"file",id:"airframe_file"}),
+                                			 React.createElement("input",  {type:"hidden",name:"photo",id:"mo-airframe_photo"}))                                	
+                                )
+                            ),
+                            React.createElement("tr",  {},
                                 React.createElement("td",  {},"推進系統(engine, motor, propeller)"),	
                                 React.createElement("td",  {},
                                 	 React.createElement("fieldset",  {},
@@ -340,9 +423,16 @@ var modifyForm = React.createClass({
                                 			 React.createElement("label",  {htmlFor:"propulsion_m"},"modify"),
                                 			 React.createElement("input",  {type:"radio",name:"propulsion_radio",id:"propulsion_m",value:"M"}),
                                 			 React.createElement("input",  {type:"text",name:"propulsion_comment",id:"mo-propulsion_comment"}),
-                                			 React.createElement("input",  {type:"hidden",name:"propulsion",id:"mo-propulsion"})
+                                			 React.createElement("input",  {type:"hidden",name:"propulsion",id:"mo-propulsion"}),
+                                			 "照片",                                			 
+                                			 React.createElement("input",  {type:"text",name:"propulsion_photo",id:"propulsion_photo"}),
+                                			 React.createElement("input",  {type:"file",name:"file",id:"propulsion_file"}),
+                                			 React.createElement("input",  {type:"hidden",name:"photo",id:"mo-propulsion_photo"})
+                                			 
                                 	 )
-                                ),
+                                )
+                            ),
+                            React.createElement("tr",  {},
                                 React.createElement("td",  {},"動力系統(battery)"),	
                                 React.createElement("td",  {},
                                 	 React.createElement("fieldset",  {},
@@ -351,7 +441,11 @@ var modifyForm = React.createClass({
                                 			 React.createElement("label",  {htmlFor:"battery_m"},"modify"),
                                 			 React.createElement("input",  {type:"radio",name:"battery_radio",id:"battery_m",value:"M"}),
                                 			 React.createElement("input",  {type:"text",name:"battery_comment",id:"mo-battery_comment"}),
-                                			 React.createElement("input",  {type:"hidden",name:"battery",id:"mo-battery"})
+                                			 React.createElement("input",  {type:"hidden",name:"battery",id:"mo-battery"}),
+                                			 "照片", 
+                                			 React.createElement("input",  {type:"text",name:"battery_photo",id:"battery_photo"}),
+                                			 React.createElement("input",  {type:"file",name:"file",id:"battery_file"}),
+                                			 React.createElement("input",  {type:"hidden",name:"photo",id:"mo-battery_photo"})
                                 	 )
                                 )
                             ),
@@ -364,9 +458,15 @@ var modifyForm = React.createClass({
                                 			 React.createElement("label",  {htmlFor:"controller_m"},"modify"),
                                 			 React.createElement("input",  {type:"radio",name:"controller_radio",id:"controller_m",value:"M"}),
                                 			 React.createElement("input",  {type:"text",name:"controller_comment",id:"mo_controller_comment"}),
-                                			 React.createElement("input",  {type:"hidden",name:"controller",id:"mo_controller"})
+                                			 React.createElement("input",  {type:"hidden",name:"controller",id:"mo_controller"}),
+                                			 "照片",
+                                			 React.createElement("input",  {type:"text",name:"controller_photo",id:"controller_photo"}),
+                                			 React.createElement("input",  {type:"file",name:"file",id:"controller_file"}),
+                                			 React.createElement("input",  {type:"hidden",name:"photo",id:"mo-controller_photo"})
                                 	 )
-                                ),
+                                )
+                            ),
+                            React.createElement("tr",  {},
                                 React.createElement("td",  {},"酬載裝置(payload)"),	
                                 React.createElement("td",  {},
                                 	 React.createElement("fieldset",  {},
@@ -375,9 +475,15 @@ var modifyForm = React.createClass({
                                 			 React.createElement("label",  {htmlFor:"payload_m"},"modify"),
                                 			 React.createElement("input",  {type:"radio",name:"payload_radio",id:"payload_m",value:"M"}),
                                 			 React.createElement("input",  {type:"text",name:"payload_comment",id:"mo_payload_comment"}),
-                                			 React.createElement("input",  {type:"hidden",name:"payload",id:"mo_payload"})
+                                			 React.createElement("input",  {type:"hidden",name:"payload",id:"mo_payload"}),
+                                			 "照片",
+                                			 React.createElement("input",  {type:"text",name:"payload_photo",id:"payload_photo"}),
+                                			 React.createElement("input",  {type:"file",name:"file",id:"payload_file"}),
+                                			 React.createElement("input",  {type:"hidden",name:"photo",id:"mo-payload_photo"})
                                 	 )
-                                ),
+                                )
+                           ),
+                           React.createElement("tr",  {},
                                 React.createElement("td",  {},"其他(others)"),	
                                 React.createElement("td",  {},
                                 	 React.createElement("input",  {type:"text",name:"others_comment",id:"mo_others_comment"}),

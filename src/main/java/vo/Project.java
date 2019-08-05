@@ -10,8 +10,8 @@ public class Project {
 	private Date projectEndDate;
 	private String projectManager;
 	private String result;
-	private byte[] areaData;
-	private byte[] otherData;
+	private String areaData;
+	private String otherData;
 	private stateMachine.States state;
 	public stateMachine.States getState() {
 		return state;
@@ -61,16 +61,16 @@ public class Project {
 	public void setResult(String result) {
 		this.result = result;
 	}
-	public byte[] getAreaData() {
+	public String getAreaData() {
 		return areaData;
 	}
-	public void setAreaData(byte[] areaData) {
+	public void setAreaData(String areaData) {
 		this.areaData = areaData;
 	}
-	public byte[] getOtherData() {
+	public String getOtherData() {
 		return otherData;
 	}
-	public void setOtherData(byte[] otherData) {
+	public void setOtherData(String otherData) {
 		this.otherData = otherData;
 	}
 }

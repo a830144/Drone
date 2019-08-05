@@ -7,7 +7,7 @@ var aerialActivityForm = React.createClass({
     notify: function(obj){    	
     	this.setState({ 
     		aerialActivityId:obj.aerialActivityId,
-    		state:obj.state
+    		state:obj.state["aerialActivity"]
     	});
     },
 	
@@ -60,6 +60,7 @@ var aerialActivityForm = React.createClass({
  		$(form).find("#aerialActivityEndDate").datepicker();
     },
     componentDidUpdate(prevProps, prevState){
+    	
     	var form = $("#aerialActivityForm_"+this.props.domId+"_sub");
 		if(this.state.state!==prevState.state){
 			form.find("#state").val(this.state.state);
@@ -93,7 +94,8 @@ var aerialActivityForm = React.createClass({
   					  form.find("#aerialPlanId").removeClass("ui-state-enabled").addClass("ui-state-disabled");
   					  form.find("#usage").removeClass("ui-state-enabled").addClass("ui-state-disabled");
   					  form.find("#aerialPlanStartDate").removeClass("ui-state-enabled").addClass("ui-state-disabled");
-  					  form.find("#aerialPlanEndDate").removeClass("ui-state-enabled").addClass("ui-state-disabled");  					  
+  					  form.find("#aerialPlanEndDate").removeClass("ui-state-enabled").addClass("ui-state-disabled"); 
+
   				  }})
     		}
     		
@@ -119,7 +121,7 @@ var aerialActivityForm = React.createClass({
                                 ),
                                 React.createElement("td",  {},"專案名稱"),
                                 React.createElement("td",  {},
-                                    React.createElement("input",  {type:"text",id:"name",readOnly:"readOnly"})
+                                    React.createElement("input",  {type:"text",id:"name",size:"25",readOnly:"readOnly"})
                                 )
                             ),
                             React.createElement("tr",  {},
@@ -166,9 +168,9 @@ var aerialActivityForm = React.createClass({
                             React.createElement("tr",  {},                       
                                     React.createElement("td",  {},
                                     	"開始",
-                                        React.createElement("input",  {type:"text",id:"aerialActivityStartDate"}),
+                                        React.createElement("input",  {type:"text",id:"aerialActivityStartDate",name:"aerialActivityStartDate"}),
                                         "~結束",
-                                        React.createElement("input",  {type:"text",id:"aerialActivityEndDate"})
+                                        React.createElement("input",  {type:"text",id:"aerialActivityEndDate",name:"aerialActivityEndDate"})
                                     )
                             )
                             
@@ -183,8 +185,8 @@ var aerialActivityForm = React.createClass({
 var aerialActivityEPList = React.createClass({
 	getInitialState: function() {
         return {
-        	aerialActivityId:'',
-        	stepIn:'', 
+        	aerialActivityId:store_obj.aerialActivityId,
+        	stepIn:store_obj.stepIn
         };
     },
     notify: function(obj){
@@ -196,6 +198,24 @@ var aerialActivityEPList = React.createClass({
 	componentDidMount(){
 		var table = $("#aerialActivityEPList_"+this.props.domId+"_sub").DataTable( {
 			columnDefs: [
+				{
+	                aTargets: [ 6,7 ],
+	                sType: "html",	                	                
+	                render : function(data, type, row,meta) {
+	                	var output = "<select id='EProw"+meta.row+"col"+meta.col+"'>";
+	                	var tagArr = data.split(",");
+	                	for(i=0;i< tagArr.length;i++){
+	                		if(tagArr[i].startsWith("selected")){
+	                			var tempArr = tagArr[i].split(" ");
+	                			output+="<option value='"+tempArr[1]+"' selected>"+tempArr[1];
+	                		}else{
+	                			output+="<option value='"+tagArr[i]+"'>"+tagArr[i];
+	                		}
+	                	}
+	                	output+="</select>";
+	                    return output;
+	                }
+	            },
 			{	
 				className: 'dt-center',
 				targets: '_all'
@@ -219,40 +239,17 @@ var aerialActivityEPList = React.createClass({
 	componentDidUpdate(prevProps, prevState){
 		  var tableName = "#aerialActivityEPList_"+this.props.domId+"_sub";
 	      if(this.state.stepIn!==prevState.stepIn && this.state.stepIn==='finish'){
-	    	  $(tableName).unbind( "select" );
-	    	  var table = $(tableName).DataTable();
-	    	  table.destroy();
-	    	  var table = $(tableName).DataTable( {
-	    		  columnDefs: [
-	    		  {	
-	    			 className: 'dt-center',
-	    			 targets: '_all'
-	    		  }],	
-	    		  dom: 'Bfrtip',
-				  buttons: [
-		            {
-		                text: '新增使用設備',
-		                action: function ( e, dt, node, config ) {
-		                	action_obj.aerialActivityEPList_add_Action();
-		                }
-		            }
-		          ],
-		          searching: false,
-	        	  select:true,
-		          order: [[ 1, 'asc' ]],
-				  scrollY: "100px",
-		          scrollCollapse: true
-			  });
+	    	  var table = $(tableName).DataTable();	    	  
 	          table.row.add( [
-	        	  store_obj.aerialActivityEPlist.equipmentId,
-	        	  store_obj.aerialActivityEPlist.manufactoryName,
-	        	  store_obj.aerialActivityEPlist.constructionType,
-	        	  store_obj.aerialActivityEPlist.productName,
-	        	  store_obj.aerialActivityEPlist.airTime,
 	        	  '',
-	        	  store_obj.aerialActivityEPlist.personId_1,
-	        	  store_obj.aerialActivityEPlist.personId_2
-              ] ).draw( false );
+	    		  store_obj.aerialActivityEPList.constructionType,
+	    		  store_obj.aerialActivityEPList.manufactoryName,
+	    		  store_obj.aerialActivityEPList.equipmentId,	        	
+	    		  store_obj.aerialActivityEPList.productName,
+	    		  store_obj.aerialActivityEPList.airTime,
+	    		  store_obj.aerialActivityEPList.personId_1,
+	    		  store_obj.aerialActivityEPList.personId_2
+              ] ).draw();
 	        };
 	        if(this.state.aerialActivityId!==prevState.aerialActivityId){
 	    	  if(this.state.aerialActivityId==='-'){
@@ -265,11 +262,29 @@ var aerialActivityEPList = React.createClass({
 		          table.destroy();
 		        
 		          var table = $(tableName).DataTable( {
-		        	columnDefs: [
-		    		{	
-		    			className: 'dt-center',
-		    			targets: '_all'
-		    		}],	
+		        	  aoColumnDefs: [
+			        		{
+				                aTargets: [ 6,7 ],
+				                sType: "html",			                			                
+				                render : function(data, type, row,meta) {
+				                	var output = "<select id='EProw"+meta.row+"col"+meta.col+"'>";
+				                	var tagArr = data.split(",");
+				                	for(i=0;i< tagArr.length;i++){
+				                		if(tagArr[i].startsWith("selected")){
+				                			var tempArr = tagArr[i].split(" ");
+				                			output+="<option value='"+tempArr[1]+"' selected>"+tempArr[1];
+				                		}else{
+				                			output+="<option value='"+tagArr[i]+"'>"+tagArr[i];
+				                		}
+				                	}
+				                	output+="</select>";
+				                    return output;
+				                }
+				            },
+				            {	
+				            	className: 'dt-center',
+				            	targets: '_all'
+				            }],	
 		    		dom: 'Bfrtip',
 					buttons: [
 			            {
@@ -299,11 +314,11 @@ var aerialActivityEPList = React.createClass({
 					    	for (i=0; i <json.equipmentPersonArray.length; i++){
 				        		var obj = json.equipmentPersonArray[i];
 				        		myarray[i][0]='';		        		
-				        		myarray[i][1]=obj.hasOwnProperty("equipmentId")?obj.equipmentId:'';
+				        		myarray[i][1]=obj.hasOwnProperty("constructionType")?obj.constructionType:'';
 				        		myarray[i][2]=obj.hasOwnProperty("manufactoryName")?obj.manufactoryName:'';
-				        		myarray[i][3]=obj.hasOwnProperty("constructionType")?obj.constructionType:'';
-				        		myarray[i][4]=obj.hasOwnProperty("manufactoryName")?obj.manufactoryName:'';
-				        		myarray[i][5]=obj.hasOwnProperty("manufactoryName")?obj.manufactoryName:'';
+				        		myarray[i][3]=obj.hasOwnProperty("equipmentId")?obj.equipmentId:'';				        			
+				        		myarray[i][4]=obj.hasOwnProperty("productName")?obj.manufactoryName:'';
+				        		myarray[i][5]=obj.hasOwnProperty("airTime")?obj.manufactoryName:'';
 				        		myarray[i][6]=obj.hasOwnProperty("personId_1")?obj.personId_1:'';
 				        		myarray[i][7]=obj.hasOwnProperty("personId_2")?obj.personId_2:'';
 				        	}

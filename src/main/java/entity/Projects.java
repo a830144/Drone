@@ -34,8 +34,8 @@ public class Projects implements java.io.Serializable {
 	private Date projectEndDate;
 	private String projectManager;
 	private String result;
-	private byte[] areaData;
-	private byte[] otherData;
+	private String areaData;
+	private String otherData;
 	private String status;
 	private Set<AerialPlans> aerialPlanses = new HashSet<AerialPlans>(0);
 	
@@ -54,7 +54,7 @@ public class Projects implements java.io.Serializable {
 	}
 
 	public Projects(Integer projectId, String name, String company, String telephone, Date projectEndDate,
-			String projectManager, String result, byte[] areaData, byte[] otherData, String status,
+			String projectManager, String result, String areaData, String otherData, String status,
 			Set<AerialPlans> aerialPlanses, ProjectFlow projectFlow) {
 		super();
 		this.projectId = projectId;
@@ -139,20 +139,20 @@ public class Projects implements java.io.Serializable {
 	}
 
 	@Column(name = "Area_Data")
-	public byte[] getAreaData() {
+	public String getAreaData() {
 		return this.areaData;
 	}
 
-	public void setAreaData(byte[] areaData) {
+	public void setAreaData(String areaData) {
 		this.areaData = areaData;
 	}
 
 	@Column(name = "Other_Data")
-	public byte[] getOtherData() {
+	public String getOtherData() {
 		return this.otherData;
 	}
 
-	public void setOtherData(byte[] otherData) {
+	public void setOtherData(String otherData) {
 		this.otherData = otherData;
 	}
 

@@ -172,9 +172,9 @@ input[type=checkbox] {
 	</form>
 	<%
 		String id = request.getParameter("txtUserName");
-			String password = request.getParameter("txtPassword");
+		String password = request.getParameter("txtPassword");
 
-			if (id != null && password != null) {
+		if (id != null && password != null) {
 		Connection conn = null;
 
 		String js_display_info_successful = "<script>document.getElementById('display_info').value='authentication successful';</script>";

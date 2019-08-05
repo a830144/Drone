@@ -26,54 +26,132 @@ var trainingDialog = React.createClass({
 				          icon: "ui-icon-pencil",
 				          id: "updateTrainingBtn_"+domId,
 				          click: function() {
-				        	  var form = $(formName);
-						      var jsonObject = {};
-							  jsonObject.personId =form.find("#personId").val();
-							  jsonObject.trainingId =form.find("#trainingId").val();
-							  jsonObject.trainingType = form.find("#trainingType").val();
-							  jsonObject.startDate = form.find("#startDate").val();
-							  jsonObject.endDate = form.find("#endDate").val();
-							  jsonObject.hours = form.find("#hours").val();
+				        	  	var form = $(formName);
+				        	  	var validator =form.validate({
+				        	  		rules: {				        	  			
+				        	  			startDate: {
+				        	  				 required: true
+				        	  			},
+				        	  			endDate: {
+				        	  				 required: true
+				        	  			},
+				        	  			hours: {
+				        	  				 required: true
+				        	  			}
+				        	  		}
+				        	    });				        	  	
+				        	  	
+				        	  	if(form.valid()){
+				        	  		var form = $(formName);
+				        	  		var jsonObject = {};
+				        	  		jsonObject.personId =form.find("#personId").val();
+				        	  		jsonObject.trainingId =form.find("#trainingId").val();
+				        	  		jsonObject.trainingType = form.find("#trainingType").val();
+				        	  		jsonObject.startDate = form.find("#startDate").val();
+				        	  		jsonObject.endDate = form.find("#endDate").val();
+				        	  		jsonObject.hours = form.find("#hours").val();
+				        	  		jsonObject.photo = form.find("#photo").val();
+				        	  		jsonObject.certificateId = form.find("#certificateId").val();
+				        	  		jsonObject.state = form.find("#state").val();
 							  
-							  var myJson = JSON.stringify(jsonObject);
-							  $.ajax({
-								 url : "/Drone/person/UpdateTrainingInPersonProcess",
-								 type : "POST",
-								 data : {
-									data : myJson
-								 },
-								 success : function() {
-									alert('修改訓練紀錄成功');
-								  }
-							   })
-				           }			 
+				        	  		var myJson = JSON.stringify(jsonObject);
+				        	  		$.ajax({
+				        	  			url : "/Drone/person/UpdateTrainingInPersonProcess",
+				        	  			type : "POST",
+				        	  			data : {
+				        	  				data : myJson
+				        	  			},
+				        	  			success : function() {
+				        	  				alert('修改訓練紀錄成功');
+				        	  			}
+				        	  		});
+				        	  		
+				        	  		var fileData = new FormData(document.getElementById("trainingForm_training_sub"));				 
+								    fileData.append("action","trainging");
+										 
+								    $.ajax({
+										            type: "POST",
+										            enctype: 'multipart/form-data',
+										            url: "/Drone/other/uploadMultipleFile",
+										            data: fileData,
+										            processData: false,
+										            contentType: false,
+										            cache: false,
+										            timeout: 600000,
+										            success: function (data) {
+										                console.log("SUCCESS : ", data);
+										            },
+										            error: function (e) {
+										                console.log("ERROR : ", e);
+										            }
+								    });
+				        	  	}	
+							}
 			 		    },
 			    		{
 			      		  text: "新增訓練資料",
 			              icon: "ui-icon-plus",
 			              id: "addTrainingBtn_"+domId,
 			              click: function() {
-			            	  var form = $(formName);
-						      var jsonObject = {};
-						      jsonObject.personId =form.find("#personId").val();
-							  jsonObject.trainingId =form.find("#trainingId").val();
-							  jsonObject.trainingType = form.find("#trainingType").val();
-							  jsonObject.startDate = form.find("#startDate").val();
-							  jsonObject.endDate = form.find("#endDate").val();
-							  jsonObject.hours = form.find("#hours").val();
-							  
-							  var myJson = JSON.stringify(jsonObject);
-							  $.ajax({
-							     url : "/Drone/person/TrainingInPersonProcess",
-							     type : "POST",
-							     data : {
-								   data : myJson
-							     },
-							     success : function() {
-								   alert('新增訓練紀錄成功');
-							     }
-						      })
-			              }
+			            	  	var form = $(formName);
+				        	  	var validator =form.validate({
+				        	  		rules: {				        	  			
+				        	  			startDate: {
+				        	  				 required: true
+				        	  			},
+				        	  			endDate: {
+				        	  				 required: true
+				        	  			},
+				        	  			hours: {
+				        	  				 required: true
+				        	  			}
+				        	  		}
+				        	    });				        	  	
+				        	  	
+				        	  	if(form.valid()){
+				        	  		var form = $(formName);
+				        	  		var jsonObject = {};
+				        	  		jsonObject.personId =form.find("#personId").val();
+				        	  		jsonObject.trainingId =form.find("#trainingId").val();
+				        	  		jsonObject.trainingType = form.find("#trainingType").val();
+				        	  		jsonObject.startDate = form.find("#startDate").val();
+				        	  		jsonObject.endDate = form.find("#endDate").val();
+				        	  		jsonObject.hours = form.find("#hours").val();
+				        	  		jsonObject.photo = form.find("#photo").val();
+				        	  		
+				        	  		var myJson = JSON.stringify(jsonObject);
+				        	  		$.ajax({
+				        	  			url : "/Drone/person/TrainingInPersonProcess",
+				        	  			type : "POST",
+				        	  			data : {
+				        	  				data : myJson
+				        	  			},
+				        	  			success : function() {
+				        	  				alert('新增訓練紀錄成功');
+				        	  			}
+				        	  		});
+				        	  		
+				        	  		var fileData = new FormData(document.getElementById("trainingForm_training_sub"));				 
+								    fileData.append("action","trainging");
+										 
+								    $.ajax({
+										            type: "POST",
+										            enctype: 'multipart/form-data',
+										            url: "/Drone/other/uploadMultipleFile",
+										            data: fileData,
+										            processData: false,
+										            contentType: false,
+										            cache: false,
+										            timeout: 600000,
+										            success: function (data) {
+										                console.log("SUCCESS : ", data);
+										            },
+										            error: function (e) {
+										                console.log("ERROR : ", e);
+										            }
+								    });
+				        	  	}
+			    			}	
 			            },
 					    {
 				          text: "關閉",
@@ -222,8 +300,8 @@ var trainingForm = React.createClass({
     },
     notify: function(obj){
     	this.setState({ 
-    		trainingId:obj.trainingId,
-    		state:obj.state
+    		targetId:obj.targetId["training"],
+    		state:obj.state["training"]
     	});
     },
     
@@ -278,8 +356,8 @@ var trainingForm = React.createClass({
 		if(this.state.state!==prevState.state){
 			form.find("#state").val(this.state.state);
 		}
-		if(this.state.trainingId!=prevState.trainingId){
-			if(this.state.trainingId==='-'){
+		if(this.state.targetId!=prevState.targetId){
+			if(this.state.targetId==='-'){
     			form.find("#trainingStateTD").empty();	
     			form.find("#trainingId").val("1");
     			form.find("#trainingType").val("1");
@@ -288,13 +366,14 @@ var trainingForm = React.createClass({
     			form.find("#startDate").val("");
     			form.find("#endDate").val("");
     			form.find("#hours").val("");
+    			form.find("#photo").val("");
+    			form.find("#certificateId").val("");
     		}else{
     			$.ajax({
     				url:"/Drone/person/ViewTrainingInfo",
     				type:"POST",
     				data:{
-    					personId : store_obj.personId,
-    					trainingId : this.state.trainingId
+    					targetId : this.state.targetId
     				},
     				dataType: "json",
     				success: function(data){				  
@@ -319,37 +398,37 @@ var trainingForm = React.createClass({
                             React.createElement("tr",  {},
                                 React.createElement("td",  {},"人員內部ID"),
                                 React.createElement("td",  {},
-                                    React.createElement("input",  {type:"text",id:"personId",className:"text ui-widget-content ui-corner-all ui-state-disabled"})
+                                    React.createElement("input",  {type:"text",id:"personId",name:"personId",className:"text ui-widget-content ui-corner-all ui-state-disabled"})
                                 )
                             ),
                             React.createElement("tr",  {},                                    
                                     React.createElement("td",  {},"人員名稱"),
                                     React.createElement("td",  {},
-                                        React.createElement("input",  {type:"text",id:"name",className:"text ui-widget-content ui-corner-all ui-state-disabled"})
+                                        React.createElement("input",  {type:"text",id:"name",name:"name",className:"text ui-widget-content ui-corner-all ui-state-disabled"})
                                     )
                             ),
                             React.createElement("tr",  {},
                                     React.createElement("td",  {},"訓練編號"),
                                     React.createElement("td",  {},
-                                        React.createElement("select",  {type:"text",id:"trainingId",onChange:this.handleTrainingIdChange})
+                                        React.createElement("select",  {type:"text",id:"trainingId",name:"trainingId",onChange:this.handleTrainingIdChange})
                                     )
                             ),
                             React.createElement("tr",  {},
                                     React.createElement("td",  {},"訓練單位"),
                                     React.createElement("td",  {},
-                                           React.createElement("input",  {type:"text",id:"unit",className:"text ui-widget-content ui-corner-all"})
+                                           React.createElement("input",  {type:"text",id:"unit",name:"unit",className:"text ui-widget-content ui-corner-all"})
                                     )
                             ),
                             React.createElement("tr",  {},
                                     React.createElement("td",  {},"訓練名稱"),
                                     React.createElement("td",  {},
-                                            React.createElement("input",  {type:"text",id:"trainingName",className:"text ui-widget-content ui-corner-all"})
+                                            React.createElement("input",  {type:"text",id:"trainingName",name:"trainingName",className:"text ui-widget-content ui-corner-all"})
                                     )
                             ),
                             React.createElement("tr",  {},
                                     React.createElement("td",  {},"訓練類型"),
                                     React.createElement("td",  {},                       
-                                           React.createElement("select",{id:"trainingType",className:"text ui-widget-content ui-corner-all"},
+                                           React.createElement("select",{id:"trainingType",name:"trainingType",className:"text ui-widget-content ui-corner-all"},
                                         		   React.createElement("option",{value:"1"},"學科"),
                                         		   React.createElement("option",{value:"2"},"術科")
                                            )
@@ -358,26 +437,33 @@ var trainingForm = React.createClass({
                             React.createElement("tr",  {},
                                     React.createElement("td",  {},"訓練日期"),
                                     React.createElement("td",  {},
-                                            React.createElement("input",  {type:"text",id:"startDate",className:"text ui-widget-content ui-corner-all"}),
+                                            React.createElement("input",  {type:"text",id:"startDate",name:"startDate",className:"text ui-widget-content ui-corner-all"}),
                                             "~",
-                                            React.createElement("input",  {type:"text",id:"endDate",className:"text ui-widget-content ui-corner-all"})
+                                            React.createElement("input",  {type:"text",id:"endDate",name:"endDate",className:"text ui-widget-content ui-corner-all"})
                                     )
                             ),
                             React.createElement("tr",  {},
                                     React.createElement("td",  {},"時數"),
                                     React.createElement("td",  {},
-                                            React.createElement("input",  {type:"text",id:"hours",className:"text ui-widget-content ui-corner-all"})
+                                            React.createElement("input",  {type:"text",id:"hours",name:"hours",className:"text ui-widget-content ui-corner-all"})
                                     )
                             ),                          
                             React.createElement("tr",  {},
                                     React.createElement("td",  {},"上傳結訓證明照片"),
                                     React.createElement("td",  {},
-                                            React.createElement("input",  {type:"file",id:"photo",className:"text ui-widget-content ui-corner-all"})
+                                            React.createElement("input",  {type:"text",id:"photo",name:"photo",className:"text ui-widget-content ui-corner-all"}),
+                                            React.createElement("input",  {type:"file",name:"file",id:"training_file"})
                                     )
                             ),
                             React.createElement("tr",  {},
                                     React.createElement("td",  {},"資料狀態"),
                                     React.createElement("td",  {id:"trainingStateTD"})
+                            ),
+                            React.createElement("tr",  {className:'hide-true'},
+                                    React.createElement("td",  {},"mapping資料表編號"),
+                                    React.createElement("td",  {},
+                                    		React.createElement("input",  {id:"certificateId"})
+                                    )
                             )
                                 
                           )

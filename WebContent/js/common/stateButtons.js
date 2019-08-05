@@ -10,10 +10,10 @@ var stateButtons = React.createClass({
     notify: function(obj){ 
     	if(obj.domId===this.props.domId && obj.typeId===this.props.typeId){
     		this.setState({ 
-    			state:obj.state,
+    			state:obj.state[this.props.typeId],
     			domId:obj.domId,
     			typeId:obj.typeId,
-    			targetId:obj.targetId
+    			targetId:obj.targetId[this.props.typeId]
     		});
     	}
     	
@@ -28,7 +28,7 @@ var stateButtons = React.createClass({
     	var domId = this.props.domId;
     	var typeId = this.props.typeId;
     	var typeId_uc_first = typeId.charAt(0).toUpperCase() + typeId.slice(1);
-    	
+
     	//debugger;
     	$(stateButton).find(checkBtn).button({
 			icons: { primary: "ui-icon-play" }
@@ -52,7 +52,7 @@ var stateButtons = React.createClass({
 				    	$(stateButton).find(checkBtn).prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
 		    			$(stateButton).find(rejectBtn).prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
 		    			$(stateButton).find(approveBtn).prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
-						action_obj.checkButton_click_Action(typeId);
+		    			action_obj.checkButton_click_Action(typeId);
 				  }
 			})
 		});

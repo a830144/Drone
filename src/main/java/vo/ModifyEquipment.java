@@ -82,40 +82,40 @@ public class ModifyEquipment extends BaseEquipmentAttachment{
 	public void setOthers_comment(String others_comment) {
 		this.others_comment = others_comment;
 	}
-	public byte[] getAirframe_photo() {
+	public String getAirframe_photo() {
 		return airframe_photo;
 	}
-	public void setAirframe_photo(byte[] airframe_photo) {
+	public void setAirframe_photo(String airframe_photo) {
 		this.airframe_photo = airframe_photo;
 	}
-	public byte[] getPropulsion_photo() {
+	public String getPropulsion_photo() {
 		return propulsion_photo;
 	}
-	public void setPropulsion_photo(byte[] propulsion_photo) {
+	public void setPropulsion_photo(String propulsion_photo) {
 		this.propulsion_photo = propulsion_photo;
 	}
-	public byte[] getBattery_photo() {
+	public String getBattery_photo() {
 		return battery_photo;
 	}
-	public void setBattery_photo(byte[] battery_photo) {
+	public void setBattery_photo(String battery_photo) {
 		this.battery_photo = battery_photo;
 	}
-	public byte[] getController_photo() {
+	public String getController_photo() {
 		return controller_photo;
 	}
-	public void setController_photo(byte[] controller_photo) {
+	public void setController_photo(String controller_photo) {
 		this.controller_photo = controller_photo;
 	}
-	public byte[] getPayload_photo() {
+	public String getPayload_photo() {
 		return payload_photo;
 	}
-	public void setPayload_photo(byte[] payload_photo) {
+	public void setPayload_photo(String payload_photo) {
 		this.payload_photo = payload_photo;
 	}
-	public byte[] getOthers_photo() {
+	public String getOthers_photo() {
 		return others_photo;
 	}
-	public void setOthers_photo(byte[] others_photo) {
+	public void setOthers_photo(String others_photo) {
 		this.others_photo = others_photo;
 	}
 	private String others;
@@ -127,12 +127,12 @@ public class ModifyEquipment extends BaseEquipmentAttachment{
 	private String payload_comment;
 	private String others_comment;
 	
-	private byte[] airframe_photo;
-	private byte[] propulsion_photo;
-	private byte[] battery_photo;
-	private byte[] controller_photo;
-	private byte[] payload_photo;
-	private byte[] others_photo;
+	private String airframe_photo;
+	private String propulsion_photo;
+	private String battery_photo;
+	private String controller_photo;
+	private String payload_photo;
+	private String others_photo;
 	
 	public Map<String,TempAttach> getResultHashMap(){
 		Map<String,TempAttach> map = new HashMap<String,TempAttach>();
@@ -146,31 +146,31 @@ public class ModifyEquipment extends BaseEquipmentAttachment{
 		    	TempAttach tempAttach = null;
 		    	String value_status = null;
 		    	String value_comment = null;
-		    	byte[] modificationPhoto = null;
-		    	
-		    		try {
-						key = detailMap.get(field.getName());		    		
-						if(key!=null){
-							value_status = (String)field.get(this);
-							value_comment = (String)c.getDeclaredField(field.getName()+"_comment").get(this);
-							modificationPhoto = (byte[])c.getDeclaredField(field.getName()+"_photo").get(this);
-							tempAttach = new TempAttach(key,value_status,value_comment,modificationPhoto);
-						}
-					} catch (IllegalArgumentException e) {
-						e.printStackTrace();
-					} catch (IllegalAccessException e) {
-						e.printStackTrace();
-					} catch (NoSuchFieldException e) {
-						e.printStackTrace();
-					} catch (SecurityException e) {
-						e.printStackTrace();
+		    	String modificationPhoto = null;
+
+				try {
+					key = detailMap.get(field.getName());
+					if (key != null) {
+						value_status = (String) field.get(this);
+						value_comment = (String) c.getDeclaredField(field.getName() + "_comment").get(this);
+						modificationPhoto = (String) c.getDeclaredField(field.getName() + "_photo").get(this);
+						tempAttach = new TempAttach(key, value_status, value_comment, modificationPhoto);
 					}
-							    	
-		    	if(key!=null && tempAttach!=null){
-		    		map.put(key, tempAttach);
-		    	}
-		    }
-		}	    
-	    return map;
+				} catch (IllegalArgumentException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				} catch (NoSuchFieldException e) {
+					e.printStackTrace();
+				} catch (SecurityException e) {
+					e.printStackTrace();
+				}
+
+				if (key != null && tempAttach != null) {
+					map.put(key, tempAttach);
+				}
+			}
+		}
+		return map;
 	}
 }

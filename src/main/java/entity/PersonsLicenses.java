@@ -32,7 +32,7 @@ public class PersonsLicenses implements java.io.Serializable {
 	private Licenses licenses;
 	private Persons persons;
 	private Date gotDate;
-	private byte[] photo;
+	private String photo;
 	private String constructionType;
 	
 	private PersonsLicensesFlow personsLicensesFlow;
@@ -57,7 +57,7 @@ public class PersonsLicenses implements java.io.Serializable {
 		this.persons = persons;
 	}
 
-	public PersonsLicenses(Licenses licenses, Persons persons, Date gotDate, byte[] photo) {
+	public PersonsLicenses(Licenses licenses, Persons persons, Date gotDate, String photo) {
 		this.licenses = licenses;
 		this.persons = persons;
 		this.gotDate = gotDate;
@@ -107,11 +107,11 @@ public class PersonsLicenses implements java.io.Serializable {
 	}
 
 	@Column(name = "Photo")
-	public byte[] getPhoto() {
+	public String getPhoto() {
 		return this.photo;
 	}
 
-	public void setPhoto(byte[] photo) {
+	public void setPhoto(String photo) {
 		this.photo = photo;
 	}
 	

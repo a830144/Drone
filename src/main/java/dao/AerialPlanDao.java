@@ -12,7 +12,7 @@ public interface AerialPlanDao{
     
     public void update(AerialPlans entity);
      
-    public AerialPlans findById(Integer id);
+    public AerialPlans findById(Integer id,boolean detach);
     
     public List<AerialPlans> findByName(String name);
      

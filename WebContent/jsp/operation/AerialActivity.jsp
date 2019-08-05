@@ -5,32 +5,46 @@
 var aerialActivity_obj = {		
 		
 		addOrUpdate : function (action){
-			  $("#aerialActivityForm_activity").find("#projectId").prop("disabled", false);
-			  $("#aerialActivityForm_activity").find("#name").prop("disabled", false);
-			  $("#aerialActivityForm_activity").find("#aerialPlanId").prop("disabled",false);
-			  $("#aerialActivityForm_activity").find("#usage").prop("disabled",false);							
-			  			  
+			var form = $("#aerialActivityForm_aerialActivity_sub");
+			var validator =form.validate({
+  	  			rules: {
+  	  				aerialActivityStartDate: {
+  	  				 	required: true,
+  	  				 	maxlength: 10
+  	  				},
+  	  				aerialActivityEndDate: {
+  	  				 	required: true,
+  	  				 	maxlength: 10
+  	  				},      	  			      	  			
+  	  			}
+  	      	});
+	
+		  if (form.valid()) {
+			  var form = $("#aerialActivityForm_aerialActivity_sub");
 			  var jsonObject = {};
-			  jsonObject.projectId =$("#aerialActivityForm_activity").find("#projectId").val();
-			  jsonObject.name = $("#aerialActivityForm_activity").find("#name").val();
-			  jsonObject.aerialPlanId = $("#aerialActivityForm_activity").find("#aerialPlanId").val();
-			  jsonObject.usage = $("#aerialActivityForm_activity").find("#usage").val();
-			  jsonObject.aerialPlanStartDate = $("#aerialActivityForm_activity").find("#aerialPlanStartDate").val();
-			  jsonObject.aerialPlanEndDate = $("#aerialActivityForm_activity").find("#aerialPlanEndDate").val();
-			  jsonObject.aerialActivityStartDate = $("#aerialActivityForm_activity").find("#aerialActivityStartDate").val();
-			  jsonObject.aerialActivityEndDate = $("#aerialActivityForm_activity").find("#aerialActivityEndDate").val();
+			  jsonObject.projectId =$(form).find("#projectId").val();
+			  jsonObject.name = $(form).find("#name").val();
+			  jsonObject.aerialPlanId = $(form).find("#aerialPlanId").val();
+			  jsonObject.usage = $(form).find("#usage").val();
+			  jsonObject.aerialPlanStartDate = $(form).find("#aerialPlanStartDate").val();
+			  jsonObject.aerialPlanEndDate = $(form).find("#aerialPlanEndDate").val();
+			  jsonObject.aerialActivityStartDate = $(form).find("#aerialActivityStartDate").val();
+			  jsonObject.aerialActivityEndDate = $(form).find("#aerialActivityEndDate").val();
+			  jsonObject.aerialActivityId = $(form).find("#aerialActivityId").val();
+			  jsonObject.state = $(form).find("#state").val();
 			  
+			  var tableName = "#aerialActivityEPList_aerialActivity_sub";
 			  var arr = new Array();
 			  jsonObject.equipmentPersonArray = arr;
-			  var table = $('#equipmentPersonList_activity_sub').DataTable();
+			  var table = $(tableName).DataTable();
+			  
 			  table.rows().eq(0).each( function ( index ) {
-			    	var row = table.row( index );
-			    	var cell = table.cell( index ,0);
-					var equipmentId = cell.data();
-					cell = table.cell( index ,6);
-					var personId_1 = cell.data();
-					cell = table.cell( index ,7);
-					var personId_2 = cell.data();
+				  var row = table.row( index );
+			    	var cell = table.cell( index ,3);
+					var equipmentId = cell.data();									
+					var personId_1 = $("#EProw"+index+"col"+6).val();					
+					var personId_2 = $("#EProw"+index+"col"+7).val(); 
+					
 					jsonObject.equipmentPersonArray.push({
 						"equipmentId":equipmentId,
 						"personId_1":personId_1,
@@ -49,6 +63,8 @@ var aerialActivity_obj = {
 					alert(action==='update'?'修改航拍活動紀錄成功':'新增航拍活動紀錄成功');
 				 }
 			  })
+			  
+		}
 		},
 		
 		initState : function (id){
@@ -73,9 +89,11 @@ var aerialActivity_obj = {
 						
 			container = document.getElementById('aerialActivityEPList_'+action);
 			aerialActivity_obj.aerialActivityEPList = ReactDOM.render(React.createElement(aerialActivityEPList, {domId:action}), container);
-			action_obj.aerialActivitySteps_clickFinish_Action_subscribe(aerialActivity_obj.aerialActivityEPList);
+			
 			action_obj.aerialActivityList_select_Action_subscribe(aerialActivity_obj.aerialActivityEPList);
 			action_obj.aerialActivityList_deselect_Action_subscribe(aerialActivity_obj.aerialActivityEPList);
+			action_obj.aerialActivityEPList_add_Action_subscribe(aerialActivity_obj.aerialActivityEPList);
+			action_obj.aerialActivitySteps_clickFinish_Action_subscribe(aerialActivity_obj.aerialActivityEPList);
 			
 			container = document.getElementById('aerialActivityForm_'+action);
 			aerialActivity_obj.aerialActivityForm = ReactDOM.render(React.createElement(aerialActivityForm, {domId:action,projectId:store_obj.projectId}), container); 
@@ -85,10 +103,13 @@ var aerialActivity_obj = {
 			container = document.getElementById('aerialActivitySteps_'+action);
 			aerialActivity_obj.steps = ReactDOM.render(React.createElement(aerialActivitySteps, {domId:action}), container);
 			action_obj.aerialActivityEPList_add_Action_subscribe(aerialActivity_obj.steps);			
+			action_obj.aerialActivitySteps_clickFinish_Action_subscribe(aerialActivity_obj.steps);
 			
 			container = document.getElementById('firstStep_'+action);
 			aerialActivity_obj.firstStep = ReactDOM.render(React.createElement(firstStep, {domId:action}), container);
 			action_obj.aerialActivityForm_planIdChange_Action_subscribe(aerialActivity_obj.firstStep);
+			action_obj.aerialActivityList_select_Action_subscribe(aerialActivity_obj.firstStep);
+			action_obj.aerialActivityList_deselect_Action_subscribe(aerialActivity_obj.firstStep);
 			
 			container = document.getElementById('secondStep_'+action);
 			aerialActivity_obj.secondStep = ReactDOM.render(React.createElement(secondStep, {domId:action}), container);

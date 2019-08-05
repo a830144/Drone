@@ -177,8 +177,14 @@ public class PersonController {
 	
 	@RequestMapping(value="/person/ViewLicenseInfo" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public String viewLicenseInfo(String personId,String licenseId) {
-		String jsonString = personService.queryLicenseInfo(new Integer(personId),new Integer(licenseId));
+	public String viewLicenseInfo(String targetId,String type) {
+		String jsonString="";
+		if(targetId!=null){
+			jsonString = personService.queryLicenseInfo(new Integer(targetId));
+			
+		}else if(type!=null){
+			jsonString = personService.queryLicenseByType(type);			
+		}
 		return jsonString;
 	}
 	
@@ -192,8 +198,8 @@ public class PersonController {
 	
 	@RequestMapping(value="/person/ViewTrainingInfo" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public String viewTrainingInfo(String personId,String trainingId) {
-		String jsonString = personService.queryTrainingInfo(new Integer(personId),new Integer(trainingId));
+	public String viewTrainingInfo(String targetId) {
+		String jsonString = personService.queryTrainingInfo(new Integer(targetId));
 		return jsonString;
 	}
 	
@@ -207,8 +213,8 @@ public class PersonController {
 	
 	@RequestMapping(value="/person/ViewEventInfo" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public String viewEventInfo(String personId,String eventId) {
-		String jsonString = personService.queryEventInfo(new Integer(personId),new Integer(eventId));
+	public String viewEventInfo(String targetId) {
+		String jsonString = personService.queryEventInfo(new Integer(targetId));
 		return jsonString;
 	}
 	
@@ -253,20 +259,20 @@ public class PersonController {
 	@ResponseBody
 	public void updateLicenseInPerson(String data) {
 		System.out.println("Update License in person");
-				
+		personService.updatePersonLicense(data);	
 	}
 	
 	@RequestMapping(value="/person/UpdateTrainingInPersonProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
 	public void updateTrainingInPerson(String data) {
 		System.out.println("Update Training in person");
-				
+		personService.updateCertificate(data);		
 	}
 	
 	@RequestMapping(value="/person/UpdateEventInPersonProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
 	public void updateEventInPerson(String data) {
 		System.out.println("Update Event in person");
-				
+		personService.updateParticipation(data);		
 	}
 }

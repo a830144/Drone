@@ -26,23 +26,59 @@ var licenseDialog = React.createClass({
 				          icon: "ui-icon-pencil",
 				          id: "updateLicenseBtn_"+domId,
 				          click: function() {
-				        	  var form = $(formName);
-						      var jsonObject = {};
-							  jsonObject.personId =form.find("#personId").val();
-							  jsonObject.type = form.find("#type").val();
-							  jsonObject.gotDate = form.find("#gotDate").val();
-							  //jsonObject.photo = form.find("#photo").val();
-							  var myJson = JSON.stringify(jsonObject);
-							  $.ajax({
-								 url : "/Drone/person/UpdateLicenseInPersonProcess",
-								 type : "POST",
-								 data : {
-									data : myJson
-								 },
-								 success : function() {
-									alert('修改操作證紀錄成功');
-								  }
-							   })
+				        	  	var form = $(formName);
+				        	  	var validator =form.validate({
+				        	  		rules: {				        	  			
+				        	  			gotDate: {
+				        	  				 required: true
+				        	  			}
+				        	  		}
+				        	    });				        	  	
+				        	  	
+				        	  	if(form.valid()){
+				        	  		var form = $(formName);
+				        	  		var jsonObject = {};
+				        	  		jsonObject.personId =form.find("#personId").val();
+				        	  		jsonObject.name =form.find("#name").val();
+				        	  		jsonObject.constructionType = form.find("#constructionType").val();
+				        	  		jsonObject.type = form.find("#type").val();
+				        	  		jsonObject.gotDate = form.find("#gotDate").val();
+				        	  		jsonObject.photo = form.find("#photo").val();
+				        	  		jsonObject.state = form.find("#state").val();
+				        	  		jsonObject.licenseId = form.find("#licenseId").val();
+				        	  		jsonObject.personsLicensesId = form.find("#personsLicensesId").val();
+				        	  		var myJson = JSON.stringify(jsonObject);
+				        	  		$.ajax({
+				        	  			url : "/Drone/person/UpdateLicenseInPersonProcess",
+				        	  			type : "POST",
+				        	  			data : {
+				        	  				data : myJson
+				        	  			},
+				        	  			success : function() {
+				        	  				alert('修改操作證紀錄成功');
+				        	  			}
+				        	  		});
+				        	  			
+									var fileData = new FormData(document.getElementById("licenseForm_license_sub"));				 
+								    fileData.append("action","license");
+										 
+								    $.ajax({
+										            type: "POST",
+										            enctype: 'multipart/form-data',
+										            url: "/Drone/other/uploadMultipleFile",
+										            data: fileData,
+										            processData: false,
+										            contentType: false,
+										            cache: false,
+										            timeout: 600000,
+										            success: function (data) {
+										                console.log("SUCCESS : ", data);
+										            },
+										            error: function (e) {
+										                console.log("ERROR : ", e);
+										            }
+								    });
+				        	  	}
 				           }			 
 			 		    },
 			    		{
@@ -50,24 +86,58 @@ var licenseDialog = React.createClass({
 			              icon: "ui-icon-plus",
 			              id: "addLicenseBtn_"+domId,
 			              click: function() {
-			            	  var form = $(formName);
-						      var jsonObject = {};
-							  jsonObject.personId =form.find("#personId").val();
-							  jsonObject.type = form.find("#type").val();
-							  jsonObject.gotDate = form.find("#gotDate").val();
-							  //jsonObject.photo = form.find("#photo").val();
-							  var myJson = JSON.stringify(jsonObject);
-							  $.ajax({
-							     url : "/Drone/person/LicenseInPersonProcess",
-							     type : "POST",
-							     data : {
-								   data : myJson
-							     },
-							     success : function() {
-								   alert('新增操作證紀錄成功');
-							     }
-						      })
-			              }
+			            	  	var form = $(formName);
+				        	  	var validator =form.validate({
+				        	  		rules: {				        	  			
+				        	  			gotDate: {
+				        	  				 required: true
+				        	  			}
+				        	  		}
+				        	    });				        	  	
+				        	  	
+				        	  	if(form.valid()){
+				        	  		var form = $(formName);
+				        	  		var jsonObject = {};
+				        	  		jsonObject.personId =form.find("#personId").val();
+				        	  		jsonObject.name =form.find("#name").val();
+				        	  		jsonObject.constructionType = form.find("#constructionType").val();
+				        	  		jsonObject.type = form.find("#type").val();
+				        	  		jsonObject.gotDate = form.find("#gotDate").val();
+				        	  		jsonObject.photo = form.find("#photo").val();
+				        	  		jsonObject.state = form.find("#state").val();
+							  
+				        	  		var myJson = JSON.stringify(jsonObject);
+				        	  		$.ajax({
+				        	  			url : "/Drone/person/LicenseInPersonProcess",
+				        	  			type : "POST",
+				        	  			data : {
+				        	  				data : myJson
+				        	  			},
+				        	  			success : function() {
+				        	  				alert('新增操作證紀錄成功');
+				        	  			}
+				        	  		});
+				        	  		
+				        	  		var fileData = new FormData(document.getElementById("licenseForm_license_sub"));				 
+								    fileData.append("action","license");										 
+								    $.ajax({
+										            type: "POST",
+										            enctype: 'multipart/form-data',
+										            url: "/Drone/other/uploadMultipleFile",
+										            data: fileData,
+										            processData: false,
+										            contentType: false,
+										            cache: false,
+										            timeout: 600000,
+										            success: function (data) {
+										                console.log("SUCCESS : ", data);
+										            },
+										            error: function (e) {
+										                console.log("ERROR : ", e);
+										            }
+								    });
+			              		}
+			    			}
 			            },
 					    {
 				          text: "關閉",
@@ -212,9 +282,27 @@ var licenseForm = React.createClass({
     },
     notify: function(obj){
     	this.setState({ 
-    		licenseId:obj.licenseId,
-    		state:obj.state
+    		targetId:obj.targetId["license"],
+    		state:obj.state["license"]
     	});
+    },
+    
+    handleTypeChange: function(){
+    	
+    	var form = $("#licenseForm_"+this.props.domId+"_sub");
+        var type = $(form).find("#type").val();
+        
+        $.ajax({
+			url : "/Drone/person/ViewLicenseInfo",
+			type : "POST",	
+			data : {
+				type : type
+			},
+			success : function(json) {  
+				$(form).find("#licenseId").val(json.licenseId);
+				$(form).find("#licenseIdshow").html(json.licenseId);
+	        }
+		});
     },
 
 	componentDidMount(){
@@ -258,19 +346,21 @@ var licenseForm = React.createClass({
 		if(this.state.state!==prevState.state){
 			form.find("#state").val(this.state.state);
 		}
-
-		if(this.state.licenseId!==prevState.licenseId){
-			if(this.state.licenseId==='-'){
+		
+		if(this.state.targetId!==prevState.targetId){
+			if(this.state.targetId==='-'){
     			form.find("#licenseStateTD").empty();	
     			form.find("#type").val("1");
     			form.find("#gotDate").val("");
+    			form.find("#photo").val("");
+    			form.find("#personsLicensesId").val("");
+    			form.find("#licenseId").val("");
     		}else{
     			$.ajax({
     				url:"/Drone/person/ViewLicenseInfo",
     				type:"POST",
     				data:{
-    					personId : store_obj.personId,
-    					licenseId : this.state.licenseId
+    					targetId : this.state.targetId
     				},
     				dataType: "json",
     				success: function(data){				  
@@ -280,6 +370,7 @@ var licenseForm = React.createClass({
     						form.find("#" + key).val(value);	
     						form.find("input[name='" + key +"']").val(value);
     					});
+    					form.find("#licenseIdshow").html(obj.licenseId);
 				}})
 		   }
 	   }
@@ -295,19 +386,19 @@ var licenseForm = React.createClass({
                             React.createElement("tr",  {},
                                 React.createElement("td",  {},"人員內部ID"),
                                 React.createElement("td",  {},
-                                    React.createElement("input",  {type:"text",id:"personId",className:"text ui-widget-content ui-corner-all ui-state-disabled"})
+                                    React.createElement("input",  {type:"text",id:"personId",name:"personId",className:"text ui-widget-content ui-corner-all ui-state-disabled"})
                                 )
                             ),
                             React.createElement("tr",  {},                                    
                                     React.createElement("td",  {},"人員名稱"),
                                     React.createElement("td",  {},
-                                        React.createElement("input",  {type:"text",id:"name",className:"text ui-widget-content ui-corner-all ui-state-disabled"})
+                                        React.createElement("input",  {type:"text",id:"name",name:"name",className:"text ui-widget-content ui-corner-all ui-state-disabled"})
                                     )
                             ),
                             React.createElement("tr",  {},
                                     React.createElement("td",  {},"類別"),
                                     React.createElement("td",  {},
-                                            React.createElement("select",  {id:"constructionType"},
+                                            React.createElement("select",  {id:"constructionType",name:"constructionType"},
                                             		React.createElement("option",  {value:"A"},"無人飛機(Aircraft)"),
                                             		React.createElement("option",  {value:"H"},"無人直昇機(Helicopter)"),
                                             		React.createElement("option",  {value:"M"},"無人多旋翼機(Muti-Rotors)"),
@@ -315,30 +406,46 @@ var licenseForm = React.createClass({
                                             )
                                     )
                             ),
+                            
                             React.createElement("tr",  {},
                                     React.createElement("td",  {},"級別"),
                                     React.createElement("td",  {},
                                         React.createElement("div",  {id:"typeTd"},
-                                        		React.createElement("select",{id:"type",className:"text ui-widget-content ui-corner-all"})
+                                        		React.createElement("u",{id:"licenseIdshow"}," 3 "),
+                                        		React.createElement("select",{id:"type",className:"text ui-widget-content ui-corner-all",onChange:this.handleTypeChange})
                                         )
                                     )
                             ),
                             React.createElement("tr",  {},
                                      React.createElement("td",  {},"操作證取得日期"),
                                      React.createElement("td",  {},
-                                             React.createElement("input",  {type:"text",id:"gotDate",className:"text ui-widget-content ui-corner-all"})
+                                             React.createElement("input",  {type:"text",id:"gotDate",name:"gotDate",className:"text ui-widget-content ui-corner-all"})
                                      )
                             ),
                             React.createElement("tr",  {},
                                     React.createElement("td",  {},"上傳操作證照片"),
                                     React.createElement("td",  {},
-                                            React.createElement("input",  {type:"file",id:"photo",className:"text ui-widget-content ui-corner-all"})
+                                            React.createElement("input",  {type:"text",id:"photo",name:"photo",className:"text ui-widget-content ui-corner-all"}),
+                                            React.createElement("input",  {type:"file",name:"file",id:"license_file"})
                                     )
                             ),
                             React.createElement("tr",  {},
                                     React.createElement("td",  {},"資料狀態"),
                                     React.createElement("td",  {id:"licenseStateTD"})
+                            ),
+                            React.createElement("tr",  {className:'hide-true'},
+                                    React.createElement("td",  {},"mapping資料表編號"),
+                                    React.createElement("td",  {},
+                                    		React.createElement("input",  {id:"personsLicensesId"})
+                                    )
+                            ),
+                            React.createElement("tr",  {className:'hide-true'},
+                                    React.createElement("td",  {},"licenseId"),
+                                    React.createElement("td",  {},
+                                    		React.createElement("input",  {id:"licenseId"})
+                                    )
                             )
+                            
                                 
                           )
                        )

@@ -21,15 +21,19 @@ import javax.persistence.Table;
 @Table(name = "roles_functions", catalog = "drone")
 public class RolesFunctions implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7872562531771084459L;
 	private Integer rolesFunctionsId;
 	private Functions functions;
 	private Roles roles;
-	private Set operationses = new HashSet(0);
+	private Set<Operations> operationses = new HashSet<Operations>(0);
 
 	public RolesFunctions() {
 	}
 
-	public RolesFunctions(Functions functions, Roles roles, Set operationses) {
+	public RolesFunctions(Functions functions, Roles roles, Set<Operations> operationses) {
 		this.functions = functions;
 		this.roles = roles;
 		this.operationses = operationses;
@@ -68,11 +72,11 @@ public class RolesFunctions implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rolesFunctions")
-	public Set getOperationses() {
+	public Set<Operations> getOperationses() {
 		return this.operationses;
 	}
 
-	public void setOperationses(Set operationses) {
+	public void setOperationses(Set<Operations> operationses) {
 		this.operationses = operationses;
 	}
 

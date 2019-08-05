@@ -29,6 +29,8 @@
 <script src="/Drone/js/react-dom.js"></script>
 <script src="/Drone/js/common/action.js" charset="utf-8"></script>
 <script src="/Drone/js/common/store.js" charset="utf-8"></script>
+<script src="/Drone/js/jquery.validate.min.js"></script>
+<script src="/Drone/js/additional-methods.min.js"></script>
 <style type="text/css">
 .dataTables_scroll
 {
@@ -65,6 +67,12 @@
 		});
 		return o;
 	};
+	function fileValue(form){
+		var details = ['airframe', 'propulsion','battery','controller','payload'];
+		details.forEach(function(item, index, array) {
+			$(form).find("#mo-"+item+"_photo").val($(form).find("#"+item+"_photo").val());					  
+		});	
+	}
 	function radioValue(form){
 		$(form).find("input[name='airframe']").val($(form).find("input:radio[name='airframe_radio']:checked").val());
 		$(form).find("input[name='propulsion']").val($(form).find("input:radio[name='propulsion_radio']:checked").val());

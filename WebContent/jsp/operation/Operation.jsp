@@ -29,7 +29,8 @@
 <script src="/Drone/js/react-dom.js"></script>
 <script src="/Drone/js/common/action.js" charset="utf-8"></script>
 <script src="/Drone/js/common/store.js" charset="utf-8"></script>
-
+<script src="/Drone/js/jquery.validate.min.js"></script>
+<script src="/Drone/js/additional-methods.min.js"></script>
 <style type="text/css">
 .hide-true  {
    display: none;
@@ -44,6 +45,7 @@
 </style>
 
 <script>
+
 
 	window.alert = function(message) {
 		$(document.createElement('div')).attr({
@@ -87,6 +89,7 @@
 		$("#updateDiv").load("./UpdateProject.jsp");
 		$("#aerialPlanDiv").load("./AerialPlan.jsp");
 		$("#aerialActivityDiv").load("./AerialActivity.jsp");
+		$("#deleteDiv").load("./DeleteProject.jsp");
 		$(document).on('click', '#add', function() {
 			addProject();
 		});
@@ -97,7 +100,7 @@
 			updateProject(this.id);
 		});
 		$(document).on('click', '.delete', function() {
-			alert("delete :" + this.id);
+			deleteProject(this.id);
 		});
 		$(document).on('click', '.aerialPlan', function() {
 			aerialPlan(this.id);
@@ -122,6 +125,7 @@
 	<div id="updateDiv"></div>
 	<div id="aerialPlanDiv"></div>
 	<div id="aerialActivityDiv"></div>
+	<div id="deleteDiv"></div>
 
 </body>
 </html>

@@ -30,7 +30,7 @@ public class ModificationDetail implements java.io.Serializable {
 	private Integer detailType;
 	private String status;
 	private String comment;
-	private byte[] modificationPhoto;
+	private String modificationPhoto;
 
 	public ModificationDetail() {
 	}
@@ -40,7 +40,7 @@ public class ModificationDetail implements java.io.Serializable {
 		this.seq = seq;
 	}
 
-	public ModificationDetail(int seq, Integer detailType, String status, String comment, byte[] modificationPhoto) {
+	public ModificationDetail(int seq, Integer detailType, String status, String comment, String modificationPhoto) {
 		super();
 		this.seq = seq;
 		this.detailType = detailType;
@@ -50,7 +50,7 @@ public class ModificationDetail implements java.io.Serializable {
 	}
 
 	public ModificationDetail(Modifications modifications, int seq, Integer detailType, String status, String comment,
-			byte[] modificationPhoto) {
+			String modificationPhoto) {
 		this.modifications = modifications;
 		this.seq = seq;
 		this.detailType = detailType;
@@ -118,11 +118,11 @@ public class ModificationDetail implements java.io.Serializable {
 	}
 
 	@Column(name = "Modification_Photo")
-	public byte[] getModificationPhoto() {
-		return this.modificationPhoto;
+	public String getModificationPhoto() {
+		return modificationPhoto;
 	}
 
-	public void setModificationPhoto(byte[] modificationPhoto) {
+	public void setModificationPhoto(String modificationPhoto) {
 		this.modificationPhoto = modificationPhoto;
 	}
 

@@ -4,7 +4,7 @@ var action_obj = {
 		action_obj.equipmentForm_load_Action_handler.push(fn);
     },		
 	equipmentForm_load_Action : function(state,equipmentId){
-		store_obj.state = state;
+		store_obj.state["equipment"] = state;
 		store_obj.typeId = "equipment";
 		store_obj.targetId["equipment"] = equipmentId;
 		action_obj.equipmentForm_load_Action_handler.forEach(
@@ -20,7 +20,7 @@ var action_obj = {
 		action_obj.personForm_load_Action_handler.push(fn);
     },		
     personForm_load_Action : function(state,personId){
-		store_obj.state = state;
+		store_obj.state["person"] = state;
 		store_obj.typeId = "person";
 		store_obj.targetId["person"] = personId;
 		action_obj.personForm_load_Action_handler.forEach(
@@ -36,7 +36,7 @@ var action_obj = {
 		action_obj.projectForm_load_Action_handler.push(fn);
     },		
     projectForm_load_Action : function(state,projectId){
-		store_obj.state = state;
+		store_obj.state["project"] = state;
 		store_obj.typeId = "project";
 		store_obj.targetId["project"] = projectId;
 		action_obj.projectForm_load_Action_handler.forEach(
@@ -56,7 +56,7 @@ var action_obj = {
 		store_obj.maintenanceId = maintenanceId;
 		store_obj.typeId = "maintain";
 		store_obj.targetId["maintain"] = maintenanceId;
-		store_obj.state = state;
+		store_obj.state["maintain"] = state;
 		//notify
 		action_obj.maintainList_select_Action_handler.forEach(
 				function(item){
@@ -74,7 +74,7 @@ var action_obj = {
 		store_obj.maintenanceId = '-';
 		store_obj.typeId = '-';
 		store_obj.targetId["maintain"] = '-';
-		store_obj.state = '';
+		store_obj.state["maintain"] = '';
 		//notify
 		action_obj.maintainList_deselect_Action_handler.forEach(
 				function(item){
@@ -93,7 +93,7 @@ var action_obj = {
 		store_obj.modificationId = modificationId;
 		store_obj.typeId = "modify";
 		store_obj.targetId["modify"] = modificationId;
-		store_obj.state = state;
+		store_obj.state["modify"] = state;
 		//notify
 		action_obj.modifyList_select_Action_handler.forEach(
 				function(item){
@@ -111,7 +111,7 @@ var action_obj = {
 		store_obj.modificationId = '-';
 		store_obj.typeId = "-";
 		store_obj.targetId["modify"] = '-';
-		store_obj.state = '';
+		store_obj.state["modify"] = '';
 		//notify
 		action_obj.modifyList_deselect_Action_handler.forEach(
 				function(item){
@@ -124,8 +124,8 @@ var action_obj = {
 	checkButton_click_Action_subscribe : function(fn) {
 		action_obj.checkButton_click_Action_handler.push(fn);
     },
-	checkButton_click_Action : function() {
-		store_obj.state = "CHECKED";
+	checkButton_click_Action : function(typeId) {
+		store_obj.state[typeId] = "CHECKED";
 		//notify
 		action_obj.checkButton_click_Action_handler.forEach(
 				function(item){
@@ -139,8 +139,8 @@ var action_obj = {
 	approveButton_click_Action_subscribe : function(fn) {
 		action_obj.approveButton_click_Action_handler.push(fn);
     },
-	approveButton_click_Action : function() {
-		store_obj.state = "APPROVED";
+	approveButton_click_Action : function(typeId) {
+		store_obj.state[typeId] = "APPROVED";
 		//notify				
 		action_obj.approveButton_click_Action_handler.forEach(
 				function(item){
@@ -153,8 +153,8 @@ var action_obj = {
 	rejectButton_click_Action_subscribe : function(fn) {
 		action_obj.rejectButton_click_Action_handler.push(fn);
     },
-	rejectButton_click_Action : function() {
-		store_obj.state = "REJECTED";
+	rejectButton_click_Action : function(typeId) {
+		store_obj.state[typeId] = "REJECTED";
 		//notify
 		action_obj.rejectButton_click_Action_handler.forEach(
 				function(item){
@@ -172,7 +172,7 @@ var action_obj = {
 		store_obj.licenseId = licenseId;
 		store_obj.typeId = "license";
 		store_obj.targetId["license"] = mappingId;
-		store_obj.state = state;
+		store_obj.state["license"] = state;
 		//notify
 		action_obj.licenseList_select_Action_handler.forEach(
 				function(item){
@@ -190,7 +190,7 @@ var action_obj = {
 		store_obj.licenseId = '-';
 		store_obj.typeId = '-';
 		store_obj.targetId["license"] = '-';
-		store_obj.state = '';
+		store_obj.state["license"] = '';
 		//notify
 		action_obj.licenseList_deselect_Action_handler.forEach(
 				function(item){
@@ -209,7 +209,7 @@ var action_obj = {
 		store_obj.trainingId = trainingId;
 		store_obj.typeId = "training";
 		store_obj.targetId["training"] = mappingId;
-		store_obj.state = state;
+		store_obj.state["training"] = state;
 		//notify
 		action_obj.trainingList_select_Action_handler.forEach(
 				function(item){
@@ -227,7 +227,7 @@ var action_obj = {
 		store_obj.trainingId = '-';
 		store_obj.typeId = '-';
 		store_obj.targetId["training"] = '-';
-		store_obj.state = '';
+		store_obj.state["training"] = '';
 		//notify
 		action_obj.trainingList_deselect_Action_handler.forEach(
 				function(item){
@@ -246,7 +246,7 @@ var action_obj = {
 		store_obj.eventId = eventId;
 		store_obj.typeId = "event";
 		store_obj.targetId["event"] = mappingId;
-		store_obj.state = state;
+		store_obj.state["event"] = state;
 		//notify
 		action_obj.eventList_select_Action_handler.forEach(
 				function(item){
@@ -264,7 +264,7 @@ var action_obj = {
 		store_obj.eventId = '-';
 		store_obj.typeId = '-';
 		store_obj.targetId["event"] = '-';
-		store_obj.state = '';
+		store_obj.state["event"] = '';
 		//notify
 		action_obj.eventList_deselect_Action_handler.forEach(
 				function(item){
@@ -278,12 +278,13 @@ var action_obj = {
 	aerialActivityList_select_Action_subscribe : function(fn) {
 		action_obj.aerialActivityList_select_Action_handler.push(fn);
     }, 
-	aerialActivityList_select_Action : function(aerialActivityId,state){
+	aerialActivityList_select_Action : function(aerialPlanId,aerialActivityId,state){
 		store_obj.crud = 'U';		
+		store_obj.aerialPlanId = aerialPlanId;
 		store_obj.aerialActivityId = aerialActivityId;
 		store_obj.typeId = "aerialActivity";
 		store_obj.targetId["aerialActivity"] = aerialActivityId;
-		store_obj.state = state;
+		store_obj.state["aerialActivity"] = state;
 		//notify
 		action_obj.aerialActivityList_select_Action_handler.forEach(
 				function(item){
@@ -296,11 +297,13 @@ var action_obj = {
 	aerialActivityList_deselect_Action_subscribe : function(fn) {
 		action_obj.aerialActivityList_deselect_Action_handler.push(fn);
     },
-	aerialActivityList_deselect_Action : function(aerialActivityId){
+	aerialActivityList_deselect_Action : function(){
 		store_obj.crud = 'C';
+		store_obj.planId = '-';
 		store_obj.aerialActivityId = '-';
 		store_obj.typeId = "-";
 		store_obj.targetId["aerialActivity"] = '-';
+		store_obj.state["aerialActivity"] = '';
 		//notify
 		action_obj.aerialActivityList_deselect_Action_handler.forEach(
 				function(item){
@@ -426,7 +429,7 @@ var action_obj = {
 		store_obj.aerialPlanId = aerialPlanId;
 		store_obj.typeId = "aerialPlan";
 		store_obj.targetId["aerialPlan"] = aerialPlanId;
-		store_obj.state = state;
+		store_obj.state["aerialPlan"] = state;
 		//notify
 		action_obj.aerialPlanList_select_Action_handler.forEach(
 				function(item){
@@ -444,6 +447,7 @@ var action_obj = {
 		store_obj.aerialPlanId = '-';
 		store_obj.typeId = "-";
 		store_obj.targetId["aerialPlan"] = '-';
+		store_obj.state["aerialPlan"] = '';
 		//notify
 		action_obj.aerialPlanList_deselect_Action_handler.forEach(
 				function(item){
@@ -516,7 +520,7 @@ var action_obj = {
 		action_obj.personAPList_select_Action_handler.push(fn);
     },
 	personAPList_select_Action : function(personId){
-		if(store_obj.personId_1=='-'||store_obj.personId_1==null){
+		if(store_obj.personId_1==''||store_obj.personId_1=='-'||store_obj.personId_1==null){
             store_obj.personId_1=personId;
         }else{
             store_obj.personId_2=personId;

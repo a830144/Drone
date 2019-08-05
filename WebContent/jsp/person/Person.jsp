@@ -29,10 +29,24 @@
 <script src="/Drone/js/react-dom.js"></script>
 <script src="/Drone/js/common/action.js" charset="utf-8"></script>
 <script src="/Drone/js/common/store.js" charset="utf-8"></script>
+<script src="/Drone/js/jquery.validate.min.js"></script>
+<script src="/Drone/js/additional-methods.min.js"></script>
 <style type="text/css">
 table.dataTable thead th {
 	  white-space: nowrap
 }
+
+.hide-true  {
+   display: none;
+}
+.hide-false  {
+   display: initial;
+}
+.dataTables_scroll
+{
+    overflow:auto;
+}
+
 </style>
 <script>
 

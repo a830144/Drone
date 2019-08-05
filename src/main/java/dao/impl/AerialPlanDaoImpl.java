@@ -32,10 +32,10 @@ public class AerialPlanDaoImpl implements AerialPlanDao{
 	}
 
 	@Override
-	public AerialPlans findById(Integer id) {
+	public AerialPlans findById(Integer id,boolean detach) {
 		Session session = this.sessionFactory.getCurrentSession();
 		AerialPlans aerialPlans = session.get(AerialPlans.class, id);
-		session.detach(aerialPlans);
+		if(detach)session.detach(aerialPlans);
         return aerialPlans; 
 	}
 
@@ -105,17 +105,23 @@ public class AerialPlanDaoImpl implements AerialPlanDao{
 	public List<Object[]> findMission(Integer aerialPlanId) {
 		//TODO 
 		String sql = 
-				"SELECT rm.Equipment_ID,rm.Person_ID,GROUP_CONCAT(mi.person_id)"
-				+ " FROM drone.real_missions rm ,drone.aerial_activities ac ,drone.aerial_plans ap, drone.missions mi"
-				+ " WHERE rm.Aerial_Activity_ID = ac.Aerial_Activity_ID"
-				+ " AND ac.Aerial_Plan_ID = ap.Aerial_Plan_ID"
-				+ " AND  mi.Aerial_Plan_ID = ap.Aerial_Plan_ID"
-				+ " AND mi.equipment_ID = rm.Equipment_ID"
-				+ " AND rm.Aerial_Activity_ID=:aerialActivityId"
-				+ " group by rm.equipment_id,rm.person_id";
+				"SELECT t1.equipment_id,t1.person_id, GROUP_CONCAT(t2.Person_ID)"
+				+ " FROM"
+				+ " (SELECT eq.equipment_id,eq.construction_type,mi.person_id"
+				+ " 	FROM drone.missions mi"
+				+ " 	INNER JOIN drone.aerial_plans ap  ON ap.Aerial_Plan_ID = mi.Aerial_Plan_ID"
+				+ " 	INNER JOIN drone.equipments eq ON mi.equipment_id = eq.equipment_id"
+				+ " 	WHERE ap.Aerial_PLAN_ID =:aerialPlanId) t1,"
+				+ " (SELECT DISTINCT eq.Construction_Type,p.Person_ID"				
+				+ " 	FROM drone.persons p"
+				+ "		INNER JOIN drone.persons_licenses pl ON p.person_id = pl.person_id"
+				+ " 	INNER JOIN drone.equipments eq ON pl.construction_type = eq.Construction_Type) t2"
+				+ " WHERE t1.construction_type = t2.construction_type"
+				+ " GROUP BY t1.equipment_id,t1.person_id";
+		System.out.println("sql::"+sql);
 		Session session = this.sessionFactory.getCurrentSession();
 		NativeQuery<Object[]> query = session.createNativeQuery(sql);
-		query.setParameter("aerialActivityId", aerialPlanId);
+		query.setParameter("aerialPlanId", aerialPlanId);
 		List<Object[]> results = query.list();
 		return results;
 	}

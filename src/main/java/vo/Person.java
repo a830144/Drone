@@ -14,8 +14,8 @@ public class Person {
 	private String fax;
 	private String address;
 	private String email;
-	private byte[] recentPhoto;
-	private byte[] investigation;
+	private String recentPhoto;
+	private String investigation;
 	private stateMachine.States state;
 	public stateMachine.States getState() {
 		return state;
@@ -90,16 +90,16 @@ public class Person {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public byte[] getRecentPhoto() {
+	public String getRecentPhoto() {
 		return recentPhoto;
 	}
-	public void setRecentPhoto(byte[] recentPhoto) {
+	public void setRecentPhoto(String recentPhoto) {
 		this.recentPhoto = recentPhoto;
 	}
-	public byte[] getInvestigation() {
+	public String getInvestigation() {
 		return investigation;
 	}
-	public void setInvestigation(byte[] investigation) {
+	public void setInvestigation(String investigation) {
 		this.investigation = investigation;
 	}
 	

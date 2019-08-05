@@ -52,6 +52,7 @@ public class AerialPlans implements java.io.Serializable {
 	private Integer areaCenterEMinute;
 	private Float areaCenterESecond;
 	private Integer operationDiameter;
+	private String photo;
 	private Set<AerialActivities> aerialActivitieses = new HashSet<AerialActivities>(0);
 	private Set<Areas> areases = new HashSet<Areas>(0);
 	private Set<OperationlimitsAerialplans> operationlimitsAerialplanses = new HashSet<OperationlimitsAerialplans>(0);
@@ -321,6 +322,15 @@ public class AerialPlans implements java.io.Serializable {
 
 	public void setOperationDiameter(Integer operationDiameter) {
 		this.operationDiameter = operationDiameter;
+	}
+	
+	@Column(name = "Photo")
+	public String getPhoto() {
+		return this.photo;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "aerialPlans")

@@ -26,47 +26,81 @@ var maintainDialog = React.createClass({
 				          icon: "ui-icon-pencil",
 				          id: "updateMaintenanceBtn_"+domId,
 				          click: function() {
-				        	  var form = $(formName);
-				        	  window.radioValue(form);
-							  var obj = form.serializeObject();
-							  obj.equipmentId = $(form).find("#equipmentId").val();
-							  obj.maintenanceDate = $(form).find("#maintenanceDate").val();
-							  obj.maintenancePerson = $(form).find("#maintenancePerson").val();
-							  var myJson = JSON.stringify(obj);
-							  $.ajax({
-								 url : "/Drone/equipment/UpdateMaintainEquipmentProcess",
-								 type : "POST",
-								 data : {
-									data : myJson
-								 },
-								 success : function() {
-									alert('修改保養紀錄成功');
-								  }
-							   })
-				           }			 
+				        	  	var form = $(formName);
+				        	  	var validator =form.validate({
+				        	  		rules: {
+				        	  			maintenancePerson: {
+				        	  				 required: true,
+				        	  				 minlength: 2
+				        	  			},
+				        	  			maintenanceDate: {
+				        	  				 required: true
+				        	  			}
+				        	  		}
+				        	    });				        	  	
+				        	  	
+				        	  	if(form.valid()){
+				        	  		 var form = $(formName);
+						        	 window.radioValue(form);
+									 var obj = form.serializeObject();
+									 obj.equipmentId = $(form).find("#equipmentId").val();
+									 obj.maintenanceDate = $(form).find("#maintenanceDate").val();
+									 obj.maintenancePerson = $(form).find("#maintenancePerson").val();
+									 obj.maintenanceType = $(form).find("#maintenanceType").val();
+									 var myJson = JSON.stringify(obj);
+									 $.ajax({
+										 url : "/Drone/equipment/UpdateMaintainEquipmentProcess",
+										 type : "POST",
+										 data : {
+											data : myJson
+										 },
+										 success : function() {
+											alert('修改保養紀錄成功');
+										  }
+									 });									 
+				        	  	}
+				        	  
+				        	  }
+				           			 
 			 		    },
 			    		{
 			      		  text: "新增保養資料",
 			              icon: "ui-icon-plus",
 			              id: "addMaintenanceBtn_"+domId,
 			              click: function() {
-			            	  var form = $(formName);
-				        	  window.radioValue(form);
-							  var obj = form.serializeObject();
-							  obj.equipmentId = $(form).find("#equipmentId").val();
-							  obj.maintenanceDate = $(form).find("#maintenanceDate").val();
-							  obj.maintenancePerson = $(form).find("#maintenancePerson").val();
-						     var myJson = JSON.stringify(obj);
-						     $.ajax({
-							    url : "/Drone/equipment/MaintainEquipmentProcess",
-							    type : "POST",
-							    data : {
-								  data : myJson
-							    },
-							    success : function() {
-								  alert('新增保養紀錄成功');
-							    }
-						    })
+			            	  	var form = $(formName);
+				        	  	var validator =form.validate({
+				        	  		rules: {
+				        	  			maintenancePerson: {
+				        	  				 required: true,
+				        	  				 minlength: 2
+				        	  			},
+				        	  			maintenanceDate: {
+				        	  				 required: true
+				        	  			}
+				        	  		}
+				        	    });				        	  	
+				        	  	
+				        	  	if(form.valid()){
+				        	  		var form = $(formName);			          			          		
+				        	  		window.radioValue(form);
+				        	  		var obj = form.serializeObject();
+				        	  		obj.equipmentId = $(form).find("#equipmentId").val();
+				        	  		obj.maintenanceDate = $(form).find("#maintenanceDate").val();
+				        	  		obj.maintenancePerson = $(form).find("#maintenancePerson").val();
+				        	  		obj.maintenanceType = $(form).find("#maintenanceType").val();
+				        	  		var myJson = JSON.stringify(obj);
+				        	  		$.ajax({
+				        	  			url : "/Drone/equipment/MaintainEquipmentProcess",
+				        	  			type : "POST",
+				        	  			data : {
+				        	  				data : myJson
+				        	  			},
+				        	  			success : function() {
+				        	  				alert('新增保養紀錄成功');
+				        	  			}
+				        	  		})
+				        	  	}
 			              }
 			            },
 					    {
@@ -217,7 +251,7 @@ var maintainForm = React.createClass({
     notify: function(obj){
     	this.setState({ 
     		maintenanceId:obj.maintenanceId,
-    		state:obj.state
+    		state:obj.state["maintain"]
     	});
     },
 
@@ -244,6 +278,7 @@ var maintainForm = React.createClass({
     	form.find("#maintenanceDate").val("");
     	form.find("#maintenancePerson").val("");
     	form.find("#maintenanceType").val("W");
+    	
 	},
 	componentDidUpdate(prevProps, prevState){	
 		var form = $("#maintainForm_"+this.props.domId+"_sub");
@@ -309,12 +344,12 @@ var maintainForm = React.createClass({
                                 React.createElement("td",  {},"保養編號"),
                                 React.createElement("td",  {id:"maintenanceIdTD"}),
                                 React.createElement("td",  {},"保養日期"),
-                                React.createElement("td",  {},
-                                    React.createElement("input",  {type:"text",id:"maintenanceDate"})
+                                React.createElement("td",  {},                              	
+                                    React.createElement("input",  {type:"text",id:"maintenanceDate",name:"maintenanceDate"})
                                 ),
                                 React.createElement("td",  {},"保養人員"),
                                 React.createElement("td",  {},
-                                    React.createElement("input",  {type:"text",id:"maintenancePerson"})
+                                    React.createElement("input",  {type:"text",id:"maintenancePerson",name:"maintenancePerson"})
                                 )
                             ),
                             React.createElement("tr",  {},

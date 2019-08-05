@@ -18,9 +18,9 @@
 
 
 
-<frameset rows="10%,84%,6%">
+<frameset rows="6%,88%,6%">
 <frame src="/Drone/jsp/header.jsp" name="header" id="header">
-<frameset cols="14%,86%">
+<frameset cols="10%,90%">
 <frame src="/Drone/jsp/menu.jsp" name="menu" id="menu">
 <frame src="/Drone/jsp/content.jsp" name="_content" id="_content">
 </frameset>

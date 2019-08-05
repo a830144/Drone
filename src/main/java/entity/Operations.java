@@ -18,6 +18,10 @@ import javax.persistence.Table;
 @Table(name = "operations", catalog = "drone")
 public class Operations implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 805963983773536602L;
 	private Integer operationId;
 	private RolesFunctions rolesFunctions;
 	private String type;

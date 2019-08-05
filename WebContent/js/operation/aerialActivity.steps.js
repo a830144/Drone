@@ -40,8 +40,7 @@ var aerialActivitySteps = React.createClass({
     },
     componentDidUpdate(prevProps, prevState){
     	if(this.state.stepHide!==prevState.stepHide && this.state.stepHide==='false'){
-    		$("#aerialActivitySteps_"+this.props.domId+"_sub").addClass('hide-false').removeClass('hide-true');
-    		
+    		$("#aerialActivitySteps_"+this.props.domId+"_sub").addClass('hide-false').removeClass('hide-true');    		
     	};
     },    
     render: function() {
@@ -88,10 +87,16 @@ var equipmentList = React.createClass({
            table.destroy();
            $(tableName).DataTable({
                 columnDefs: [ {
-                   orderable: false,
-                   className: 'select-checkbox',
-                   targets:   0
-                } ],
+    				orderable: false,
+    				className: 'select-checkbox',
+    				targets:   0
+    			},{	
+				    className: 'dt-center',
+				    targets: '_all'
+				},{
+	                targets: [ 3 ],
+	                visible: false
+	            }],
                 select: {
                 	style:    'os',
                 	selector: 'td:first-child'
@@ -108,7 +113,7 @@ var equipmentList = React.createClass({
                 	dataSrc: function ( json ) {
                 		var myarray=new Array(json.length);
                 		for(i=0; i <json.length; i++){
-                			myarray[i]=new Array(5);
+                			myarray[i]=new Array(6);
                 		}
                 		for(i=0;i<json.length;i++){
                 			var obj = $.parseJSON(json[i]);
@@ -118,6 +123,24 @@ var equipmentList = React.createClass({
                 			myarray[i][3]=obj.hasOwnProperty("constructionType")?obj.constructionType:'';
                 			myarray[i][4]=obj.hasOwnProperty("sendDate")?obj.sendDate:'';
                 			myarray[i][5]=obj.hasOwnProperty("state")?obj.state:'';
+                			if(obj.hasOwnProperty("constructionType")){
+            					switch(obj.constructionType){
+            					case 'A':
+            						myarray[i][6] = '無人飛機';
+            						break;
+            					case 'H':
+            						myarray[i][6] = '無人直昇機';
+            						break;
+            					case 'M':
+            						myarray[i][6] = '無人多旋翼機';
+            						break;
+            					case 'O':
+            						myarray[i][6] = '其它';
+            						break;
+            					default:
+            						myarray[i][6] = '';
+            					}
+            				}
                 		}
                 		var t = $(tableName).DataTable();
                 		t.on( 'select', function ( e, dt, type, indexes ) {		            		
@@ -168,10 +191,11 @@ var equipmentList = React.createClass({
                          React.createElement("tr",  {},
                              React.createElement('th', {}, ''),
                              React.createElement('th', {}, '編號'),
-                             React.createElement('th', {}, '設備型號'),
+                             React.createElement('th', {}, '設備型號英文'),
                              React.createElement('th', {}, '設備構型'),
                              React.createElement('th', {}, '設備ID取得日期'),
-                             React.createElement('th', {}, '狀態')
+                             React.createElement('th', {}, '狀態'),
+                             React.createElement('th', {}, '設備型號')
                
             )));
   }
@@ -220,11 +244,14 @@ var personList = React.createClass({
             table.destroy();
             $(tableName).DataTable({
                 columnDefs: [
-				{	
-				    orderable: false,
-                    className: 'select-checkbox',
-                    targets:   0
-				}],
+                	{	
+    				    orderable: false,
+                        className: 'select-checkbox',
+                        targets:   0
+    				},{	
+    				    className: 'dt-center',
+    				    targets: '_all'
+    				}],
 		        select: {
                     style: 'multi',
                     selector: 'td:first-child'
@@ -366,11 +393,11 @@ var equipmentForm = React.createClass({
 			        $.each(obj, function(key, value) {
 					    $(form).find("#" + key).val(value);
 				    });							     
-			        store_obj.aerialActivityEPList.equipmentId = $("#equipmentForm_activity").find("#equipmentId").val();
-			        store_obj.aerialActivityEPList.manufactoryName = $("#equipmentForm_activity").find("#manufactoryName").val();
-			        store_obj.aerialActivityEPList.constructionType = $("#equipmentForm_activity").find("#constructionType").val();
-			        store_obj.aerialActivityEPList.productName = $("#equipmentForm_activity").find("#productName").val();
-			        store_obj.aerialActivityEPList.airTime = $("#equipmentForm_activity").find("#airTime").val();
+			        store_obj.aerialActivityEPList.equipmentId = $(form).find("#equipmentId").val();
+			        store_obj.aerialActivityEPList.manufactoryName = $(form).find("#manufactoryName").val();
+			        store_obj.aerialActivityEPList.constructionType = $(form).find("#constructionType").val();
+			        store_obj.aerialActivityEPList.productName = $(form).find("#productName").val();
+			        store_obj.aerialActivityEPList.airTime = $(form).find("#airTime").val();
 			    }
 		    })
 		    

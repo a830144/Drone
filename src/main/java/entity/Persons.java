@@ -43,8 +43,8 @@ public class Persons implements java.io.Serializable {
 	private String fax;
 	private String address;
 	private String email;
-	private byte[] recentPhoto;
-	private byte[] investigation;
+	private String recentPhoto;
+	private String investigation;
 	
 	private PersonFlow personFlow;
 		
@@ -67,10 +67,15 @@ public class Persons implements java.io.Serializable {
 
 	
 
+	
+
+
+
 	public Persons(Integer personId, String name, Character sex, String nationality, String idNumber, Date dateOfBirth,
-			String telephone, String mobilePhone, String fax, String address, String email, byte[] recentPhoto,
-			byte[] investigation, Set<Participations> participationses, Set<Certificates> certificateses,
-			Set<PersonsLicenses> personsLicenseses, Set<Missions> missionses) {
+			String telephone, String mobilePhone, String fax, String address, String email, String recentPhoto,
+			String investigation, PersonFlow personFlow, Set<Participations> participationses,
+			Set<Certificates> certificateses, Set<PersonsLicenses> personsLicenseses, Set<Missions> missionses,
+			Set<RealMissions> realmissionses) {
 		super();
 		this.personId = personId;
 		this.name = name;
@@ -85,13 +90,13 @@ public class Persons implements java.io.Serializable {
 		this.email = email;
 		this.recentPhoto = recentPhoto;
 		this.investigation = investigation;
+		this.personFlow = personFlow;
 		this.participationses = participationses;
 		this.certificateses = certificateses;
 		this.personsLicenseses = personsLicenseses;
 		this.missionses = missionses;
+		this.realmissionses = realmissionses;
 	}
-
-
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -197,20 +202,20 @@ public class Persons implements java.io.Serializable {
 	}
 
 	@Column(name = "Recent_Photo")
-	public byte[] getRecentPhoto() {
+	public String getRecentPhoto() {
 		return this.recentPhoto;
 	}
 
-	public void setRecentPhoto(byte[] recentPhoto) {
+	public void setRecentPhoto(String recentPhoto) {
 		this.recentPhoto = recentPhoto;
 	}
 
 	@Column(name = "Investigation")
-	public byte[] getInvestigation() {
+	public String getInvestigation() {
 		return this.investigation;
 	}
 
-	public void setInvestigation(byte[] investigation) {
+	public void setInvestigation(String investigation) {
 		this.investigation = investigation;
 	}
 

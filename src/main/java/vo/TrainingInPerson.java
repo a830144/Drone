@@ -11,7 +11,7 @@ public class TrainingInPerson extends Person{
 	private Date startDate;
 	private Date endDate;
 	private Integer hours;
-	private byte[] photo;
+	private String photo;
 	
 	private Integer certificateId;
 	
@@ -39,10 +39,10 @@ public class TrainingInPerson extends Person{
 	public void setHours(Integer hours) {
 		this.hours = hours;
 	}
-	public byte[] getPhoto() {
+	public String getPhoto() {
 		return photo;
 	}
-	public void setPhoto(byte[] photo) {
+	public void setPhoto(String photo) {
 		this.photo = photo;
 	}
 	public Integer getTrainingId() {

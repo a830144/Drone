@@ -6,51 +6,110 @@ var aerialPlan_obj = {
 		
 		addOrUpdate : function (action){
 			  var form = $("#aerialPlanForm_aerialPlan_sub");
-			  $(form).find("#projectId").prop("disabled", false);
-			  $(form).find("#name").prop("disabled", false);
-			  $(form).find("#aerialPlanId").prop("disabled",false);
-			  $(form).find("#usage").prop("disabled",false);							
-			  			  
-			  var jsonObject = {};
-			  jsonObject.projectId =$(form).find("#projectId").val();
-			  jsonObject.name = $(form).find("#name").val();
-			  jsonObject.aerialPlanId = $(form).find("#aerialPlanId").val();
-			  jsonObject.usage = $(form).find("#usage").val();
-			  jsonObject.aerialPlanStartDate = $(form).find("#aerialPlanStartDate").val();
-			  jsonObject.aerialPlanEndDate = $(form).find("#aerialPlanEndDate").val();
-			  jsonObject.aerialPlanStartDate = $(form).find("#aerialPlanStartDate").val();
-			  jsonObject.aerialPlanEndDate = $(form).find("#aerialPlanEndDate").val();
+			  var form_other = $("#otherForm_aerialPlan_sub");
+			  var validator =form.validate({
+      	  			rules: {
+      	  				aerialPlanStartDate: {
+      	  				 	required: true,
+      	  				 	maxlength: 10
+      	  				},
+      	  				aerialPlanEndDate: {
+      	  				 	required: true,
+      	  				 	maxlength: 10
+      	  				},      	  			      	  			
+      	  			}
+      	      });
+			  var validator_other =form_other.validate({
+    	  			rules: {
+    	  				takeOffLocationName: {
+    	  				 	required: true,
+    	  				 	maxlength: 25
+    	  				}      	  			      	  			
+    	  			}
+    	      });	
+			  if (form.valid() && form_other.valid()) {
 			  
-			  var tableName = "#aerialPlanEPList_aerialPlan_sub";
-			  var arr = new Array();
-			  jsonObject.equipmentsArray = arr;
-			  var table = $(tableName).DataTable();
-			  table.rows().eq(0).each( function ( index ) {
+			  	var jsonObject = {};
+			  	jsonObject.projectId =$(form).find("#projectId").val();
+			  	jsonObject.name = $(form).find("#name").val();
+			  	jsonObject.aerialPlanId = $(form).find("#aerialPlanId").val();
+			  	jsonObject.usage = $(form).find("#usage").val();
+			  	jsonObject.aerialPlanStartDate = $(form).find("#aerialPlanStartDate").val();
+			  	jsonObject.aerialPlanEndDate = $(form).find("#aerialPlanEndDate").val();
+			  	jsonObject.photo = $(form).find("#photo").val();
+			  	jsonObject.state = $(form).find("#state").val();
+			
+			  
+			 	var tableName = "#aerialPlanEPList_aerialPlan_sub";
+			  	var arr = new Array();
+			  	jsonObject.equipmentsArray = arr;
+			  	var table = $(tableName).DataTable();			  
+			  	table.rows().eq(0).each( function ( index ) {
 			    	var row = table.row( index );
-			    	var cell = table.cell( index ,0);
-					var equipmentId = cell.data();
-					cell = table.cell( index ,6);
-					var personId_1 = cell.data();
-					cell = table.cell( index ,7);
-					var personId_2 = cell.data();
+			    	var cell = table.cell( index ,3);
+					var equipmentId = cell.data();									
+					var personId_1 = $("#EProw"+index+"col"+6).val();					
+					var personId_2 = $("#EProw"+index+"col"+7).val(); 
+					
 					jsonObject.equipmentsArray.push({
 						"equipmentId":equipmentId,
 						"personId_1":personId_1,
 						"personId_2":personId_2
 					});
-			  } );
-			  myJson = JSON.stringify(jsonObject);
-			  console.log(myJson);
-			  $.ajax({
-				 type : "POST", 
-				 url : action==='update'?"/Drone/operation/UpdateAerialPlanProcess":"/Drone/operation/AddAerialPlanProcess",
-				 data : {
+			  	} );
+			  
+			  										  			  
+			  	jsonObject.amslFrom =$(form_other).find("#amslFrom").val();
+			  	jsonObject.amslTo = $(form_other).find("#amslTo").val();
+			  	jsonObject.agl = $(form_other).find("#agl").val();
+			  	jsonObject.takeOffNDegree = $(form_other).find("#takeOffNDegree").val();
+			  	jsonObject.takeOffNMinute = $(form_other).find("#takeOffNMinute").val();
+			  	jsonObject.takeOffNSecond = $(form_other).find("#takeOffNSecond").val();
+			  	jsonObject.takeOffEDegree = $(form_other).find("#takeOffEDegree").val();
+			  	jsonObject.takeOffEMinute = $(form_other).find("#takeOffEMinute").val();
+			  	jsonObject.takeOffESecond = $(form_other).find("#takeOffESecond").val();			  
+			  	jsonObject.areaCenterNDegree = $(form_other).find("#areaCenterNDegree").val();
+			  	jsonObject.areaCenterNMinute = $(form_other).find("#areaCenterNMinute").val();
+			  	jsonObject.areaCenterNSecond = $(form_other).find("#areaCenterNSecond").val();
+			  	jsonObject.areaCenterEDegree = $(form_other).find("#areaCenterEDegree").val();
+			  	jsonObject.areaCenterEMinute = $(form_other).find("#areaCenterEMinute").val();
+			  	jsonObject.areaCenterESecond = $(form_other).find("#areaCenterESecond").val();
+			  	jsonObject.operationDiameter = $(form_other).find("#operationDiameter").val();
+			  
+			 	myJson = JSON.stringify(jsonObject);
+			  	console.log(myJson);
+			  	$.ajax({
+				 	type : "POST", 
+				 	url : action==='update'?"/Drone/operation/UpdateAerialPlanProcess":"/Drone/operation/AddAerialPlanProcess",
+				 	data : {
 						data : myJson
-				 },
-				 success : function() {
-					alert(action==='update'?'修改航拍活動紀錄成功':'新增航拍活動紀錄成功');
-				 }
-			  })
+				 	},
+				 	success : function() {
+						alert(action==='update'?'修改航拍活動紀錄成功':'新增航拍活動紀錄成功');
+				 	}
+			  	});
+			  	
+	
+				var fileData = new FormData(document.getElementById("aerialPlanForm_aerialPlan_sub"));				 
+			    fileData.append("action","aerialPlan");
+					 
+			    $.ajax({
+					   type: "POST",
+					   enctype: 'multipart/form-data',
+					   url: "/Drone/other/uploadMultipleFile",
+					   data: fileData,
+					   processData: false,
+					   contentType: false,
+					   cache: false,
+					   timeout: 600000,
+					   success: function (data) {
+					         console.log("SUCCESS : ", data);
+					   },
+					   error: function (e) {
+					         console.log("ERROR : ", e);
+					   }
+			    });		
+			  }
 		},
 		
 		initState : function (id){
@@ -73,10 +132,11 @@ var aerialPlan_obj = {
 			aerialPlan_obj.tabs = ReactDOM.render(React.createElement(aerialPlanTabs, {domId:action}), container);
 			
 			container = document.getElementById('aerialPlanEPList_'+action);
-			aerialPlan_obj.aerialPlanEPList = ReactDOM.render(React.createElement(aerialPlanEPList, {domId:action}), container);
-			action_obj.aerialPlanSteps_clickFinish_Action_subscribe(aerialPlan_obj.aerialPlanEPList);
+			aerialPlan_obj.aerialPlanEPList = ReactDOM.render(React.createElement(aerialPlanEPList, {domId:action}), container);	
 			action_obj.aerialPlanList_select_Action_subscribe(aerialPlan_obj.aerialPlanEPList);
 			action_obj.aerialPlanList_deselect_Action_subscribe(aerialPlan_obj.aerialPlanEPList); 
+			action_obj.aerialPlanEPList_add_Action_subscribe(aerialPlan_obj.aerialPlanEPList);
+			action_obj.aerialPlanSteps_clickFinish_Action_subscribe(aerialPlan_obj.aerialPlanEPList);
 			
 			container = document.getElementById('aerialPlanForm_'+action);
 			aerialPlan_obj.aerialPlanForm = ReactDOM.render(React.createElement(aerialPlanForm, {domId:action,projectId:store_obj.projectId}), container); 
@@ -91,6 +151,7 @@ var aerialPlan_obj = {
 			container = document.getElementById('aerialPlanSteps_'+action);
 			aerialPlan_obj.steps = ReactDOM.render(React.createElement(aerialPlanSteps, {domId:action}), container);
 			action_obj.aerialPlanEPList_add_Action_subscribe(aerialPlan_obj.steps);
+			action_obj.aerialPlanSteps_clickFinish_Action_subscribe(aerialPlan_obj.steps);
 			
 			container = document.getElementById('p_firstStep_'+action);
 			aerialPlan_obj.firstStep = ReactDOM.render(React.createElement(p_firstStep, {domId:action}), container);

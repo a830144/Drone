@@ -194,9 +194,13 @@ public class PersonServiceImpl implements PersonService {
 	@Override
 	public void updatePersonLicense(String jsonString) {
 		LicenseInPerson vo = gson.fromJson(jsonString, LicenseInPerson.class);
-		PersonsLicenses entity_personslicenses = personDao.findLicenseInfo(vo.getPersonId(), vo.getLicenseId());
+		PersonsLicenses entity_personslicenses = personDao.findLicenseInfo(vo.getPersonsLicensesId());
 		try {
 			BeanUtils.copyProperties(entity_personslicenses, vo);
+			if(entity_personslicenses.getLicenses().getLicenseId()!=vo.getLicenseId()){
+				Licenses entity_licenses = licenseDao.findById(vo.getLicenseId());
+				entity_personslicenses.setLicenses(entity_licenses);
+			}
 			if(entity_personslicenses.getPersonsLicensesFlow()!=null){
 				BeanUtils.copyProperties( entity_personslicenses.getPersonsLicensesFlow(),vo);
 			}else{
@@ -243,9 +247,13 @@ public class PersonServiceImpl implements PersonService {
 	@Override
 	public void updateCertificate(String jsonString) {
 		TrainingInPerson vo = gson.fromJson(jsonString, TrainingInPerson.class);
-		Certificates entity_certificates = personDao.findTrainingInfo(vo.getPersonId(), vo.getTrainingId());
+		Certificates entity_certificates = personDao.findTrainingInfo(vo.getCertificateId());
 		try {
 			BeanUtils.copyProperties(entity_certificates, vo);
+			if(entity_certificates.getTrainings().getTrainingId()!=vo.getTrainingId()){
+				Trainings entity_trainings = trainingDao.findById(vo.getTrainingId());
+				entity_certificates.setTrainings(entity_trainings);
+			}
 			if(entity_certificates.getCertificateFlow()!=null){
 				BeanUtils.copyProperties( entity_certificates.getCertificateFlow(),vo);
 			}else{
@@ -293,9 +301,13 @@ public class PersonServiceImpl implements PersonService {
 	@Override
 	public void updateParticipation(String jsonString) {
 		EventInPerson vo = gson.fromJson(jsonString, EventInPerson.class);
-		Participations entity_participations = personDao.findEventInfo(vo.getPersonId(), vo.getEventId());
+		Participations entity_participations = personDao.findEventInfo(vo.getParticipationId());
 		try {
 			BeanUtils.copyProperties(entity_participations, vo);
+			if(entity_participations.getEvents().getEventId()!=vo.getEventId()){
+				Events entity_events = eventDao.findById(vo.getEventId());
+				entity_participations.setEvents(entity_events);
+			}
 			if(entity_participations.getParticipationFlow()!=null){
 				BeanUtils.copyProperties( entity_participations.getParticipationFlow(),vo);
 			}else{
@@ -396,7 +408,7 @@ public class PersonServiceImpl implements PersonService {
 		}
 		return jsonArray;
 	}
-
+	
 	@Override
 	public String queryLicenseInfo(Integer personId, Integer licenseId) {
 		PersonsLicenses entity_personLicenses = personDao.findLicenseInfo(personId,licenseId);
@@ -419,8 +431,29 @@ public class PersonServiceImpl implements PersonService {
 	}
 
 	@Override
-	public String queryTrainingInfo(Integer personId, Integer trainingId) {
-		Certificates entity_certificates = personDao.findTrainingInfo(personId,trainingId);
+	public String queryLicenseInfo(Integer targetId) {
+		PersonsLicenses entity_personLicenses = personDao.findLicenseInfo(targetId);
+		LicenseInPerson vo = new LicenseInPerson();
+		try {
+			BeanUtils.copyProperties(vo, entity_personLicenses);
+			BeanUtils.copyProperties(vo, entity_personLicenses.getPersons());
+			BeanUtils.copyProperties(vo, entity_personLicenses.getLicenses());
+			if (entity_personLicenses.getPersonsLicensesFlow() != null) {
+				BeanUtils.copyProperties(vo, entity_personLicenses.getPersonsLicensesFlow());
+			}
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		String jsonString = "";
+		jsonString = gson.toJson(vo);
+		return jsonString;
+	}
+
+	@Override
+	public String queryTrainingInfo(Integer targetId) {
+		Certificates entity_certificates = personDao.findTrainingInfo(targetId);
 		TrainingInPerson vo = new TrainingInPerson();
 		try {
 			BeanUtils.copyProperties(vo, entity_certificates);
@@ -441,8 +474,8 @@ public class PersonServiceImpl implements PersonService {
 	}
 
 	@Override
-	public String queryEventInfo(Integer personId, Integer eventId) {
-		Participations entity_participations = personDao.findEventInfo(personId, eventId);
+	public String queryEventInfo(Integer targetId) {
+		Participations entity_participations = personDao.findEventInfo(targetId);
 		EventInPerson vo = new EventInPerson();
 		try {
 			BeanUtils.copyProperties(vo, entity_participations);
@@ -679,5 +712,23 @@ public class PersonServiceImpl implements PersonService {
 
 		return jsonArray;
 	}
+
+	@Override
+	public String queryLicenseByType(String type) {
+		Licenses entity_licenses = licenseDao.findByType(type);
+		LicenseInPerson vo = new LicenseInPerson();
+		try {
+			BeanUtils.copyProperties(vo, entity_licenses);
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		String jsonString = "";
+		jsonString = gson.toJson(vo);
+		return jsonString;
+	}
+
+
 
 }

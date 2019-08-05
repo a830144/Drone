@@ -16,17 +16,21 @@
 body {
     background-image: url('../images/header.jpg');
     background-attachment: fixed;
+    background-position: center;
+   	background-size: cover;
     background-repeat: no-repeat;
 }
+
 </style>
 <title>The include Directive Example</title>
 </head>
 
 <body>
+	<div id ="gnav">
 	<center>
-		<h2>無人機管理系統雛型畫面<a href="javascript://" onclick="self.parent.location='./logout.jsp'">Logout</a></h2>
+		<h2>無人機管理系統	&nbsp;	&nbsp;	&nbsp;<a href="javascript://" onclick="self.parent.location='./logout.jsp'">登出</a></h2>
 		
 	</center>
-
+	</div>
 </body>
 </html>

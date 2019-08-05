@@ -1,6 +1,7 @@
 package service.impl;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -75,6 +76,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 		EquipmentPerformance entity_equipmentPerformance = gson.fromJson(jsonString, EquipmentPerformance.class);
 		EquipmentFlow entity_equipmentFlow = gson.fromJson(jsonString, EquipmentFlow.class);
 		entity.setEquipmentPerformance(entity_equipmentPerformance);
+		entity_equipmentFlow.setSendDate(new Date());
 		entity_equipmentFlow.setState(States.PROCESSING);
 		entity.setEquipmentFlow(entity_equipmentFlow);
 		equipmentDao.persist(entity);
@@ -309,18 +311,23 @@ public class EquipmentServiceImpl implements EquipmentService {
 			if (detail.getSeq() == 1) {
 				vo.setAirframe(detail.getStatus());
 				vo.setAirframe_comment(detail.getComment());
+				vo.setAirframe_photo(detail.getModificationPhoto());
 			} else if (detail.getSeq() == 2) {
 				vo.setPropulsion(detail.getStatus());
 				vo.setPropulsion_comment(detail.getComment());
+				vo.setPropulsion_photo(detail.getModificationPhoto());
 			} else if (detail.getSeq() == 3) {
 				vo.setBattery(detail.getStatus());
 				vo.setBattery_comment(detail.getComment());
+				vo.setBattery_photo(detail.getModificationPhoto());
 			} else if (detail.getSeq() == 4) {
 				vo.setController(detail.getStatus());
 				vo.setController_comment(detail.getComment());
+				vo.setController_photo(detail.getModificationPhoto());
 			} else if (detail.getSeq() == 5) {
 				vo.setPayload(detail.getStatus());
 				vo.setPayload_comment(detail.getComment());
+				vo.setPayload_photo(detail.getModificationPhoto());
 			} else if (detail.getSeq() == 6) {
 				vo.setOthers_comment(detail.getComment());
 			}

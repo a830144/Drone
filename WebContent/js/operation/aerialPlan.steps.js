@@ -89,6 +89,7 @@ var selectConstruction = React.createClass({
     },
     render: function() {
         return  React.createElement("select",  {name:"constructionType",onChange: this.handleChange},
+        		React.createElement("option",  {value: ""},'-'),
                 React.createElement("option",  {value: "A"},'無人飛機(Aircraft)'),
                 React.createElement("option",  {value: "H"},'無人直升機(Helicopter)'),
                 React.createElement("option",  {value: "M"},'無人多旋翼機(Muti-Rotors)'),
@@ -116,11 +117,17 @@ var p_equipmentList = React.createClass({
     		var table = $(tableName).DataTable();
     		table.destroy();
     		$(tableName).DataTable({
-    			columnDefs: [ {
+    			columnDefs: [{
     				orderable: false,
     				className: 'select-checkbox',
     				targets:   0
-    			} ],
+    			},{	
+				    className: 'dt-center',
+				    targets: '_all'
+				},{
+	                targets: [ 3 ],
+	                visible: false
+	            }],
     			select: {
     				style:    'os',
     				selector: 'td:first-child'
@@ -137,16 +144,34 @@ var p_equipmentList = React.createClass({
     				dataSrc: function ( json ) {
     					var myarray=new Array(json.length);
     					for(i=0; i <json.length; i++){
-    						myarray[i]=new Array(5);
+    						myarray[i]=new Array(6);
     					}
     					for(i=0;i<json.length;i++){
     						var obj = $.parseJSON(json[i]);
     						myarray[i][0]='';
     						myarray[i][1]=obj.hasOwnProperty("equipmentId")?obj.equipmentId:'';
-    						myarray[i][2]=obj.hasOwnProperty("productName")?obj.productName:'';		        			
+    						myarray[i][2]=obj.hasOwnProperty("productName")?obj.productName:'';	    						
     						myarray[i][3]=obj.hasOwnProperty("constructionType")?obj.constructionType:'';
-    						myarray[i][4]=obj.hasOwnProperty("sendDate")?obj.sendDate:'';
+    						myarray[i][4]=obj.hasOwnProperty("airTime")?obj.airTime:'';
     						myarray[i][5]=obj.hasOwnProperty("state")?obj.state:'';
+    						if(obj.hasOwnProperty("constructionType")){
+            					switch(obj.constructionType){
+            					case 'A':
+            						myarray[i][6] = '無人飛機';
+            						break;
+            					case 'H':
+            						myarray[i][6] = '無人直昇機';
+            						break;
+            					case 'M':
+            						myarray[i][6] = '無人多旋翼機';
+            						break;
+            					case 'O':
+            						myarray[i][6] = '其它';
+            						break;
+            					default:
+            						myarray[i][6] = '';
+            					}
+            				}
     					}
     					var t = $(tableName).DataTable();
     					t.on( 'select', function ( e, dt, type, indexes ) {		            		
@@ -198,10 +223,11 @@ var p_equipmentList = React.createClass({
                          React.createElement("tr",  {},
                              React.createElement('th', {}, ''),
                              React.createElement('th', {}, '編號'),
-                             React.createElement('th', {}, '設備型號'),
+                             React.createElement('th', {}, '設備型號英文'),
                              React.createElement('th', {}, '設備構型'),
-                             React.createElement('th', {}, '設備ID取得日期'),
-                             React.createElement('th', {}, '狀態')
+                             React.createElement('th', {}, '最大作業時間'),
+                             React.createElement('th', {}, '狀態'),
+                             React.createElement('th', {}, '設備型號')
                
             )));
   }
@@ -329,11 +355,13 @@ var p_personList = React.createClass({
             var table = $(tableName).DataTable();
             table.destroy();
             $(tableName).DataTable({
-                columnDefs: [
-				{	
+                columnDefs: [{	
 				    orderable: false,
                     className: 'select-checkbox',
                     targets:   0
+				},{	
+				    className: 'dt-center',
+				    targets: '_all'
 				}],
 		        select: {
                     style: 'multi',
@@ -350,7 +378,7 @@ var p_personList = React.createClass({
 			        dataSrc: function ( json ) {
 			    	    var myarray=new Array(json.length);
 	    			    for (i=0; i <json.length; i++){
-	    	   			    myarray[i]=new Array(4);
+	    	   			    myarray[i]=new Array(7);
 	    			    }
 	    			    for(i=0;i<json.length;i++){
                             var obj = $.parseJSON(json[i]);
@@ -359,6 +387,9 @@ var p_personList = React.createClass({
         				    myarray[i][2]=obj.hasOwnProperty("name")?obj.name:'';		        			
         				    myarray[i][3]=obj.hasOwnProperty("sex")?obj.sex:'';
         				    myarray[i][4]=obj.hasOwnProperty("status")?obj.status:'';
+        				    myarray[i][5]='100';
+        				    myarray[i][6]='3小時15分';
+        				    myarray[i][7]='3次';
         			    }
 
                         var t = $(tableName).DataTable();
@@ -412,7 +443,10 @@ var p_personList = React.createClass({
                              React.createElement('th', {}, '人員內部ID'),
                              React.createElement('th', {}, '姓名'),
                              React.createElement('th', {}, '具備操作證類別'),
-                             React.createElement('th', {}, '狀態')
+                             React.createElement('th', {}, '狀態'),
+                             React.createElement('th', {}, '任務次數'),
+                             React.createElement('th', {}, '飛行時數'),
+                             React.createElement('th', {}, '事故紀錄')
                
             )));
   }
@@ -427,7 +461,7 @@ var p_fourthStep = React.createClass({
        	 	personId_2:store_obj.personId_2
         };
     },
-    notify: function(obj){
+    notify: function(obj){    	
        this.setState({ 
     	    equipmentId:obj.equipmentId,
       	 	personId_1:obj.personId_1,
@@ -543,7 +577,8 @@ var p_personForm_1 = React.createClass({
     },
     componentDidUpdate(prevProps, prevState){
     	var form = "#p_personForm_1";
-        if((this.props.personId_1!==prevProps.personId_1)&&(this.props.personId_1!=='-')&&(this.props.personId_1!==null)){
+    	//debugger;
+        if((this.props.personId_1!==prevProps.personId_1)&&((this.props.personId_1!=='-')&&(this.props.personId_1!==null))){
             $.ajax({
 			    url:"/Drone/person/ViewPersonProcess",
 			    type:"POST",
@@ -560,7 +595,12 @@ var p_personForm_1 = React.createClass({
 			    }
 		    });
 		    
-        } 
+        }else if((this.props.personId_1!==prevProps.personId_1)&&(this.props.personId_1==='-')||(this.props.personId_1===null)){
+        	$(form).find("#personId").val("");
+        	$(form).find("#name").val("");
+        	$(form).find("#idNumber").val("");
+        	$(form).find("#dateOfBirth").val("");
+        }
     },    
    
     render: function() {
@@ -614,6 +654,7 @@ var p_personForm_2 = React.createClass({
     },
     componentDidUpdate(prevProps, prevState){
     	var form = "#p_personForm_2";
+    	//debugger;
         if((this.props.personId_2!==prevProps.personId_2)&&(this.props.personId_2!=='-')&&(this.props.personId_2!==null)){
             $.ajax({
             	type:"POST",
@@ -631,6 +672,11 @@ var p_personForm_2 = React.createClass({
 			    }
 		    })
 		    
+        }else if((this.props.personId_2!==prevProps.personId_2)&&(this.props.personId_2==='-')||(this.props.personId_2===null)){
+        	$(form).find("#personId").val("");
+        	$(form).find("#name").val("");
+        	$(form).find("#idNumber").val("");
+        	$(form).find("#dateOfBirth").val("");
         } 
     },    
    

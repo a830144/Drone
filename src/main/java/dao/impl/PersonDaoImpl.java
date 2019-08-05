@@ -12,9 +12,11 @@ import org.springframework.stereotype.Repository;
 
 import dao.PersonDao;
 import entity.Certificates;
+import entity.Missions;
 import entity.Participations;
 import entity.Persons;
 import entity.PersonsLicenses;
+import entity.RealMissions;
 
 @Repository
 public class PersonDaoImpl implements PersonDao{
@@ -129,8 +131,9 @@ public class PersonDaoImpl implements PersonDao{
 		
 		List<PersonsLicenses> results = query.list();
 		return results.get(0);
-		
 	}
+	
+	
 	@Override
 	public Certificates findTrainingInfo(Integer personId, Integer trainingId) {
 		String hql = "FROM Certificates as E where E.persons.personId = :searchField1 and E.trainings.trainingId = :searchField2 ";
@@ -201,5 +204,18 @@ public class PersonDaoImpl implements PersonDao{
 		
 		return results;
 	}
+	
+	@Override
+    public void deleteMission(Missions entity) {
+    	Session session = this.sessionFactory.getCurrentSession();
+    	session.delete(entity);
+    }
+	
+	@Override
+    public void deleteRealMission(RealMissions entity) {
+    	Session session = this.sessionFactory.getCurrentSession();
+    	session.delete(entity);
+    }
+	
 	
 }

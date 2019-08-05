@@ -13,7 +13,7 @@ public class DetailBuilder {
 	private Integer detailType;
 	private String status;
 	private String comment;
-	private byte[] modificationPhoto;
+	private String modificationPhoto;
 	public int getSeq() {
 		return seq;
 	}
@@ -41,11 +41,11 @@ public class DetailBuilder {
 		return this;
 	}
 
-	public byte[] getModificationPhoto() {
+	public String getModificationPhoto() {
 		return modificationPhoto;
 	}
 
-	public DetailBuilder setModificationPhoto(byte[] modificationPhoto) {
+	public DetailBuilder setModificationPhoto(String modificationPhoto) {
 		this.modificationPhoto = modificationPhoto;
 		return this;
 	}

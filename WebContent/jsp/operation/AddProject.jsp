@@ -1,124 +1,45 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 <script>
-		function updateTips(t) {
-			tips.text(t).addClass("ui-state-highlight");
-			setTimeout(function() {
-				tips.removeClass("ui-state-highlight", 1500);
-			}, 500);
-		}
-
-		function checkLength(o, n, min, max) {
-			if (o.val().length > max || o.val().length < min) {
-				o.addClass("ui-state-error");
-				updateTips("" + n + " 的長度必須在 " + min + " 和 " + max + " 之間。");
-				return false;
-			} else {
-				return true;
-			}
-		}
-
-		function checkRegexp(o, regexp, n) {
-			if (!(regexp.test(o.val()))) {
-				o.addClass("ui-state-error");
-				updateTips(n);
-				return false;
-			} else {
-				return true;
-			}
-		}
+var add_obj = {		
+		initState : function (id,domId){
+			store_obj.projectId = id;
+			store_obj.domId = domId;
+		},
+		removeState : function (){
+			store_obj.projectId = '';
+			store_obj.domId = '';
+		},
 		
-		function prepareQueryDomAction(){
-			$("#dialog-add-form").dialog({
-						autoOpen : false,
-						height : 550,
-						width : 800,
-						modal : true,
-						buttons : {
-							"新增專案" : function() {
-								var bValid = true;
-								if (bValid) {
-									var myJson = JSON.stringify($("#add-form").serializeObject());
-									$.ajax({
-										  url:"/Drone/operation/AddProjectProcess",
-										  type:"POST",
-										  data:{"data" : myJson},
-										  success: function(){
-											  alert('新增成功');
-										  }
-									})
-																		
-									$(this).dialog("close");
-								}
-							},
-							"取消" : function() {
-								$(this).dialog("close");
-							}
-						},
-						close : function() {
-						}
-					});
-			$("#add-form").find("#endDate").datepicker();
-		}
-		
-		function queryDomFinishState() {
+		initReactComponent : function (action){	
+			var container = document.getElementById('addProjectDialog_'+action);
+			add_obj.addProjectDialog = ReactDOM.render(React.createElement(addProjectDialog, {domId:action}), container);			
+					
+			container = document.getElementById('projectForm_'+action);
+			add_obj.projectForm = ReactDOM.render(React.createElement(projectForm, {domId:action}), container);
+			
+		},
+		removeReactComponent : function (action){
+			var container = document.getElementById('addProjectDialog_'+action);
+			ReactDOM.unmountComponentAtNode(container);
+			
+			container = document.getElementById('projectForm_'+action);
+			ReactDOM.unmountComponentAtNode(container);
+			
+			Object.keys(store_obj).forEach(function(index) {
+				if(typeof store_obj[index] !='object'){
+					store_obj[index] = null
+				}
+		    });
+		},		
+};
 
-		}
-		function initializeAddFormState() {
-
-		}
-		$(function() {
-			prepareQueryDomAction();
-		});
-		function addProject() {
-			queryDomFinishState();
-			initializeAddFormState();
-			$("#dialog-add-form").dialog("open");
-		}
-
+function addProject(){	
+	add_obj.initState('','add');
+	add_obj.initReactComponent('add');	
+}
 </script>
-<div id="dialog-add-form" title="新增專案">
-	<p class="validateTips">*代表必填</p>
-	<form id="add-form">
-		<table id="single-table">
-			<tr>
-				<td>名稱</td>
-				<td><input type="text" name="name" id="name"
-					class="text ui-widget-content ui-corner-all"></td>
-			</tr>
-			<tr>
-				<td>委託公司</td>
-				<td><input type="text" name="company" id="company"
-					class="text ui-widget-content ui-corner-all"></td>
-			
-				<td>專案經理</td>
-				<td><input type="text" name="projectManager" id="projectManager"
-					class="text ui-widget-content ui-corner-all"></td>
-			</tr>
-			<tr>
-				<td>連絡電話</td>
-				<td><input type="text" name="telephone" id="telephone"
-					class="text ui-widget-content ui-corner-all"></td>
-			
-				<td>專案結案日期</td>
-				<td><input type="text" name="endDate" id="endDate"
-					class="text ui-widget-content ui-corner-all"></td>
-			</tr>
-			<tr>
-				<td>專案結案成果</td>
-				<td><textarea name="result" id="result" rows="10" cols="30" 
-					class="text ui-widget-content ui-corner-all"></textarea></td>
-			</tr>
-			<tr>
-				<td>專案區域</td>
-				<td><input type="file" name="areaData" id="areaData"
-					class="text ui-widget-content ui-corner-all"></td>
-			</tr>
-			<tr>
-				<td>其他相關資料</td>
-				<td><input type="file" name="otherData" id="otherData"
-					class="text ui-widget-content ui-corner-all"></td>
-			</tr>
-		</table>
-	</form>
+<div id="addProjectDialog_add" title="新增專案" style="display: none;">
 </div>
+<script src="/Drone/js/operation/addProject.js" charset="utf-8"></script>
+<script src="/Drone/js/operation/viewProject.js" charset="utf-8"></script>

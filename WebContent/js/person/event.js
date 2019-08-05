@@ -26,47 +26,121 @@ var eventDialog = React.createClass({
 				          icon: "ui-icon-pencil",
 				          id: "updateEventBtn_"+domId,
 				          click: function() {
-				        	  var form = $(formName);
-						      var jsonObject = {};
-							  jsonObject.personId =form.find("#personId").val();
-							  jsonObject.eventId =form.find("#eventId").val();
+				        	  	var form = $(formName);
+				        	  	var validator =form.validate({
+				        	  		rules: {				        	  			
+				        	  			unit: {
+				        	  				 required: true
+				        	  			}
+				        	  		}
+				        	    });				        	  	
+				        	  	
+				        	  	if(form.valid()){
+				        	  		var form = $(formName);
+				        	  		var jsonObject = {};
+				        	  		jsonObject.personId =form.find("#personId").val();
+				        	  		jsonObject.eventId =form.find("#eventId").val();
+				        	  		jsonObject.participationId =form.find("#participationId").val();
+				        	  		jsonObject.unit =form.find("#unit").val();
+				        	  		jsonObject.photo = form.find("#photo").val();
+				        	  		jsonObject.state = form.find("#state").val();
 							  
-							  
-							  var myJson = JSON.stringify(jsonObject);
-							  $.ajax({
-								 url : "/Drone/person/UpdateEventInPersonProcess",
-								 type : "POST",
-								 data : {
-									data : myJson
-								 },
-								 success : function() {
-									alert('修改特殊事蹟紀錄成功');
-								  }
-							   })
-				           }			 
+				        	  		var myJson = JSON.stringify(jsonObject);
+				        	  		$.ajax({
+				        	  			url : "/Drone/person/UpdateEventInPersonProcess",
+				        	  			type : "POST",
+				        	  			data : {
+				        	  				data : myJson
+				        	  			},
+				        	  			success : function() {
+				        	  				alert('修改特殊事蹟紀錄成功');
+				        	  			}
+				        	  		});
+				        	  		
+				        	  		var fileData = new FormData(document.getElementById("eventForm_event_sub"));				 
+								    fileData.append("action","event");
+										 
+								    $.ajax({
+										            type: "POST",
+										            enctype: 'multipart/form-data',
+										            url: "/Drone/other/uploadMultipleFile",
+										            data: fileData,
+										            processData: false,
+										            contentType: false,
+										            cache: false,
+										            timeout: 600000,
+										            success: function (data) {
+										                console.log("SUCCESS : ", data);
+										            },
+										            error: function (e) {
+										                console.log("ERROR : ", e);
+										            }
+								    });
+				        	  	}	
+							}
 			 		    },
 			    		{
 			      		  text: "新增特殊事蹟資料",
 			              icon: "ui-icon-plus",
 			              id: "addEventBtn_"+domId,
 			              click: function() {
-			            	  var form = $(formName);
-						      var jsonObject = {};
-						      jsonObject.personId =form.find("#personId").val();
-							  jsonObject.eventId =form.find("#eventId").val();						  
+			            	  	var form = $(formName);
+				        	  	var validator =form.validate({
+				        	  		rules: {				        	  			
+				        	  			startDate: {
+				        	  				 required: true
+				        	  			},
+				        	  			endDate: {
+				        	  				 required: true
+				        	  			},
+				        	  			hours: {
+				        	  				 required: true
+				        	  			}
+				        	  		}
+				        	    });				        	  	
+				        	  	
+				        	  	if(form.valid()){
+				        	  		var form = $(formName);
+				        	  		var jsonObject = {};
+				        	  		jsonObject.personId =form.find("#personId").val();
+				        	  		jsonObject.eventId =form.find("#eventId").val();						  
+				        	  		jsonObject.unit =form.find("#unit").val();
+				        	  		jsonObject.photo = form.find("#photo").val();
 							  
-							  var myJson = JSON.stringify(jsonObject);
-							  $.ajax({
-							     url : "/Drone/person/EventInPersonProcess",
-							     type : "POST",
-							     data : {
-								   data : myJson
-							     },
-							     success : function() {
-								   alert('新增特殊事蹟紀錄成功');
-							     }
-						      })
-			              }
+							  
+				        	  		var myJson = JSON.stringify(jsonObject);
+				        	  		$.ajax({
+				        	  			url : "/Drone/person/EventInPersonProcess",
+				        	  			type : "POST",
+				        	  			data : {
+				        	  				data : myJson
+				        	  			},
+				        	  			success : function() {
+				        	  				alert('新增特殊事蹟紀錄成功');
+				        	  			}
+				        	  		});
+				        	  		
+				        	  		var fileData = new FormData(document.getElementById("eventForm_event_sub"));				 
+								    fileData.append("action","event");
+										 
+								    $.ajax({
+										            type: "POST",
+										            enctype: 'multipart/form-data',
+										            url: "/Drone/other/uploadMultipleFile",
+										            data: fileData,
+										            processData: false,
+										            contentType: false,
+										            cache: false,
+										            timeout: 600000,
+										            success: function (data) {
+										                console.log("SUCCESS : ", data);
+										            },
+										            error: function (e) {
+										                console.log("ERROR : ", e);
+										            }
+								    });
+				        	  	}
+			    			}
 			            },
 					    {
 				          text: "關閉",
@@ -213,8 +287,8 @@ var eventForm = React.createClass({
     },
     notify: function(obj){
     	this.setState({ 
-    		eventId:obj.eventId,
-    		state:obj.state
+    		targetId:obj.targetId["event"],
+    		state:obj.state["event"]
     	});
     },
     
@@ -271,20 +345,21 @@ var eventForm = React.createClass({
 			form.find("#state").val(this.state.state);
 		}
 		
-		if(this.state.eventId!==prevState.eventId){
-			if(this.state.eventId==='-'){
+		if(this.state.targetId!==prevState.targetId){
+			if(this.state.targetId==='-'){
     			form.find("#eventStateTD").empty();	
     			form.find("#eventId").val("1");
     			form.find("#eventName").val("");
     			form.find("#startDate").val("");
     			form.find("#endDate").val("");
+    			form.find("#photo").val("");
+    			form.find("#participationId").val("");
     		}else{
     			$.ajax({
     				url:"/Drone/person/ViewEventInfo",
     				type:"POST",
     				data:{
-    					personId : store_obj.personId,
-    					eventId : this.state.eventId
+    					targetId : this.state.targetId
     				},
     				dataType: "json",
     				success: function(data){				  
@@ -309,57 +384,64 @@ var eventForm = React.createClass({
                             React.createElement("tr",  {},
                                 React.createElement("td",  {},"人員內部ID"),
                                 React.createElement("td",  {},
-                                    React.createElement("input",  {type:"text",id:"personId",className:"text ui-widget-content ui-corner-all ui-state-disabled"})
+                                    React.createElement("input",  {type:"text",id:"personId",name:"personId",className:"text ui-widget-content ui-corner-all ui-state-disabled"})
                                 )
                             ),
                             React.createElement("tr",  {},                                    
                                     React.createElement("td",  {},"人員名稱"),
                                     React.createElement("td",  {},
-                                        React.createElement("input",  {type:"text",id:"name",className:"text ui-widget-content ui-corner-all ui-state-disabled"})
+                                        React.createElement("input",  {type:"text",id:"name",name:"name",className:"text ui-widget-content ui-corner-all ui-state-disabled"})
                                     )
                             ),
                             React.createElement("tr",  {},
                                     React.createElement("td",  {},"事蹟編號"),
                                     React.createElement("td",  {},
-                                        React.createElement("select",  {type:"text",id:"eventId",onChange:this.handleEventIdChange})
+                                        React.createElement("select",  {type:"text",id:"eventId",name:"eventId",onChange:this.handleEventIdChange})
                                     )
                             ),
                             React.createElement("tr",  {},
                                     React.createElement("td",  {},"事蹟名稱"),
                                     React.createElement("td",  {},
-                                           React.createElement("input",  {type:"text",id:"eventName",className:"text ui-widget-content ui-corner-all"})
+                                           React.createElement("input",  {type:"text",id:"eventName",name:"eventName",className:"text ui-widget-content ui-corner-all"})
                                     )
                             ),
                             
                             React.createElement("tr",  {},
                                     React.createElement("td",  {},"發生特殊事蹟日期"),
                                     React.createElement("td",  {},
-                                            React.createElement("input",  {type:"text",id:"startDate",className:"text ui-widget-content ui-corner-all"}),
+                                            React.createElement("input",  {type:"text",id:"startDate",name:"startDate",className:"text ui-widget-content ui-corner-all"}),
                                             "~",
-                                            React.createElement("input",  {type:"text",id:"endDate",className:"text ui-widget-content ui-corner-all"})
+                                            React.createElement("input",  {type:"text",id:"endDate",name:"endDate",className:"text ui-widget-content ui-corner-all"})
                                     )
                             ),
                             React.createElement("tr",  {},
                                     React.createElement("td",  {},"事蹟說明"),
                                     React.createElement("td",  {},
-                                            React.createElement("input",  {type:"text",id:"description",className:"text ui-widget-content ui-corner-all"})
+                                            React.createElement("input",  {type:"text",id:"description",name:"description",className:"text ui-widget-content ui-corner-all"})
                                     )
                             ), 
                             React.createElement("tr",  {},
                                     React.createElement("td",  {},"事蹟證明單位"),
                                     React.createElement("td",  {},
-                                            React.createElement("input",  {type:"text",id:"",className:"text ui-widget-content ui-corner-all"})
+                                            React.createElement("input",  {type:"text",id:"unit",name:"unit",className:"text ui-widget-content ui-corner-all"})
                                     )
                             ),  
                             React.createElement("tr",  {},
                                     React.createElement("td",  {},"上傳特殊事蹟照片"),
                                     React.createElement("td",  {},
-                                            React.createElement("input",  {type:"file",id:"photo",className:"text ui-widget-content ui-corner-all"})
+                                            React.createElement("input",  {type:"text",id:"photo",name:"photo",className:"text ui-widget-content ui-corner-all"}),
+                                            React.createElement("input",  {type:"file",name:"file",id:"event_file"})
                                     )
                             ),
                             React.createElement("tr",  {},
                                     React.createElement("td",  {},"資料狀態"),
                                     React.createElement("td",  {id:"eventStateTD"})
+                            ),
+                            React.createElement("tr",  {className:'hide-true'},
+                                    React.createElement("td",  {},"participation Id"),
+                                    React.createElement("td",  {},
+                                    		React.createElement("input",  {id:"participationId"})
+                                    )
                             )
                                 
                           )

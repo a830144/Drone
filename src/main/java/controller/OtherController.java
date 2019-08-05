@@ -1,6 +1,7 @@
 package controller;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -213,13 +214,30 @@ public class OtherController {
 		/*Iterator<String> itr =  request.getFileNames();
 		System.out.println("name::"+request.getParameter("equipmentPhoto"));
 		System.out.println("file::"+request.getFileNames().next());*/
-	    String[] names = new String[1] ;
+	    /*String[] names = new String[1] ;
 	    names[0] = request.getParameter("equipmentPhoto");
 	    MultipartFile[] files = new MultipartFile[1];
-	    files[0] = request.getFile(request.getFileNames().next());
+	    files[0] = request.getFile(request.getFileNames().next());*/
+		
+		String[] names = request.getParameterValues("photo");
+		System.out.println("names:"+names.length);
+		List<MultipartFile> fileList = request.getFiles("file");		
+		System.out.println("fileList.size():"+fileList.size());
+		
+		MultipartFile[] files = new MultipartFile[fileList.size()];
+		for(int i =0;i<fileList.size();i++){
+			MultipartFile file = fileList.get(i);
+			files[i] = file;
+		}
+		String action ="";
+		if(request.getParameter("action") == null){
+			action = "default";
+		}else{
+			action = request.getParameter("action");
+		}
 		
 	    
-		return util.FileUploader.multiFiles(names, files,"equipments");
+		return util.FileUploader.multiFiles(names, files,action);
 
 	}
 }

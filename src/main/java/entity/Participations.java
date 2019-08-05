@@ -28,8 +28,22 @@ public class Participations implements java.io.Serializable {
 	private Integer participationId;
 	private Events events;
 	private Persons persons;
-	private byte[] photo;
+	private String photo;
+	private String unit;
 	
+	@Column(name = "Unit", length = 25)
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
 	private ParticipationFlow participationFlow;
 	
 	
@@ -47,7 +61,7 @@ public class Participations implements java.io.Serializable {
 
 	
 
-	public Participations(Events events, Persons persons, byte[] photo) {
+	public Participations(Events events, Persons persons, String photo) {
 		this.events = events;
 		this.persons = persons;
 		this.photo = photo;
@@ -86,12 +100,14 @@ public class Participations implements java.io.Serializable {
 	}
 
 	@Column(name = "Photo")
-	public byte[] getPhoto() {
+	public String getPhoto() {
 		return this.photo;
 	}
 
-	public void setPhoto(byte[] photo) {
+	public void setPhoto(String photo) {
 		this.photo = photo;
 	}
 
+	
+	
 }

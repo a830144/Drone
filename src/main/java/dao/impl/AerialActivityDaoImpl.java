@@ -38,10 +38,10 @@ public class AerialActivityDaoImpl implements AerialActivityDao{
 	}
 
 	@Override
-	public AerialActivities findById(Integer id) {
+	public AerialActivities findById(Integer id,boolean detach) {
 		Session session = this.sessionFactory.getCurrentSession();
 		AerialActivities aerialPlans = session.get(AerialActivities.class, id);
-		session.detach(aerialPlans);
+		if(detach)session.detach(aerialPlans);
         return aerialPlans; 
 	}
 
