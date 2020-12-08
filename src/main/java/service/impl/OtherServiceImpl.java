@@ -16,13 +16,14 @@ import com.google.gson.GsonBuilder;
 import dao.CodeDao;
 import dao.EventDao;
 import dao.LicenseDao;
+import dao.RoleDao;
 import dao.TrainingDao;
 import dao.UserDao;
 import entity.Code;
 import entity.Events;
+import entity.Permissions;
 import entity.Trainings;
 import service.OtherService;
-import vo.AerialActivity;
 import vo.EventInPerson;
 import vo.TrainingInPerson;
 import vo.User;
@@ -46,6 +47,9 @@ public class OtherServiceImpl implements OtherService {
 	
 	@Autowired
 	private UserDao userDao;
+	
+	@Autowired
+	private RoleDao roleDao;
 	
 	@Override
 	public void persistEvent(String jsonString) {		
@@ -160,6 +164,14 @@ public class OtherServiceImpl implements OtherService {
 		vo.setUserId(id);
 		vo.setFunctionOperations(functionOperations);
 		return vo;
+	}
+
+	@Override
+	public List<Permissions> queryPermissions() {
+		List<Permissions> permissionsList;
+		permissionsList = roleDao.findAllPermissions();
+		
+		return permissionsList;
 	}
 
 	

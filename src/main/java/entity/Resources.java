@@ -4,6 +4,8 @@ package entity;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -20,16 +22,20 @@ import javax.persistence.Table;
 @Table(name = "resources")
 public class Resources implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8252578116444774739L;
 	private Integer resourceId;
 	private String resourceName;
 	private String entryPoint;
 	private String type;
-	private Set permissionses = new HashSet(0);
+	private Set<Permissions> permissionses = new HashSet<Permissions>(0);
 
 	public Resources() {
 	}
 
-	public Resources(String resourceName, String entryPoint, String type, Set permissionses) {
+	public Resources(String resourceName, String entryPoint, String type, Set<Permissions> permissionses) {
 		this.resourceName = resourceName;
 		this.entryPoint = entryPoint;
 		this.type = type;
@@ -75,12 +81,12 @@ public class Resources implements java.io.Serializable {
 		this.type = type;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "resources")
-	public Set getPermissionses() {
+	@OneToMany(fetch = FetchType.LAZY,cascade=CascadeType.ALL, mappedBy = "resources")
+	public Set<Permissions> getPermissionses() {
 		return this.permissionses;
 	}
 
-	public void setPermissionses(Set permissionses) {
+	public void setPermissionses(Set<Permissions> permissionses) {
 		this.permissionses = permissionses;
 	}
 

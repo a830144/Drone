@@ -37,7 +37,17 @@
 				<value>entity.Projects</value>
 				<value>entity.Code</value>
                 <value>entity.Missions</value>
-                <value>entity.RealMissions</value>						
+                <value>entity.RealMissions</value>                
+                <value>entity.Users</value>
+                <value>entity.UsersRoles</value>
+                <value>entity.Roles</value>
+                <value>entity.RolesFunctions</value>
+                <value>entity.Functions</value>
+                <value>entity.Operations</value>
+                <value>entity.RolesPermissions</value>
+                <value>entity.Permissions</value>	
+                <value>entity.Actions</value>	
+                <value>entity.Resources</value>				
 			</list>
 		</property>
 		<property name="hibernateProperties">

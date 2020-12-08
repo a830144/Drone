@@ -1,6 +1,7 @@
 package controller;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Type;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -19,25 +20,43 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 
 import entity.Code;
 import entity.Events;
+import entity.Permissions;
 import entity.Trainings;
 import service.OtherService;
 import util.CodeTreeHierarchyHelper;
 import util.DFS;
 import util.TreeNode;
 import vo.EventInPerson;
+import vo.Permission;
 import vo.TrainingInPerson;
 import vo.User;
 
 @Controller
 public class OtherController {
 	
+	//private Gson gson = null;
+	
 	private Gson gson = new GsonBuilder().setDateFormat("MM/dd/yyyy").create();
 	@Autowired
 	private OtherService otherService;
 	
+	public OtherController() {
+		super();
+		/*GsonBuilder b = new GsonBuilder();
+		b.setDateFormat("MM/dd/yyyy");
+		
+		b.registerTypeAdapterFactory(HibernateProxyTypeAdapter.FACTORY);
+		
+		gson = b.create();*/
+	}
+
 	@RequestMapping(value="/other/AddTrainingProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
 	public void addTraining(String data) {
@@ -242,6 +261,40 @@ public class OtherController {
 		User user = otherService.accessIAM(Integer.parseInt(id), password);
 		String jsonString = gson.toJson(user);
 
+		System.out.println("jsonString::"+jsonString);
+		return jsonString;
+	}
+	
+	
+	@RequestMapping(value="/other/QueryPermissionProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public String showQueryPermission() {
+		List<Permissions> list = otherService.queryPermissions();
+		Iterator<Permissions> iterator = list.iterator();
+		JsonArray jsonArray = new JsonArray();
+		Gson gson = new GsonBuilder().registerTypeAdapter(Permissions.class, new JsonSerializer<Permissions>() {
+            @Override
+            public JsonElement serialize(Permissions permissions, Type type, JsonSerializationContext jsonSerializationContext) {
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("permissionId", permissions.getPermissionId());
+                jsonObject.addProperty("permissionName", permissions.getPermissionName());
+                return jsonObject;
+            }
+        }).create();
+		while (iterator.hasNext()) {
+			Permissions entity_permissions = (Permissions) iterator.next();
+			Permission vo = new Permission();
+			try {
+				BeanUtils.copyProperties(vo, entity_permissions);
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}
+			jsonArray.add(gson.toJson(entity_permissions));
+		}
+
+		String jsonString =jsonArray.toString();
 		System.out.println("jsonString::"+jsonString);
 		return jsonString;
 	}

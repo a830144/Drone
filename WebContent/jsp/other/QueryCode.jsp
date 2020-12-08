@@ -7,9 +7,10 @@
 			queryCode();
 		}
 		function queryCode() {
-				$("#queryEventDiv").hide();
-				$("#queryTrainingDiv").hide();
-				$("#queryCodeDiv").show();
+			$("#queryEventDiv").hide();
+			$("#queryTrainingDiv").hide();
+			$("#queryCodeDiv").show();
+			$("#queryPermissionDiv").hide();
 				$.ajax({  
 					 "type": "POST",
 			   		 "url": "/" + system_name +"/other/QueryCodeProcess",

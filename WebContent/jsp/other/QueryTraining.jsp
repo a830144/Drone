@@ -2,9 +2,10 @@
 	pageEncoding="utf-8"%>
 <script>
 		function queryTraining() {
-				$("#queryEventDiv").hide();
-				$("#queryTrainingDiv").show();
-				$("#queryCodeDiv").hide();
+			$("#queryEventDiv").hide();
+			$("#queryTrainingDiv").show();
+			$("#queryCodeDiv").hide();
+			$("#queryPermissionDiv").hide();
 				$.ajax({  
 					 "type": "POST",
 			   		 "url": "/" + system_name +"/other/QueryTrainingProcess",

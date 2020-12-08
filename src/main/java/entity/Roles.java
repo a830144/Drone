@@ -26,14 +26,14 @@ public class Roles implements java.io.Serializable {
 	private Integer roleId;
 	private String roleName;
 	private String roleType;
-	private Set rolesPermissionses = new HashSet(0);
+	private Set<RolesPermissions> rolesPermissionses = new HashSet<RolesPermissions>(0);
 	private Set<RolesFunctions> rolesFunctionses = new HashSet<RolesFunctions>(0);
 	private Set<UsersRoles> usersRoleses = new HashSet<UsersRoles>(0);
 
 	public Roles() {
 	}
 
-	public Roles(String roleName, String roleType, Set rolesPermissionses, Set<RolesFunctions> rolesFunctionses, Set<UsersRoles> usersRoleses) {
+	public Roles(String roleName, String roleType, Set<RolesPermissions> rolesPermissionses, Set<RolesFunctions> rolesFunctionses, Set<UsersRoles> usersRoleses) {
 		this.roleName = roleName;
 		this.roleType = roleType;
 		this.rolesPermissionses = rolesPermissionses;
@@ -90,11 +90,11 @@ public class Roles implements java.io.Serializable {
 	}
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "roles")
-	public Set getRolesPermissionses() {
+	public Set<RolesPermissions> getRolesPermissionses() {
 		return this.rolesPermissionses;
 	}
 
-	public void setRolesPermissionses(Set rolesPermissionses) {
+	public void setRolesPermissionses(Set<RolesPermissions> rolesPermissionses) {
 		this.rolesPermissionses = rolesPermissionses;
 	}
 

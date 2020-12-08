@@ -19,17 +19,21 @@ import javax.persistence.Table;
 @Table(name = "users")
 public class Users implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8817924421340415137L;
 	private Integer userId;
 	private String username;
 	private String password;
 	private String EMail;
 	private String phone;
-	private Set usersRoleses = new HashSet(0);
+	private Set<UsersRoles> usersRoleses = new HashSet<UsersRoles>(0);
 
 	public Users() {
 	}
 
-	public Users(String username, String password, String EMail, String phone, Set usersRoleses) {
+	public Users(String username, String password, String EMail, String phone, Set<UsersRoles> usersRoleses) {
 		this.username = username;
 		this.password = password;
 		this.EMail = EMail;
@@ -86,11 +90,11 @@ public class Users implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "users")
-	public Set getUsersRoleses() {
+	public Set<UsersRoles> getUsersRoleses() {
 		return this.usersRoleses;
 	}
 
-	public void setUsersRoleses(Set usersRoleses) {
+	public void setUsersRoleses(Set<UsersRoles> usersRoleses) {
 		this.usersRoleses = usersRoleses;
 	}
 

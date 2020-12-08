@@ -4,6 +4,8 @@ package entity;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -57,7 +59,7 @@ public class Actions implements java.io.Serializable {
 		this.actionName = actionName;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "actions")
+	@OneToMany(fetch = FetchType.LAZY,cascade=CascadeType.ALL, mappedBy = "actions")
 	public Set<Permissions> getPermissionses() {
 		return this.permissionses;
 	}

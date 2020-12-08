@@ -39,6 +39,7 @@
 				$("#queryTrainingDiv").load("./QueryTraining.jsp");
 				$("#queryEventDiv").load("./QueryEvent.jsp");
 				$("#queryCodeDiv").load("./QueryCode.jsp");
+				$("#queryPermissionDiv").load("./QueryPermission.jsp");
 				$("#addTrainingDiv").load("./AddTraining.jsp");
 				$("#addEventDiv").load("./AddEvent.jsp");
 				$("#addCodeDiv").load("./AddCode.jsp");
@@ -46,6 +47,7 @@
 				$("#queryTrainingDiv").hide();
 				$("#queryEventDiv").hide();
 				$("#queryCodeDiv").hide();
+				$("#queryPermissionDiv").hide();
 				$("#addTrainingDiv").hide();
 				$("#addEventDiv").hide();
 				$("#addCodeDiv").hide();
@@ -60,12 +62,15 @@
 	<button id="query-training" name="query-training" class="ui-button ui-corner-all ui-widget">查詢訓練項目</button>
 	<button id="query-event" name="query-event" class="ui-button ui-corner-all ui-widget">查詢特殊事蹟項目</button>
 	<button id="query-code" name="query-code" class="ui-button ui-corner-all ui-widget">查詢代碼項目</button>
+	<button id="query-permission" name="query-permission" class="ui-button ui-corner-all ui-widget">查詢系統permissions</button>
 	<div id="queryTrainingDiv"></div>
 	<div id="queryEventDiv"></div>
 	<div id="queryCodeDiv"></div>
+	<div id="queryPermissionDiv"></div>
 	<div id="addTrainingDiv"></div>
 	<div id="addEventDiv"></div>
 	<div id="addCodeDiv"></div>
+	
 
 </body>
 </html>

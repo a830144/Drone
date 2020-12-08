@@ -2,9 +2,10 @@
 	pageEncoding="utf-8"%>
 <script>
 	function queryEvent() {
-				$("#queryEventDiv").show();
-				$("#queryTrainingDiv").hide();
-				$("#queryCodeDiv").hide();
+		$("#queryEventDiv").show();
+		$("#queryTrainingDiv").hide();
+		$("#queryCodeDiv").hide();
+		$("#queryPermissionDiv").hide();
 				$.ajax({  
 					 "type": "POST",
 			   		 "url": "/" + system_name +"/other/QueryEventProcess",  

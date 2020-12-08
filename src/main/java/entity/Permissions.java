@@ -4,6 +4,8 @@ package entity;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -83,7 +85,7 @@ public class Permissions implements java.io.Serializable {
 		this.permissionName = permissionName;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "permissions")
+	@OneToMany(fetch = FetchType.LAZY,cascade=CascadeType.ALL, mappedBy = "permissions")
 	public Set<RolesPermissions> getRolesPermissionses() {
 		return this.rolesPermissionses;
 	}

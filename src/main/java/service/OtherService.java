@@ -4,6 +4,7 @@ import java.util.List;
 
 import entity.Code;
 import entity.Events;
+import entity.Permissions;
 import entity.Trainings;
 import vo.User;
 
@@ -27,5 +28,7 @@ public interface OtherService {
 	public void persistCode(String jsonString);
 	
 	public User accessIAM(Integer id,String password);
+	
+	public List<Permissions> queryPermissions();
 
 }
