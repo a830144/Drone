@@ -41,5 +41,5 @@ function updateEquipment(id){
 </script>
 <div id="updateEquipmentDialog_update" title="修改設備" style="display: none;">
 </div>
-<script src="/Drone/js/equipment/updateEquipment.js" charset="utf-8"></script>
-<script src="/Drone/js/equipment/viewEquipment.js" charset="utf-8"></script>
+<script src="../../js/equipment/updateEquipment.js" charset="utf-8"></script>
+<script src="../../js/equipment/viewEquipment.js" charset="utf-8"></script>

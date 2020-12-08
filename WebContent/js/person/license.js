@@ -15,6 +15,7 @@ var licenseDialog = React.createClass({
     	var dialog = "#licenseDialog_"+this.props.domId+"_sub";
     	var formName = "#licenseForm_"+this.props.domId+"_sub";
     	var domId = this.props.domId;
+    	var typeId = this.props.domId;
     	$(dialog).dialog({
 			autoOpen : false,
 			height : 600,
@@ -49,13 +50,21 @@ var licenseDialog = React.createClass({
 				        	  		jsonObject.personsLicensesId = form.find("#personsLicensesId").val();
 				        	  		var myJson = JSON.stringify(jsonObject);
 				        	  		$.ajax({
-				        	  			url : "/Drone/person/UpdateLicenseInPersonProcess",
+				        	  			url : "/"+ system_name +"/person/UpdateLicenseInPersonProcess",
 				        	  			type : "POST",
 				        	  			data : {
 				        	  				data : myJson
 				        	  			},
-				        	  			success : function() {
-				        	  				alert('修改操作證紀錄成功');
+				        	  			success : function(json) {
+				        	  				
+				        	  				alert(json[1]);
+				        	  				if(json[0]==='success'){
+				        	  					store_obj.license["constructionType"] =form.find("#constructionType option:selected").text();
+				        	  					store_obj.license["type"] = form.find("#type").val();  
+				        	  					store_obj.license["typeContent"] = form.find("#type option:selected").text();  	  				
+				        	  					store_obj.license["gotDate"] =form.find("#gotDate").val();
+				        	  					action_obj.updateButton_click_Action(typeId);
+				        	  				}
 				        	  			}
 				        	  		});
 				        	  			
@@ -65,7 +74,7 @@ var licenseDialog = React.createClass({
 								    $.ajax({
 										            type: "POST",
 										            enctype: 'multipart/form-data',
-										            url: "/Drone/other/uploadMultipleFile",
+										            url: "/"+ system_name +"/other/uploadMultipleFile",
 										            data: fileData,
 										            processData: false,
 										            contentType: false,
@@ -108,13 +117,14 @@ var licenseDialog = React.createClass({
 							  
 				        	  		var myJson = JSON.stringify(jsonObject);
 				        	  		$.ajax({
-				        	  			url : "/Drone/person/LicenseInPersonProcess",
+				        	  			url : "/"+ system_name +"/person/LicenseInPersonProcess",
 				        	  			type : "POST",
 				        	  			data : {
 				        	  				data : myJson
 				        	  			},
-				        	  			success : function() {
-				        	  				alert('新增操作證紀錄成功');
+				        	  			
+				        	  			success : function(json) {
+				        	  				alert(json[1]);
 				        	  			}
 				        	  		});
 				        	  		
@@ -123,7 +133,7 @@ var licenseDialog = React.createClass({
 								    $.ajax({
 										            type: "POST",
 										            enctype: 'multipart/form-data',
-										            url: "/Drone/other/uploadMultipleFile",
+										            url: "/"+system_name +"/other/uploadMultipleFile",
 										            data: fileData,
 										            processData: false,
 										            contentType: false,
@@ -183,10 +193,20 @@ var licenseDialog = React.createClass({
 var licenseList = React.createClass({
 	getInitialState: function() {
         return {
+        	state:undefined,
+        	constructionType:'',
+        	type:'',
+        	typeContent:'',
+        	gotDate:'',
         };
     },
     notify: function(obj){
-    	this.setState({  
+    	this.setState({ 
+    		state:obj.state["license"],
+    		constructionType:obj.license["constructionType"],
+    		type:obj.license["type"],
+    		typeContent:obj.license["typeContent"],
+    		gotDate:obj.license["gotDate"]
     	});
     },
 	componentDidMount(){
@@ -202,12 +222,12 @@ var licenseList = React.createClass({
 				    targets: '_all'
 				}],
 			select:true,
-	        order: [[ 1, 'asc' ]],
+	        //order: [[ 1, 'asc' ]],
 			scrollY: "100px",
 	        scrollCollapse: true,		
 			ajax: {
 				type: "POST",
-			    url: "/Drone/person/QueryLicenses",  
+			    url: "/"+ system_name +"/person/QueryLicenses",  
 			    data: {  
 			        id: store_obj.personId 
 			    }, 
@@ -252,7 +272,36 @@ var licenseList = React.createClass({
 		});
 	},
 	componentDidUpdate(prevProps, prevState){
-	      
+		var tableName = "#licenseList_"+this.props.domId+"_sub";
+    	var table = $(tableName).DataTable();
+		if(this.state.state!==prevState.state){
+			if(this.state.state!=null && this.state.state!=undefined && this.state.state!=''){
+				var row = table.row('.selected');
+				var cell = table.cell( row ,0);
+				cell.data(this.state.state).draw();				
+			}
+		}
+		
+		
+		if(this.state.state==='PROCESSING'){
+			//alert(this.state.typeContent);
+			if(this.state.type!=null && this.state.type!=''){
+				var cell = table.cell( row ,1);
+				cell.data(this.state.type).draw();
+			}
+			if(this.state.gotDate!=null && this.state.gotDate!=''){
+				var cell = table.cell( row ,2);
+				cell.data(this.state.gotDate).draw();
+			}
+			if(this.state.typeContent!=null && this.state.typeContent!=''){
+				var cell = table.cell( row ,3);				
+				cell.data(this.state.typeContent).draw();
+			}			
+			if(this.state.constructionType!=null && this.state.constructionType!=''){
+				var cell = table.cell( row ,5);
+				cell.data(this.state.constructionType).draw();
+			}
+		}
 	},
     componentWillUnmount(){
 	        $("#licenseList_"+this.props.domId+"_sub").unbind( "select" );
@@ -293,7 +342,7 @@ var licenseForm = React.createClass({
         var type = $(form).find("#type").val();
         
         $.ajax({
-			url : "/Drone/person/ViewLicenseInfo",
+			url : "/"+ system_name +"/person/ViewLicenseInfo",
 			type : "POST",	
 			data : {
 				type : type
@@ -308,7 +357,7 @@ var licenseForm = React.createClass({
 	componentDidMount(){
     	var form = $("#licenseForm_"+this.props.domId+"_sub");    	
     	$.ajax({
-			  url:"/Drone/person/ViewPersonProcess",
+			  url:"/"+ system_name +"/person/ViewPersonProcess",
 			  type:"POST",
 			  data:{
 				  id : store_obj.personId
@@ -323,7 +372,7 @@ var licenseForm = React.createClass({
 		});
     	
     	$.ajax({
-			url : "/Drone/other/QueryCodes",
+			url : "/"+ system_name +"/other/QueryCodes",
 			type : "POST",
 			data : {
 				type : 'License_type',
@@ -357,7 +406,7 @@ var licenseForm = React.createClass({
     			form.find("#licenseId").val("");
     		}else{
     			$.ajax({
-    				url:"/Drone/person/ViewLicenseInfo",
+    				url:"/"+ system_name +"/person/ViewLicenseInfo",
     				type:"POST",
     				data:{
     					targetId : this.state.targetId

@@ -25,11 +25,12 @@ var stateButtons = React.createClass({
     	var checkBtn = "#check_"+this.props.domId+"_"+this.props.typeId+"_btn";
     	var approveBtn = "#approve_"+this.props.domId+"_"+this.props.typeId+"_btn";
     	var rejectBtn = "#reject_"+this.props.domId+"_"+this.props.typeId+"_btn";
+    	var canReject = this.props.canReject;
+    	var canApprove = this.props.canApprove;
     	var domId = this.props.domId;
     	var typeId = this.props.typeId;
     	var typeId_uc_first = typeId.charAt(0).toUpperCase() + typeId.slice(1);
 
-    	//debugger;
     	$(stateButton).find(checkBtn).button({
 			icons: { primary: "ui-icon-play" }
 		});   	
@@ -42,23 +43,27 @@ var stateButtons = React.createClass({
 		
 		$(stateButton).find(checkBtn).button().click(function() {
 			$.ajax({
-				  url:"/Drone"+"/"+typeId+"/Check"+typeId_uc_first+"Process",
+				  url:"/"+system_name+"/"+typeId+"/Check"+typeId_uc_first+"Process",
 				  type:"POST",
 				  data:{
 					  targetId : store_obj.targetId[typeId]
 				  },
 				  success : function() {
-						alert('檢核成功');						
-				    	$(stateButton).find(checkBtn).prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
-		    			$(stateButton).find(rejectBtn).prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
-		    			$(stateButton).find(approveBtn).prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
+						alert('檢核成功');	
+						$(stateButton).find(checkBtn).prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
+		    			if(canReject){
+		    				$(stateButton).find(rejectBtn).prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
+		    			};
+		    			if(canApprove){
+		    				$(stateButton).find(approveBtn).prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
+		    			};
 		    			action_obj.checkButton_click_Action(typeId);
 				  }
 			})
 		});
 		$(stateButton).find(approveBtn).button().click(function() {
 			$.ajax({
-				  url:"/Drone"+"/"+typeId+"/Approve"+typeId_uc_first+"Process",
+				  url:"/"+system_name+"/"+typeId+"/Approve"+typeId_uc_first+"Process",
 				  type:"POST",
 				  data:{
 					  targetId : store_obj.targetId[typeId]
@@ -74,7 +79,7 @@ var stateButtons = React.createClass({
 		});
 		$(stateButton).find(rejectBtn).button().click(function() {
 			$.ajax({
-				  url:"/Drone"+"/"+typeId+"/Reject"+typeId_uc_first+"Process",
+				  url:"/"+system_name+"/"+typeId+"/Reject"+typeId_uc_first+"Process",
 				  type:"POST",
 				  data:{
 					  targetId : store_obj.targetId[typeId]
@@ -88,6 +93,21 @@ var stateButtons = React.createClass({
 				  }
 			})
 		});
+		if(this.props.canCheck){
+			$(stateButton).find(checkBtn).prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
+		}else{
+			$(stateButton).find(checkBtn).prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
+		};
+		if(this.props.canApprove){
+			$(stateButton).find(approveBtn).prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
+		}else{
+			$(stateButton).find(approveBtn).prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
+		};
+		if(this.props.canReject){
+			$(stateButton).find(rejectBtn).prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
+		}else{
+			$(stateButton).find(rejectBtn).prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
+		}
     },
     componentDidUpdate(prevProps, prevState){
     	var stateButton = "#stateButton_"+this.props.domId+"_"+this.props.typeId+"_sub";
@@ -95,17 +115,23 @@ var stateButtons = React.createClass({
     	var approveBtn = "#approve_"+this.props.domId+"_"+this.props.typeId+"_btn";
     	var rejectBtn = "#reject_"+this.props.domId+"_"+this.props.typeId+"_btn";
     	
-    	//alert('notify:'+this.state.state+prevState.state+";"+this.state.domId+this.props.domId+";"+this.state.typeId+this.props.typeId);
-    	
     	if(this.state.targetId!==prevState.targetId || this.state.state!==prevState.state){
     		if(this.state.state==="PROCESSING"){
-    			$(stateButton).find(checkBtn).prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
-    			$(stateButton).find(rejectBtn).prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
+    			if(this.props.canCheck){
+    				$(stateButton).find(checkBtn).prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
+    			};
+    			if(this.props.canReject){
+    				$(stateButton).find(rejectBtn).prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
+    			};
     			$(stateButton).find(approveBtn).prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
     		}else if(this.state.state==="CHECKED"){
     			$(stateButton).find(checkBtn).prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
-    			$(stateButton).find(rejectBtn).prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
-    			$(stateButton).find(approveBtn).prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
+    			if(this.props.canReject){
+    				$(stateButton).find(rejectBtn).prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
+    			};
+    			if(this.props.canApprove){
+    				$(stateButton).find(approveBtn).prop("disabled", false).removeClass("ui-state-disabled").addClass("ui-state-enabled");
+    			};
     		}else if(this.state.state==="APPROVED"){
     			$(stateButton).find(checkBtn).prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
     			$(stateButton).find(rejectBtn).prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
@@ -115,14 +141,15 @@ var stateButtons = React.createClass({
     			$(stateButton).find(rejectBtn).prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
     			$(stateButton).find(approveBtn).prop("disabled", true).removeClass("ui-state-enabled").addClass("ui-state-disabled");
     		}
-    	}
+    	};
+    	
     },    
    
     render: function() {
         return  React.createElement("div",  {id:"stateButton_"+this.props.domId+"_"+this.props.typeId+"_sub"},
-        			React.createElement("button",  {id:"check_"+this.props.domId+"_"+this.props.typeId+"_btn",className:"ui-button ui-corner-all ui-widget"},"檢核"+this.props.domIdCN),
-        			React.createElement("button",  {id:"approve_"+this.props.domId+"_"+this.props.typeId+"_btn",className:"ui-button ui-corner-all ui-widget"},"核可"+this.props.domIdCN),
-        			React.createElement("button",  {id:"reject_"+this.props.domId+"_"+this.props.typeId+"_btn",className:"ui-button ui-corner-all ui-widget"},"退回"+this.props.domIdCN)
+        			React.createElement("button",  {id:"check_"+this.props.domId+"_"+this.props.typeId+"_btn",className:"ui-button ui-corner-all ui-widget ui-state-disabled"},"檢核"+this.props.domIdCN),
+        			React.createElement("button",  {id:"approve_"+this.props.domId+"_"+this.props.typeId+"_btn",className:"ui-button ui-corner-all ui-widget ui-state-disabled"},"核可"+this.props.domIdCN),
+        			React.createElement("button",  {id:"reject_"+this.props.domId+"_"+this.props.typeId+"_btn",className:"ui-button ui-corner-all ui-widget ui-state-disabled"},"退回"+this.props.domIdCN)
         			
         		);
     }

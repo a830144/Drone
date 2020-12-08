@@ -46,7 +46,7 @@ public class ProjectDaoImpl implements ProjectDao{
     @SuppressWarnings("unchecked")
     public List<Projects> findAll() {
     	Session session = this.sessionFactory.getCurrentSession();
-        List<Projects> Projectss = (List<Projects>) session.createQuery("from Projects").list();
+        List<Projects> Projectss = (List<Projects>) session.createQuery("from Projects as E where E.projectFlow.state <> 'DELETED'").list();
         return Projectss;
     }
     @Override

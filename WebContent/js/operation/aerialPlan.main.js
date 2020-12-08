@@ -17,6 +17,7 @@ var aerialPlanDialog = React.createClass({
     	var dialog = "#aerialPlanDialog_"+this.props.domId+"_sub";
     	var formName = "#aerialPlanForm_"+this.props.domId+"_sub";
     	var domId = this.props.domId;
+    	var typeId = this.props.domId;
     	$(dialog).dialog({
 			autoOpen : false,
 			height : 700,
@@ -27,7 +28,113 @@ var aerialPlanDialog = React.createClass({
 				  text: "修改航拍計畫資料",
 		          icon: "ui-icon-pencil",
 		          id: "updateAerialPlanBtn_"+domId,
-		          click: function (){ aerialPlan_obj.addOrUpdate('update') }
+		          click: function (){ 
+		        	  var form = $("#aerialPlanForm_aerialPlan_sub");
+					  var form_other = $("#otherForm_aerialPlan_sub");
+					  var validator =form.validate({
+		      	  			rules: {
+		      	  				aerialPlanStartDate: {
+		      	  				 	required: true,
+		      	  				 	maxlength: 10
+		      	  				},
+		      	  				aerialPlanEndDate: {
+		      	  				 	required: true,
+		      	  				 	maxlength: 10
+		      	  				},      	  			      	  			
+		      	  			}
+		      	      });
+					  var validator_other =form_other.validate({
+		    	  			rules: {
+		    	  				takeOffLocationName: {
+		    	  				 	required: true,
+		    	  				 	maxlength: 25
+		    	  				}      	  			      	  			
+		    	  			}
+		    	      });	
+					  if (form.valid() && form_other.valid()) {			  
+					  	var jsonObject = {};
+					  	jsonObject.projectId =$(form).find("#projectId").val();
+					  	jsonObject.name = $(form).find("#name").val();
+					  	jsonObject.aerialPlanId = $(form).find("#aerialPlanId").val();
+					  	jsonObject.usage = $(form).find("#usage").val();
+					  	jsonObject.aerialPlanStartDate = $(form).find("#aerialPlanStartDate").val();
+					  	jsonObject.aerialPlanEndDate = $(form).find("#aerialPlanEndDate").val();
+					  	jsonObject.photo = $(form).find("#photo").val();
+					  	jsonObject.state = $(form).find("#state").val();
+					
+					  
+					 	var tableName = "#aerialPlanEPList_aerialPlan_sub";
+					  	var arr = new Array();
+					  	jsonObject.equipmentsArray = arr;
+					  	var table = $(tableName).DataTable();			  
+					  	table.rows().eq(0).each( function ( index ) {
+					    	var row = table.row( index );
+					    	var cell = table.cell( index ,3);
+							var equipmentId = cell.data();									
+							var personId_1 = $("#EProw"+index+"col"+6).val();					
+							var personId_2 = $("#EProw"+index+"col"+7).val(); 
+							
+							jsonObject.equipmentsArray.push({
+								"equipmentId":equipmentId,
+								"personId_1":personId_1,
+								"personId_2":personId_2
+							});
+					  	} );
+					  
+					  										  			  
+					  	jsonObject.amslFrom =$(form_other).find("#amslFrom").val();
+					  	jsonObject.amslTo = $(form_other).find("#amslTo").val();
+					  	jsonObject.agl = $(form_other).find("#agl").val();
+					  	jsonObject.takeOffNDegree = $(form_other).find("#takeOffNDegree").val();
+					  	jsonObject.takeOffNMinute = $(form_other).find("#takeOffNMinute").val();
+					  	jsonObject.takeOffNSecond = $(form_other).find("#takeOffNSecond").val();
+					  	jsonObject.takeOffEDegree = $(form_other).find("#takeOffEDegree").val();
+					  	jsonObject.takeOffEMinute = $(form_other).find("#takeOffEMinute").val();
+					  	jsonObject.takeOffESecond = $(form_other).find("#takeOffESecond").val();			  
+					  	jsonObject.areaCenterNDegree = $(form_other).find("#areaCenterNDegree").val();
+					  	jsonObject.areaCenterNMinute = $(form_other).find("#areaCenterNMinute").val();
+					  	jsonObject.areaCenterNSecond = $(form_other).find("#areaCenterNSecond").val();
+					  	jsonObject.areaCenterEDegree = $(form_other).find("#areaCenterEDegree").val();
+					  	jsonObject.areaCenterEMinute = $(form_other).find("#areaCenterEMinute").val();
+					  	jsonObject.areaCenterESecond = $(form_other).find("#areaCenterESecond").val();
+					  	jsonObject.operationDiameter = $(form_other).find("#operationDiameter").val();
+					  
+					 	myJson = JSON.stringify(jsonObject);
+					  	console.log(myJson);
+					  	$.ajax({
+						 	type : "POST", 
+						 	url : "/"+ system_name +"/operation/UpdateAerialPlanProcess",
+						 	data : {
+								data : myJson
+						 	},
+						 	success : function() {
+								alert('修改航拍活動紀錄成功');
+								action_obj.updateButton_click_Action(typeId);
+						 	}
+					  	});
+					  	
+			
+						var fileData = new FormData(document.getElementById("aerialPlanForm_aerialPlan_sub"));				 
+					    fileData.append("action","aerialPlan");
+							 
+					    $.ajax({
+							   type: "POST",
+							   enctype: 'multipart/form-data',
+							   url: "/"+ system_name +"/other/uploadMultipleFile",
+							   data: fileData,
+							   processData: false,
+							   contentType: false,
+							   cache: false,
+							   timeout: 600000,
+							   success: function (data) {
+							         console.log("SUCCESS : ", data);
+							   },
+							   error: function (e) {
+							         console.log("ERROR : ", e);
+							   }
+					    });		
+					  } 
+		          }
 	 		    },
 	    		{
 	      		  text: "新增航拍計畫資料",
@@ -76,10 +183,12 @@ var aerialPlanDialog = React.createClass({
 var aerialPlanList = React.createClass({
 	getInitialState: function() {
         return {
+        	state:undefined
         };
     },
     notify: function(obj){
-    	this.setState({  
+    	this.setState({ 
+    		state:obj.state["aerialPlan"]
     	});
     },
     componentWillUnmount(){
@@ -100,7 +209,7 @@ var aerialPlanList = React.createClass({
 	        scrollCollapse: true,		
 			ajax: {
 				type: "POST",
-			    url: "/Drone/operation/QueryAerailPlansProcess",  
+			    url: "/"+ system_name +"/operation/QueryAerailPlansProcess",  
 			    data: {  
 			    	projectId : store_obj.projectId 
 			    }, 
@@ -138,7 +247,15 @@ var aerialPlanList = React.createClass({
     	$(' .dataTables_scrollBody').height(100);
     },
     componentDidUpdate(prevProps, prevState){
-        
+    	var tableName = "#aerialPlanList_"+this.props.domId+"_sub";
+    	var table = $(tableName).DataTable();
+		if(this.state.state!==prevState.state){
+			if(this.state.state!=null && this.state.state!=undefined && this.state.state!=''){
+				var row = table.row('.selected');
+				var cell = table.cell( row ,0);
+				cell.data(this.state.state).draw();
+			}
+		}
     },    
    
     render: function() {

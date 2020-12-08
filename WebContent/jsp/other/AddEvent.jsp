@@ -15,7 +15,7 @@
 									
 								var myJson = JSON.stringify($("#add-event-form").serializeObject());
 								$.ajax({
-									url : "/Drone/other/AddEventProcess",
+									url : "/" + system_name +"/other/AddEventProcess",
 									type : "POST",
 									data : {
 										"data" : myJson

@@ -163,6 +163,36 @@ var action_obj = {
 		)
 	},
 	
+	addButton_click_Action_handler : [],
+	addButton_click_Action_subscribe : function(fn) {
+		action_obj.addButton_click_Action_handler.push(fn);
+    },
+    addButton_click_Action : function(typeId) {
+		store_obj.state[typeId] = "ADD";
+		//notify
+		action_obj.addButton_click_Action_handler.forEach(
+				function(item){
+					item.notify(store_obj);
+				}
+		)
+		
+	},
+	
+	updateButton_click_Action_handler : [],
+	updateButton_click_Action_subscribe : function(fn) {
+		action_obj.updateButton_click_Action_handler.push(fn);
+    },
+    updateButton_click_Action : function(typeId) {
+		store_obj.state[typeId] = "PROCESSING";
+		//notify
+		action_obj.updateButton_click_Action_handler.forEach(
+				function(item){
+					item.notify(store_obj);
+				}
+		)
+		
+	},
+	
 	licenseList_select_Action_handler : [],
 	licenseList_select_Action_subscribe : function(fn) {
 		action_obj.licenseList_select_Action_handler.push(fn);
@@ -471,6 +501,21 @@ var action_obj = {
 		)
 	},
 	
+	
+	selectConstruction_change_Action_handler : [],
+	selectConstruction_change_Action_subscribe : function(fn) {
+		action_obj.selectConstruction_change_Action_handler.push(fn);
+    },
+    selectConstruction_change_Action : function(constructionType){
+		store_obj.constructionType = constructionType;
+		//notify			
+		action_obj.selectConstruction_change_Action_handler.forEach(
+				function(item){
+					item.notify(store_obj);
+				}
+		)
+	},
+	
 	equipmentAPList_select_Action_handler : [],
 	equipmentAPList_select_Action_subscribe : function(fn) {
 		action_obj.equipmentAPList_select_Action_handler.push(fn);
@@ -488,10 +533,10 @@ var action_obj = {
 	
 	equipmentAPList_deselect_Action_handler : [],
 	equipmentAPList_deselect_Action_subscribe : function(fn) {
-		action_obj.equipmentAPList_select_Action_handler.push(fn);
+		action_obj.equipmentAPList_deselect_Action_handler.push(fn);
     },
 	equipmentAPList_deselect_Action : function(equipmentId){
-		store_obj.equipmentId = '-';
+		store_obj.equipmentId = '';
 		//notify
 		action_obj.equipmentAPList_deselect_Action_handler.forEach(
 				function(item){
@@ -519,12 +564,9 @@ var action_obj = {
 	personAPList_select_Action_subscribe : function(fn) {
 		action_obj.personAPList_select_Action_handler.push(fn);
     },
-	personAPList_select_Action : function(personId){
-		if(store_obj.personId_1==''||store_obj.personId_1=='-'||store_obj.personId_1==null){
-            store_obj.personId_1=personId;
-        }else{
-            store_obj.personId_2=personId;
-        }
+	personAPList_select_Action : function(personIds){
+		store_obj.personId_1=personIds[0];
+		store_obj.personId_2=personIds[1];
 		//notify
 		action_obj.personAPList_select_Action_handler.forEach(
 				function(item){
@@ -537,12 +579,9 @@ var action_obj = {
 	personAPList_deselect_Action_subscribe : function(fn) {
 		action_obj.personAPList_deselect_Action_handler.push(fn);
     },
-	personAPList_deselect_Action : function(personId){
-		if(store_obj.personId_1==personId){
-            store_obj.personId_1='-';
-        }else if(store_obj.personId_2==personId){
-            store_obj.personId_2='-';
-        }
+	personAPList_deselect_Action : function(personIds){
+		store_obj.personId_1=personIds[0];
+		store_obj.personId_2=personIds[1];
 		//notify
 		action_obj.personAPList_deselect_Action_handler.forEach(
 				function(item){

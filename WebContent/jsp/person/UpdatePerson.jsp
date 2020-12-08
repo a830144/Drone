@@ -41,5 +41,5 @@ function updatePerson(id){
 </script>
 <div id="updatePersonDialog_update" title="修改人員" style="display: none;">
 </div>
-<script src="/Drone/js/person/updatePerson.js" charset="utf-8"></script>
-<script src="/Drone/js/person/viewPerson.js" charset="utf-8"></script>
+<script src="../../js/person/updatePerson.js" charset="utf-8"></script>
+<script src="../../js/person/viewPerson.js" charset="utf-8"></script>

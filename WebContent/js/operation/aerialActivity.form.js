@@ -15,7 +15,7 @@ var aerialActivityForm = React.createClass({
     	var form = $("#aerialActivityForm_"+this.props.domId+"_sub");
         var id = $(form).find("#aerialPlanId").val();
 		$.ajax({
-			url : "/Drone/operation/ViewAerialPlanByAerialPlanId",
+			url : "/"+system_name +"/operation/ViewAerialPlanByAerialPlanId",
 			type : "POST",	
 			data : {
 				id : id
@@ -32,7 +32,7 @@ var aerialActivityForm = React.createClass({
     componentDidMount() {
     	var form = $("#aerialActivityForm_"+this.props.domId+"_sub");
     	$.ajax({
-			url:"/Drone/operation/ViewProjectProcess",
+			url:"/"+system_name +"/operation/ViewProjectProcess",
 			type:"POST",
 			data:{
 				id : store_obj.projectId
@@ -47,7 +47,7 @@ var aerialActivityForm = React.createClass({
 		});  
         
         $.ajax({
-			url : "/Drone/operation/QueryAerailPlansIDsByProjectId",
+			url : "/"+ system_name +"/operation/QueryAerailPlansIDsByProjectId",
 			type : "POST",
 			data: {  
 		    	projectId: store_obj.projectId
@@ -76,9 +76,10 @@ var aerialActivityForm = React.createClass({
     			form.find("#aerialActivityStartDate").val("");
     			form.find("#aerialActivityEndDate").val("");
     		}else{
+    			if(this.state.aerialActivityId!=null && this.state.aerialActivityId!=''){
     			$.ajax({
   				  type:"POST",
-  				  url:"/Drone/operation/ViewAerialActivityByAerialActivityId",				  
+  				  url:"/"+system_name +"/operation/ViewAerialActivityByAerialActivityId",				  
   				  data:{
   					  id : this.state.aerialActivityId
   				  },
@@ -97,6 +98,7 @@ var aerialActivityForm = React.createClass({
   					  form.find("#aerialPlanEndDate").removeClass("ui-state-enabled").addClass("ui-state-disabled"); 
 
   				  }})
+    			}
     		}
     		
     	};
@@ -301,7 +303,7 @@ var aerialActivityEPList = React.createClass({
 			        scrollCollapse: true,
 			        ajax: {
 						type: "POST",
-					    url: "/Drone/operation/ViewAerialActivityByAerialActivityId",  
+					    url: "/"+system_name +"/operation/ViewAerialActivityByAerialActivityId",  
 					    data: {  
 					    	id : this.state.aerialActivityId 
 					    }, 

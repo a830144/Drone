@@ -15,6 +15,7 @@ var maintainDialog = React.createClass({
     	var dialog = "#maintainDialog_"+this.props.domId+"_sub";
     	var formName = "#maintainForm_"+this.props.domId+"_sub";
     	var domId = this.props.domId;
+    	var typeId = this.props.domId;
     	$(dialog).dialog({
 			autoOpen : false,
 			height : 600,
@@ -48,16 +49,34 @@ var maintainDialog = React.createClass({
 									 obj.maintenancePerson = $(form).find("#maintenancePerson").val();
 									 obj.maintenanceType = $(form).find("#maintenanceType").val();
 									 var myJson = JSON.stringify(obj);
+													 
 									 $.ajax({
-										 url : "/Drone/equipment/UpdateMaintainEquipmentProcess",
+										 url : "/" +system_name +"/equipment/UpdateMaintainEquipmentProcess",
 										 type : "POST",
 										 data : {
 											data : myJson
 										 },
 										 success : function() {
 											alert('修改保養紀錄成功');
-										  }
-									 });									 
+											store_obj.maintain["maintenanceType"]=$(form).find("#maintenanceType option:selected").text();
+											store_obj.maintain["maintenanceDate"]=$(form).find("#maintenanceDate").val();
+											
+											store_obj.maintain["airframe"]=$(form).find("input[name='airframe']").val();
+											store_obj.maintain["propulsion"]=$(form).find("input[name='propulsion']").val();
+											store_obj.maintain["battery"]=$(form).find("input[name='battery']").val();
+											store_obj.maintain["controller"]=$(form).find("input[name='controller']").val();
+											store_obj.maintain["payload"]=$(form).find("input[name='payload']").val();
+											store_obj.maintain["other"]=$(form).find("input[name='other']").val();
+											action_obj.updateButton_click_Action(typeId);
+										 },
+										 beforeSend:function(){
+											 $(form).find('#loading_msg').addClass('hide-false').removeClass('hide-true');
+							             },
+							             complete:function(){
+							            	 $(form).find('#loading_msg').addClass('hide-true').removeClass('hide-false');
+							             }
+									 });
+									
 				        	  	}
 				        	  
 				        	  }
@@ -91,7 +110,7 @@ var maintainDialog = React.createClass({
 				        	  		obj.maintenanceType = $(form).find("#maintenanceType").val();
 				        	  		var myJson = JSON.stringify(obj);
 				        	  		$.ajax({
-				        	  			url : "/Drone/equipment/MaintainEquipmentProcess",
+				        	  			url : "/" +system_name +"/equipment/MaintainEquipmentProcess",
 				        	  			type : "POST",
 				        	  			data : {
 				        	  				data : myJson
@@ -147,10 +166,28 @@ var maintainDialog = React.createClass({
 var maintainList = React.createClass({
 	getInitialState: function() {
         return {
+        	state:undefined,
+        	maintenanceType:'',
+    		maintenanceDate:'',
+    		airframe:'',
+    		propulsion:'',
+    		battery:'',
+    		controller:'',
+    		payload:'',
+    		other:''
         };
     },
     notify: function(obj){
-    	this.setState({  
+    	this.setState({ 
+    		state:obj.state["maintain"],
+    		maintenanceType:obj.maintain["maintenanceType"],
+    		maintenanceDate:obj.maintain["maintenanceDate"],
+    		airframe:obj.maintain["airframe"],
+    		propulsion:obj.maintain["propulsion"],
+    		battery:obj.maintain["battery"],
+    		controller:obj.maintain["controller"],
+    		payload:obj.maintain["payload"],
+    		other:obj.maintain["other"]
     	});
     },
 	componentDidMount(){
@@ -167,7 +204,7 @@ var maintainList = React.createClass({
 	        scrollCollapse: true,		
 			ajax: {
 				type: "POST",
-			    url: "/Drone/equipment/ViewMaintenance",  
+			    url: "/" +system_name +"/equipment/ViewMaintenance",  
 			    data: {  
 			        id: store_obj.equipmentId 
 			    }, 
@@ -214,7 +251,50 @@ var maintainList = React.createClass({
 		});
 	},
 	componentDidUpdate(prevProps, prevState){
-	      
+		var tableName = "#maintainList_"+this.props.domId+"_sub";
+    	var table = $(tableName).DataTable();
+		if(this.state.state!==prevState.state){
+			if(this.state.state!=null && this.state.state!=undefined && this.state.state!=''){
+				var row = table.row('.selected');
+				var cell = table.cell( row ,0);
+				cell.data(this.state.state).draw();
+			}
+		}
+		if(this.state.state==='PROCESSING'){
+			
+			if(this.state.maintenanceType!=null && this.state.maintenanceType!=''){
+				var cell = table.cell( row ,2);				
+				cell.data(this.state.maintenanceType).draw();
+			}			
+			if(this.state.maintenanceDate!=null && this.state.maintenanceDate!=''){
+				var cell = table.cell( row ,3);
+				cell.data(this.state.maintenanceDate).draw();
+			}
+			if(this.state.airframe!=null && this.state.airframe!=''){
+				var cell = table.cell( row ,4);
+				cell.data(this.state.airframe).draw();
+			}
+			if(this.state.propulsion!=null && this.state.propulsion!=''){
+				var cell = table.cell( row ,5);
+				cell.data(this.state.propulsion).draw();
+			}
+			if(this.state.battery!=null && this.state.battery!=''){
+				var cell = table.cell( row ,6);
+				cell.data(this.state.battery).draw();
+			}
+			if(this.state.controller!=null && this.state.controller!=''){
+				var cell = table.cell( row ,7);
+				cell.data(this.state.controller).draw();
+			}
+			if(this.state.payload!=null && this.state.payload!=''){
+				var cell = table.cell( row ,8);
+				cell.data(this.state.payload).draw();
+			}
+			if(this.state.other!=null && this.state.other!=''){
+				var cell = table.cell( row ,9);
+				cell.data(this.state.other).draw();
+			}
+		}
 	},
     componentWillUnmount(){
 	        $("#maintainList_"+this.props.domId+"_sub").unbind( "select" );
@@ -226,8 +306,8 @@ var maintainList = React.createClass({
                     React.createElement("thead",  {},
                          React.createElement("tr",  {},
                              React.createElement('th', {}, '狀態'),
-                             React.createElement('th', {}, '維護編號'),
-                             React.createElement('th', {}, '維護種類'),
+                             React.createElement('th', {}, '保養編號'),
+                             React.createElement('th', {}, '保養種類'),
                              React.createElement('th', {}, '日期'),
                              React.createElement('th', {}, '結構系統'),
                              React.createElement('th', {}, '推進系統'),
@@ -258,7 +338,7 @@ var maintainForm = React.createClass({
 	componentDidMount(){
     	var form = $("#maintainForm_"+this.props.domId+"_sub");    	
     	$.ajax({
-			  url:"/Drone/equipment/ViewEquipmentProcess",
+			  url:"/" +system_name +"/equipment/ViewEquipmentProcess",
 			  type:"POST",
 			  data:{
 				  id : store_obj.equipmentId
@@ -285,7 +365,6 @@ var maintainForm = React.createClass({
 		if(this.state.state!==prevState.state){
 			form.find("#maintainState").val(this.state.state);
 		}
-
 		if(this.state.maintenanceId!==prevState.maintenanceId){
 			if(this.state.maintenanceId==='-'){
     			form.find("#maintenanceIdTD").empty();
@@ -297,8 +376,9 @@ var maintainForm = React.createClass({
     			form.find("input[name*='radio']").button("enable").button("refresh");
     			form.find("input[name*='comment']").val("");	
     		}else{
+    			if(this.state.maintenanceId!=null && this.state.maintenanceId!=''){
     			$.ajax({
-    				url:"/Drone/equipment/ViewMaintenanceByMaintenanceId",
+    				url:"/"+system_name +"/equipment/ViewMaintenanceByMaintenanceId",
     				type:"POST",
     				data:{
     					id : this.state.maintenanceId
@@ -314,6 +394,7 @@ var maintainForm = React.createClass({
 					});
 					window.reverseRadioValue(form,"ma");
 				}})
+    			}
 		   }
 	   }
 	},
@@ -324,6 +405,9 @@ var maintainForm = React.createClass({
 	},
 	render: function() {
         return  React.createElement("form",{ id:"maintainForm_"+this.props.domId+"_sub",className:this.props.extraClass},
+        		React.createElement("div",  { id:"loading_msg",className:'hide-true'},
+        				React.createElement("img",  {src:"../../images/loading.gif", className:"center"}
+        		)),
         		React.createElement("table",  {},
                         React.createElement("tbody",  {},
                             React.createElement("tr",  {},

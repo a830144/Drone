@@ -18,7 +18,7 @@ var updatePersonDialog = React.createClass({
     	$(dialog).dialog({
 			autoOpen : false,
 			height : 500,
-			width : 1000,
+			width : 1200,
 			modal : true,
 			buttons : {
 				"修改人員" : function() {
@@ -27,20 +27,20 @@ var updatePersonDialog = React.createClass({
 	        	  		rules: {
 	        	  			name: {
 	        	  				 required: true,
-	        	  				 maxlength: 10
+	        	  				 maxlength: 30
 	        	  			},
 	        	  			sex: {
 	        	  				 required: true,
 	        	  				 maxlength: 1
 	        	  			},
+	        	  			nationality: {
+	        	  				 required: true,
+	        	  				 maxlength: 30
+	        	  			},
 	        	  			idNumber: {
 	        	  				 required: true,
 	        	  				 maxlength: 10
-	        	  			},
-	        	  			nationality: {
-	        	  				 required: true,
-	        	  				 maxlength: 10
-	        	  			},
+	        	  			},	        	  			
 	        	  			dateOfBirth: {
 	        	  				 required: true,
 	        	  				 maxlength: 10
@@ -48,21 +48,19 @@ var updatePersonDialog = React.createClass({
 	        	  			telephone: {
 	        	  				 required: true,
 	        	  				 minlength: 8,
-	        	  				 maxlength: 10
+	        	  				 maxlength: 15
 	        	  			},
 	        	  			fax: {
-	        	  				 required: true,
 	        	  				 minlength: 8,
-	        	  				 maxlength: 10
+	        	  				 maxlength: 15
 	        	  			},
 	        	  			address: {
-	        	  				 required: true,
 	        	  				 minlength: 3,
-	        	  				 maxlength: 22
+	        	  				 maxlength: 40
 	        	  			},
 	        	  			email: {
 	        	  				 required: true,
-	        	  				 maxlength: 20,
+	        	  				 maxlength: 40,
 	        	  				 email: true
 	        	  			}
 	        	  			
@@ -71,13 +69,14 @@ var updatePersonDialog = React.createClass({
 					if (form.valid()) {
 							var myJson = JSON.stringify($(formName).serializeObject());
 							$.ajax({
-								url : "/Drone/person/UpdatePersonProcess",
+								url : "/"+system_name +"/person/UpdatePersonProcess",
 								type : "POST",
 								data : {
 									"data" : myJson
 								},
 								success : function() {
 									alert('修改成功');
+									reloadQueryPersonAction();
 								}
 							})
 							$(form).find("#person-recentPhoto").val($(form).find("#recentPhoto").val());
@@ -88,7 +87,7 @@ var updatePersonDialog = React.createClass({
 							$.ajax({
 							            type: "POST",
 							            enctype: 'multipart/form-data',
-							            url: "/Drone/other/uploadMultipleFile",
+							            url: "/"+system_name +"/other/uploadMultipleFile",
 							            data: fileData,
 							            processData: false,
 							            contentType: false,

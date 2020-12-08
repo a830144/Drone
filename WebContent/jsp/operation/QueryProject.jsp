@@ -1,8 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 <script>
-$(document).ready(
-		$(function() {
+function prepareQueryDomAction(){
+	$("#query_form").find("#query").button();
+}
+function queryDomFinishState(){
+	window.queryString = $('#query_name').val();
+}
+
+function transferQueryListAction(){
 			var name = $('#query_name').val();
 			var table = $('#single-query-table-1').DataTable( {
 				columnDefs: [
@@ -10,13 +16,13 @@ $(document).ready(
 					    className: 'dt-center',
 					    targets: '_all'
 					}],				
-				"ajax": {  					
-					 "type": "POST",
-			   		 "url": "/Drone/operation/QueryProjectProcess",  
-			   		 "data": {  
-			       		 "name": name  
+				ajax: {  					
+					 type: "POST",
+			   		 url: "/" +system_name +"/operation/QueryProjectProcess",  
+			   		 data: {  
+			       		 name: name  
 			   		 }, 
-		    		 "dataSrc": function ( json ) {
+		    		 dataSrc: function ( json ) {
 		    				var myarray=new Array(json.length);
 			    			for (i=0; i <json.length; i++){
 			    	   			 myarray[i]=new Array(7);
@@ -43,9 +49,13 @@ $(document).ready(
 				}
 
 		});
-		})
-		
-)
+
+}		
+
+function initializeQueryListState(){
+	
+}
+
 function stateMachineInQuery(obj){
 	var buttons='';
 	if(obj.state=="APPROVED"){
@@ -67,6 +77,19 @@ function stateMachineInQuery(obj){
 	buttons=view_btn+update_btn+aerialPlan_btn+aerialActivity_btn+delete_btn;
 	return buttons;
 }
+
+function reloadQueryProjectAction(){
+	var table = $('#single-query-table-1').DataTable();
+	table.destroy();
+	transferQueryListAction();
+}
+
+$(function() {
+	prepareQueryDomAction();
+	queryDomFinishState();
+	transferQueryListAction();
+	initializeQueryListState();
+})
 </script>
 <div id="dialog-query-form" title="查詢">
 	<table id="single-query-table-1" class="display" style="width: 100%">

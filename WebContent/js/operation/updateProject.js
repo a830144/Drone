@@ -27,11 +27,11 @@ var updateProjectDialog = React.createClass({
 							rules: {
 		        	  			name: {
 		        	  				 required: true,
-		        	  				 maxlength: 25
+		        	  				 maxlength: 40
 		        	  			},
 		        	  			company: {
 		        	  				 required: true,
-		        	  				 maxlength: 25
+		        	  				 maxlength: 40
 		        	  			},
 		        	  			telephone: {
 		        	  				 required: true,
@@ -42,7 +42,6 @@ var updateProjectDialog = React.createClass({
 		        	  				 maxlength: 10
 		        	  			},
 		        	  			projectEndDate: {
-		        	  				 required: true,
 		        	  				 maxlength: 10
 		        	  			}
 		        	  			
@@ -51,14 +50,14 @@ var updateProjectDialog = React.createClass({
 						if (form.valid()) {
 							var myJson = JSON.stringify($(formName).serializeObject());
 							$.ajax({
-								url : "/Drone/operation/UpdateProjectProcess",
+								url : "/"+ system_name +"/operation/UpdateProjectProcess",
 								type : "POST",
 								data : {
 									"data" : myJson
 								},
 								success : function() {
 									alert('修改成功');
-									//reloadQueryEquipmentAction();
+									reloadQueryProjectAction();
 								}
 							});
 						$(form).find("#project-areaData").val($(form).find("#areaData").val());
@@ -69,7 +68,7 @@ var updateProjectDialog = React.createClass({
 					    $.ajax({
 							   type: "POST",
 							   enctype: 'multipart/form-data',
-							   url: "/Drone/other/uploadMultipleFile",
+							   url: "/"+ system_name +"/other/uploadMultipleFile",
 							   data: fileData,
 							   processData: false,
 							   contentType: false,

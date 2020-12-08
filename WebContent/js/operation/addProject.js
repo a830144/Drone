@@ -18,7 +18,7 @@ var addProjectDialog = React.createClass({
     	$(dialog).dialog({
 			autoOpen : false,
 			height : 500,
-			width : 1000,
+			width : 1200,
 			modal : true,
 			buttons : {
 				"新增專案" : function() {
@@ -27,11 +27,11 @@ var addProjectDialog = React.createClass({
 	        	  		rules: {
 	        	  			name: {
 	        	  				 required: true,
-	        	  				 maxlength: 25
+	        	  				 maxlength: 40
 	        	  			},
 	        	  			company: {
 	        	  				 required: true,
-	        	  				 maxlength: 25
+	        	  				 maxlength: 40
 	        	  			},
 	        	  			telephone: {
 	        	  				 required: true,
@@ -42,7 +42,6 @@ var addProjectDialog = React.createClass({
 	        	  				 maxlength: 10
 	        	  			},
 	        	  			projectEndDate: {
-	        	  				 required: true,
 	        	  				 maxlength: 10
 	        	  			}
 	        	  			
@@ -51,13 +50,14 @@ var addProjectDialog = React.createClass({
 					if (form.valid()) {
 						var myJson = JSON.stringify($(formName).serializeObject());
 						$.ajax({
-									url : "/Drone/operation/AddProjectProcess",
+									url : "/"+system_name +"/operation/AddProjectProcess",
 									type : "POST",
 									data : {
 										"data" : myJson
 									},
 									success : function() {
 										alert('新增成功');
+										reloadQueryProjectAction();
 									}
 						});
 						
@@ -69,7 +69,7 @@ var addProjectDialog = React.createClass({
 					    $.ajax({
 							   type: "POST",
 							   enctype: 'multipart/form-data',
-							   url: "/Drone/other/uploadMultipleFile",
+							   url: "/"+system_name +"/other/uploadMultipleFile",
 							   data: fileData,
 							   processData: false,
 							   contentType: false,

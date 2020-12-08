@@ -88,8 +88,8 @@ public class PersonController {
 	
 	@RequestMapping(value="/person/LicenseInPersonProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public void licenseInPerson(String data) {
-		personService.licenseInPerson(data);		
+	public String licenseInPerson(String data) {
+		return personService.licenseInPerson(data);		
 	}
 	
 	@RequestMapping(value="/license/CheckLicenseProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
@@ -257,9 +257,9 @@ public class PersonController {
 	
 	@RequestMapping(value="/person/UpdateLicenseInPersonProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public void updateLicenseInPerson(String data) {
+	public String updateLicenseInPerson(String data) {
 		System.out.println("Update License in person");
-		personService.updatePersonLicense(data);	
+		return personService.updatePersonLicense(data);	
 	}
 	
 	@RequestMapping(value="/person/UpdateTrainingInPersonProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")

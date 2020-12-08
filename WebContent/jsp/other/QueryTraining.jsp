@@ -7,7 +7,7 @@
 				$("#queryCodeDiv").hide();
 				$.ajax({  
 					 "type": "POST",
-			   		 "url": "/Drone/other/QueryTrainingProcess",
+			   		 "url": "/" + system_name +"/other/QueryTrainingProcess",
 			   		 "success": function(json) {  
 	                    $("#single-query-training-table-1").empty();
 	                    $("#single-query-training-table-1").append('<thead><tr><th>訓練ID</th><th>訓練名稱</th><th>訓練單位</th><th>訓練類別</th><th>系統功能</th></tr></thead>');

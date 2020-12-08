@@ -29,6 +29,7 @@ var projectDialog = React.createClass({
 		 		}],
 			close : function() {
 				view_obj.removeReactComponent(domId);
+				reloadQueryProjectAction();
 			}
 		});	
     	$(dialog).dialog("open");
@@ -124,7 +125,7 @@ var projectForm = React.createClass({
     	var form = $("#projectForm_"+this.props.domId+"_sub");
     	if(store_obj.projectId!==null && store_obj.projectId!==''){
     		$.ajax({
-    			url:"/Drone/operation/ViewProjectProcess",
+    			url:"/"+ system_name +"/operation/ViewProjectProcess",
     			type:"POST",
     			data:{
     				id : store_obj.projectId
@@ -170,13 +171,13 @@ var projectForm = React.createClass({
                                           "專案名稱"
                                     ),
                                     React.createElement("td",  {}, 
-                                          React.createElement("input",  {id:"name",name:"name"})                  
+                                          React.createElement("input",  {id:"name",name:"name",size:"40",maxLength:"40"})                  
                                     )
                             ),
                             React.createElement("tr",  {},
                                 React.createElement("td",  {},"委託公司"),
                                 React.createElement("td",  {},
-                                    React.createElement("input",  {id:"company",name:"company"})
+                                    React.createElement("input",  {id:"company",name:"company",size:"40",maxLength:"40"})
                                 ),
                                 React.createElement("td",  {},"專案經理"),
                                 React.createElement("td",  {},
@@ -196,7 +197,7 @@ var projectForm = React.createClass({
                             React.createElement("tr",  {},
                                     React.createElement("td",  {},"專案結案成果"),
                                     React.createElement("td",  {},
-                                        React.createElement("textarea",  {id:"result",name:"result",rows:"10", cols:"30" })
+                                        React.createElement("textarea",  {id:"result",name:"result",rows:"10", cols:"50" })
                                     )
                             ),
                             React.createElement("tr",  {},                                   

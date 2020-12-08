@@ -37,13 +37,17 @@
 </script>
 <style>
 /* Basics */
-html, body {
+body {
+	background-image: url('./images/login.png');
+	background-repeat: no-repeat;
+  	background-attachment: fixed;
+  	background-size: 100% 100%;
 	padding: 0;
 	margin: 0;
 	width: 100%;
 	height: 100%;
 	font-family: "Helvetica Neue", Helvetica, sans-serif;
-	background: #FFFFFF;
+	
 }
 
 .logincontent {
@@ -52,9 +56,9 @@ html, body {
 	height: 300px;
 	top: 50%;
 	left: 50%;
-	margin-top: -150px;
-	margin-left: -175px;
-	background: #07A8C3;
+	margin-top: -10px;
+	margin-left: 250px;
+	background: #9999CC;
 	padding-top: 10px;
 }
 
@@ -119,13 +123,13 @@ input[type=checkbox] {
 	font-size: 14px;
 	font-weight: bold;
 	color: #fff;
-	background-color: #07A8C3;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#07A8C3),
+	background-color: #9999CC;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#9999CC),
 		to(#6EE4E8));
-	background-image: -moz-linear-gradient(top left 90deg, #07A8C3 0%, #6EE4E8 100%);
-	background-image: linear-gradient(top left 90deg, #07A8C3 0%, #6EE4E8 100%);
+	background-image: -moz-linear-gradient(top left 90deg, #9999CC 0%, #6EE4E8 100%);
+	background-image: linear-gradient(top left 90deg, #9999CC 0%, #6EE4E8 100%);
 	border-radius: 30px;
-	border: 1px solid #07A8C3;
+	border: 1px solid #9999CC;
 	cursor: pointer;
 }
 
@@ -149,14 +153,16 @@ input[type=checkbox] {
 		}
 
 	%>
-
 	<form id="myForm" method="get" action="" autocomplete="off">
-		<div class="logincontent">
+		<div class="logincontent">		
 			<div class="loginheading">Login</div>
-			<label for="txtUserName"> User name:</label> <input type="text"
-				id="txtUserName" name="txtUserName" value="" /> <label
-				for="txtPassword"> Password:</label> <input type="password"
-				id="txtPassword" name="txtPassword" value="" />
+			<label for="txtUserName"> User name:</label> 
+			<input type="text"
+				id="txtUserName" name="txtUserName" value="" />
+			<label for="txtPassword"> Password:</label> 
+			<input type="password"
+				id="txtPassword" name="txtPassword" value="" /> 
+			
 			<div class="loginremember">
 				<input type="checkbox" id="chbRemember" name="chbRemember" /> <label
 					class="check" for="chbRemember">Remember me next time</label> <input
@@ -170,8 +176,11 @@ input[type=checkbox] {
 			</div>
 		</div>
 	</form>
+	</div>
+	<script>
+	</script>
 	<%
-		String id = request.getParameter("txtUserName");
+	    String id = request.getParameter("txtUserName");
 		String password = request.getParameter("txtPassword");
 
 		if (id != null && password != null) {
@@ -194,10 +203,6 @@ input[type=checkbox] {
 			dispatcher.forward(request,response);
 		} else {
 			try {
-				// db parameters
-				// create a connection to the database
-				//String url = "jdbc:mysql://localhost:3306/autoplane";					
-				//conn = DriverManager.getConnection(url,"root","4688");
 				try {
 	   					System.out.println("Loading driver...");
 						Class.forName("com.mysql.jdbc.Driver");
@@ -205,10 +210,10 @@ input[type=checkbox] {
 					} catch (ClassNotFoundException e) {
 						throw new RuntimeException("Cannot find the driver in the classpath!", e);
 					}
-					String url = "jdbc:mysql://localhost:3306/drone";
+					String url = "jdbc:mysql://localhost:3306/drone1";
 					conn = DriverManager.getConnection(url, "root", "4688");
 
-					String sql = "SELECT user_ID, password FROM users Where username='" + id + "' and password='"
+					String sql = "SELECT user_ID,username, password FROM users Where username='" + id + "' and password='"
 							+ password + "'";
 					Statement stmt = conn.createStatement();
 					ResultSet rs = stmt.executeQuery(sql);
@@ -217,6 +222,8 @@ input[type=checkbox] {
 					if (rs.next()) {
 						out.println(js_display_info_successful);
 						session.setAttribute("login", "true");
+						session.setAttribute("id", rs.getString("user_ID"));
+						session.setAttribute("username", rs.getString("username"));
 						String nextJSP = "/home";
 						RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
 						dispatcher.forward(request, response);

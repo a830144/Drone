@@ -7,7 +7,7 @@
 				$("#queryCodeDiv").hide();
 				$.ajax({  
 					 "type": "POST",
-			   		 "url": "/Drone/other/QueryEventProcess",  
+			   		 "url": "/" + system_name +"/other/QueryEventProcess",  
 			   		 "success": function(json) {            
 	                    $("#single-query-event-table-1").empty();
 	                    $("#single-query-event-table-1").append('<thead><tr><th>事件ID</th><th>事件名稱</th><th>開始時間</th><th>結束時間</th><th>事件描述</th><th>系統功能</th></tr></thead>');

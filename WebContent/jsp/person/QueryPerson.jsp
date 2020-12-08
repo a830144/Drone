@@ -14,13 +14,13 @@ function transferQueryListAction(){
 			    className: 'dt-center',
 			    targets: '_all'
 			}],		
-		"ajax": {  
-			 "type": "POST",
-	   		 "url": "/Drone/person/QueryPersonProcess",  
-	   		 "data": {  
-	       		 "name": 'empty' 
+		ajax: {  
+			 type: "POST",
+	   		 url: "/" +system_name +"/person/QueryPersonProcess",  
+	   		 data: {  
+	       		 name: 'empty' 
 	   		 }, 
-    		 "dataSrc": function ( json ) {
+    		 dataSrc: function ( json ) {
     				var myarray=new Array(json.length);
 	    			for (i=0; i <json.length; i++){
 	    	   			 myarray[i]=new Array(4);
@@ -42,7 +42,7 @@ function transferQueryListAction(){
         			}
 	       			 return myarray;
 	      		},
-        	 "dataType": 'json'
+        	 dataType: 'json'
 		}
 
 });

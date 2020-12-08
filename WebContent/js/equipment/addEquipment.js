@@ -18,72 +18,75 @@ var addEquipmentDialog = React.createClass({
     	$(dialog).dialog({
 			autoOpen : false,
 			height : 500,
-			width : 1000,
+			width : 1200,
 			modal : true,
 			buttons : {
 				"新增設備" : function() {
 					var form = $(formName);
 					var validator =form.validate({
-	        	  		rules: {
+						rules: {
 	        	  			manufactoryName: {
-	        	  				 required: true,
-	        	  				 maxlength: 10
-	        	  			},
-	        	  			productName: {
-	        	  				 required: true,
-	        	  				 maxlength: 10
-	        	  			},
-	        	  			maxWeight: {
-	        	  				 required: true,
-	        	  				 maxlength: 10
-	        	  			},
-	        	  			wingWidth: {
-	        	  				 required: true,
-	        	  				 maxlength: 10
-	        	  			},
-	        	  			equipmentLength: {
-	        	  				 required: true,
-	        	  				 maxlength: 10
-	        	  			},
-	        	  			propulsionSystem: {
-	        	  				 required: true,
-	        	  				 maxlength: 10
-	        	  			},
-	        	  			powerType: {
-	        	  				 required: true,
-	        	  				 maxlength: 20
-	        	  			},
-	        	  			loading: {
-	        	  				 required: true,
-	        	  				maxlength: 10
-	        	  			},
-	        	  			speed: {
-	        	  				 required: true,
-	        	  				 maxlength: 10
-	        	  			},
-	        	  			maxHeight: {
-	        	  				 required: true,
-	        	  				 maxlength: 10
-	        	  			},
-	        	  			airTime: {
-	        	  				 required: true,
-	        	  				 maxlength: 10
-	        	  			},
-	        	  			maxDistance: {
-	        	  				 required: true,
-	        	  				 maxlength: 10
-	        	  			},
-	        	  			antiWind: {
-	        	  				 required: true,
-	        	  				 maxlength: 10
-	        	  			}
+        	  				 	required: true,
+        	  				 	maxlength: 30
+        	  				},
+        	  				productName: {
+        	  				 	required: true,
+        	  				 	maxlength: 30
+        	  				},
+        	  				maxWeight: {
+        	  				 	required: true,
+        	  				 	number: true,
+        	  				 	maxlength: 6
+        	  				},
+        	  				wingWidth: {
+        	  				 	required: true,
+        	  				 	number: true,
+        	  					maxlength: 6
+        	  				},
+        	  				equipmentLength: {
+        	  				 	required: true,
+        	  				 	number: true,
+        	  				 	maxlength: 6
+        	  				},
+        	  				propulsionSystem: {
+        	  				 	required: true,
+        	  				 	maxlength: 10
+        	  				},
+        	  				powerType: {
+        	  				 	required: true,
+        	  				 	maxlength: 20
+        	  				},
+        	  				loading: {
+        	  				 	number: true,
+        	  					maxlength: 6
+        	  				},
+        	  				speed: {
+        	  				 	number: true,
+        	  				 	maxlength: 6
+        	  				},
+        	  				maxHeight: {
+        	  				 	number: true,
+        	  				 	maxlength: 6
+        	  				},
+        	  				airTime: {
+        	  				 	number: true,
+        	  				 	maxlength: 6
+        	  				},
+        	  				maxDistance: {
+        	  				 	number: true,
+        	  					maxlength: 6
+        	  				},
+        	  				antiWind: {
+        	  				 	required: true,
+        	  				 	maxlength: 10
+        	  				}
 	        	  			
 	        	  		}
 	        	    });		
 					if (form.valid()) {
 						var myJson = JSON.stringify($(formName).serializeObject());
 						$.ajax({
-									url : "/Drone/equipment/AddEquipmentProcess",
+									url : "/"+system_name +"/equipment/AddEquipmentProcess",
 									type : "POST",
 									data : {
 										"data" : myJson
@@ -103,7 +106,7 @@ var addEquipmentDialog = React.createClass({
 						$.ajax({
 				            type: "POST",
 				            enctype: 'multipart/form-data',
-				            url: "/Drone/other/uploadMultipleFile",
+				            url: "/"+ system_name +"/other/uploadMultipleFile",
 				            data: fileData,
 				            processData: false,
 				            contentType: false,

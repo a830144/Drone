@@ -167,55 +167,74 @@ public class PersonServiceImpl implements PersonService {
 
 
 	@Override
-	public void licenseInPerson(String jsonString) {
+	public String licenseInPerson(String jsonString) {
 		LicenseInPerson vo = gson.fromJson(jsonString, LicenseInPerson.class);
-		Persons entity_persons = personDao.findById(vo.getPersonId());
-		PersonsLicenses entity_personsLicenses = new PersonsLicenses();
-		PersonsLicensesFlow entity_personsLicensesFlow = gson.fromJson(jsonString, PersonsLicensesFlow.class);
-		entity_personsLicensesFlow.setState(States.PROCESSING);
-		entity_personsLicenses.setPersonsLicensesFlow(entity_personsLicensesFlow);
-		Licenses entity_licenses = licenseDao.findByType(vo.getType());
-		try {
-			BeanUtils.copyProperties(entity_personsLicenses, vo);
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		}
-		entity_persons.getPersonsLicenseses().add(entity_personsLicenses);
-		entity_licenses.getPersonsLicenseses().add(entity_personsLicenses);
-		entity_personsLicenses.setPersons(entity_persons);
-		entity_personsLicenses.setLicenses(entity_licenses);
+		PersonsLicenses entity_personsLicenses = personDao.findLicenseInfo(vo.getPersonId(),
+				Integer.parseInt(vo.getType()));
+		if (entity_personsLicenses != null) {
+			String[] strings = {"error", "此人員已有所選取的工作證"};
+			return gson.toJson(strings);
+		} else {
 
-		personDao.persist(entity_persons);
-		licenseDao.persist(entity_licenses);
+			Persons entity_persons = personDao.findById(vo.getPersonId());
+			entity_personsLicenses = new PersonsLicenses();
+			PersonsLicensesFlow entity_personsLicensesFlow = gson.fromJson(jsonString, PersonsLicensesFlow.class);
+			entity_personsLicensesFlow.setState(States.PROCESSING);
+			entity_personsLicenses.setPersonsLicensesFlow(entity_personsLicensesFlow);
+			Licenses entity_licenses = licenseDao.findByType(vo.getType());
+			try {
+				BeanUtils.copyProperties(entity_personsLicenses, vo);
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}
+			entity_persons.getPersonsLicenseses().add(entity_personsLicenses);
+			entity_licenses.getPersonsLicenseses().add(entity_personsLicenses);
+			entity_personsLicenses.setPersons(entity_persons);
+			entity_personsLicenses.setLicenses(entity_licenses);
+
+			personDao.persist(entity_persons);
+			licenseDao.persist(entity_licenses);
+			
+			String[] strings = {"success", "新增操作證紀錄成功"};
+			return gson.toJson(strings);
+		}
 	}
 	
 	@Override
-	public void updatePersonLicense(String jsonString) {
+	public String updatePersonLicense(String jsonString) {
 		LicenseInPerson vo = gson.fromJson(jsonString, LicenseInPerson.class);
-		PersonsLicenses entity_personslicenses = personDao.findLicenseInfo(vo.getPersonsLicensesId());
-		try {
-			BeanUtils.copyProperties(entity_personslicenses, vo);
-			if(entity_personslicenses.getLicenses().getLicenseId()!=vo.getLicenseId()){
-				Licenses entity_licenses = licenseDao.findById(vo.getLicenseId());
-				entity_personslicenses.setLicenses(entity_licenses);
+		PersonsLicenses entity_personsLicenses = personDao.findLicenseInfo(vo.getPersonId(),
+				Integer.parseInt(vo.getType()));
+		if (entity_personsLicenses != null) {
+			String[] strings = {"error", "您所打算修改的工作證類別,此人員已經擁有"};
+			return gson.toJson(strings);
+		} else {
+			PersonsLicenses entity_personslicenses = personDao.findLicenseInfo(vo.getPersonsLicensesId());
+			try {
+				BeanUtils.copyProperties(entity_personslicenses, vo);
+				if (entity_personslicenses.getLicenses().getLicenseId() != vo.getLicenseId()) {
+					Licenses entity_licenses = licenseDao.findById(vo.getLicenseId());
+					entity_personslicenses.setLicenses(entity_licenses);
+				}
+				if (entity_personslicenses.getPersonsLicensesFlow() != null) {
+					BeanUtils.copyProperties(entity_personslicenses.getPersonsLicensesFlow(), vo);
+				} else {
+					PersonsLicensesFlow entity_personsLicensesFlow = new PersonsLicensesFlow();
+					BeanUtils.copyProperties(entity_personsLicensesFlow, vo);
+					entity_personslicenses.setPersonsLicensesFlow(entity_personsLicensesFlow);
+				}
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
 			}
-			if(entity_personslicenses.getPersonsLicensesFlow()!=null){
-				BeanUtils.copyProperties( entity_personslicenses.getPersonsLicensesFlow(),vo);
-			}else{
-				PersonsLicensesFlow entity_personsLicensesFlow = new PersonsLicensesFlow();
-				BeanUtils.copyProperties( entity_personsLicensesFlow,vo);
-				entity_personslicenses.setPersonsLicensesFlow(entity_personsLicensesFlow);
-			}
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			updatePersonLicenseState(entity_personslicenses, stateMachine.Events.UPDATE);
+			personDao.updatePersonsLicenses(entity_personslicenses);
+			String[] strings = {"success", "修改操作證紀錄成功"};
+			return gson.toJson(strings);
 		}
-		updatePersonLicenseState(entity_personslicenses, stateMachine.Events.UPDATE);
-		personDao.updatePersonsLicenses(entity_personslicenses);
-		
 	}
 
 	@Override

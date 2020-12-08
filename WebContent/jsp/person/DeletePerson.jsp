@@ -15,7 +15,7 @@ function deletePerson(id) {
 	      buttons: {
 	        "刪除人員": function() {
 	        	$.ajax({
-					  url:"/Drone/person/DeletePersonProcess",
+					  url:"/" + system_name +"/person/DeletePersonProcess",
 					  type:"POST",
 					  data:{"id" : id},
 					  success : function() {

@@ -11,7 +11,7 @@
 								"新增訓練" : function() {									
 								var myJson = JSON.stringify($("#add-training-form").serializeObject());
 								$.ajax({
-									url : "/Drone/other/AddTrainingProcess",
+									url : "/" + system_name +"/other/AddTrainingProcess",
 									type : "POST",
 									data : {
 										"data" : myJson

@@ -7,9 +7,9 @@ public interface PersonService {
 
 	public void updatePerson(String jsonString);
 	
-	public void licenseInPerson(String jsonString);
+	public String licenseInPerson(String jsonString);
 	
-	public void updatePersonLicense(String jsonString);
+	public String updatePersonLicense(String jsonString);
 	
 	public void trainingInPerson(String jsonString);
 	

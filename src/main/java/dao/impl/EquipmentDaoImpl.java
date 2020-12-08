@@ -47,7 +47,7 @@ public class EquipmentDaoImpl implements EquipmentDao{
     public List<Equipments> findAll() {
     	
 		Session session = this.sessionFactory.getCurrentSession();
-		List<Equipments> results = (List<Equipments>) session.createQuery("from Equipments e left outer join fetch e.registrations").list();
+		List<Equipments> results = (List<Equipments>) session.createQuery("from Equipments E left outer join fetch E.registrations where E.equipmentFlow.state <> 'DELETED'").list();
         return results;
     }
     @Override

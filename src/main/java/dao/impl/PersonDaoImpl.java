@@ -68,7 +68,7 @@ public class PersonDaoImpl implements PersonDao{
     @SuppressWarnings("unchecked")
     public List<Persons> findAll() {
     	Session session = this.sessionFactory.getCurrentSession();
-        List<Persons> persons = (List<Persons>) session.createQuery("from Persons").list();
+        List<Persons> persons = (List<Persons>) session.createQuery("from Persons as E where E.personFlow.state <> 'DELETED'").list();
         for(int i=0;i<persons.size();i++){
         	Persons entity = persons.get(i);
         	session.detach(entity);
@@ -103,9 +103,9 @@ public class PersonDaoImpl implements PersonDao{
 	public List<Object[]> findLicenseDetail(Integer personId) {
 		// TODO
 		String sql = "SELECT pl.State,l.License_ID,pl.got_Date,c.Code_Content,pl.Persons_Licenses_ID,pl.Construction_Type,"
-				+ " (SELECT code_content FROM drone.code where code.code = pl.Construction_Type"
+				+ " (SELECT code_content FROM code where code.code = pl.Construction_Type"
                 + "  AND code.Code_Type = 'Construction_type') as Construction_Type_name"
-				+ " FROM drone.persons p,drone.persons_licenses pl, drone.licenses l, drone.code c"
+				+ " FROM persons p,persons_licenses pl, licenses l, code c"
 				+ " WHERE p.person_id = pl.Person_ID"
 				+ " and pl.License_ID = l.License_ID" 
 				+ " and l.type = c.code"
@@ -130,7 +130,8 @@ public class PersonDaoImpl implements PersonDao{
 		query.setParameter("searchField2",licenseId);
 		
 		List<PersonsLicenses> results = query.list();
-		return results.get(0);
+		System.out.println("personId:"+personId+";licenseId:"+licenseId+"results.size()::"+results.size());
+		return results.size()>0 ?results.get(0):null;
 	}
 	
 	

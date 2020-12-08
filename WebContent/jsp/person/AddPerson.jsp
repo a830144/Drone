@@ -41,5 +41,5 @@ function addPerson(){
 </script>
 <div id="addPersonDialog_add" title="新增人員" style="display: none;">
 </div>
-<script src="/Drone/js/person/addPerson.js" charset="utf-8"></script>
-<script src="/Drone/js/person/viewPerson.js" charset="utf-8"></script>
+<script src="../../js/person/addPerson.js" charset="utf-8"></script>
+<script src="../../js/person/viewPerson.js" charset="utf-8"></script>

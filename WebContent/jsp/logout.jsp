@@ -9,7 +9,7 @@
 <body>
 <%
 session.invalidate();
-response.sendRedirect("/Drone/index.jsp");
+response.sendRedirect("../index.jsp");
 %>
 </body>
 </html>

@@ -18,32 +18,35 @@ var updateEquipmentDialog = React.createClass({
     	$(dialog).dialog({
 			autoOpen : false,
 			height : 500,
-			width : 1000,
+			width : 1200,
 			modal : true,
 			buttons : {
 				"修改設備" : function() {
 						var form = $(formName);
 						var validator =form.validate({
-	        	  			rules: {
-	        	  				manufactoryName: {
+							rules: {
+		        	  			manufactoryName: {
 	        	  				 	required: true,
-	        	  				 	maxlength: 10
+	        	  				 	maxlength: 30
 	        	  				},
 	        	  				productName: {
 	        	  				 	required: true,
-	        	  				 	maxlength: 10
+	        	  				 	maxlength: 30
 	        	  				},
 	        	  				maxWeight: {
 	        	  				 	required: true,
-	        	  				 	maxlength: 10
+	        	  				 	number: true,
+	        	  				 	maxlength: 6
 	        	  				},
 	        	  				wingWidth: {
 	        	  				 	required: true,
-	        	  					maxlength: 10
+	        	  				 	number: true,
+	        	  					maxlength: 6
 	        	  				},
 	        	  				equipmentLength: {
 	        	  				 	required: true,
-	        	  				 	maxlength: 10
+	        	  				 	number: true,
+	        	  				 	maxlength: 6
 	        	  				},
 	        	  				propulsionSystem: {
 	        	  				 	required: true,
@@ -54,44 +57,50 @@ var updateEquipmentDialog = React.createClass({
 	        	  				 	maxlength: 20
 	        	  				},
 	        	  				loading: {
-	        	  				 	required: true,
-	        	  					maxlength: 10
+	        	  				 	number: true,
+	        	  					maxlength: 6
 	        	  				},
 	        	  				speed: {
-	        	  				 	required: true,
-	        	  				 	maxlength: 10
+	        	  				 	number: true,
+	        	  				 	maxlength: 6
 	        	  				},
 	        	  				maxHeight: {
-	        	  				 	required: true,
-	        	  				 	maxlength: 10
+	        	  				 	number: true,
+	        	  				 	maxlength: 6
 	        	  				},
 	        	  				airTime: {
-	        	  				 	required: true,
-	        	  				 	maxlength: 10
+	        	  				 	number: true,
+	        	  				 	maxlength: 6
 	        	  				},
 	        	  				maxDistance: {
-	        	  				 	required: true,
-	        	  					 maxlength: 10
+	        	  				 	number: true,
+	        	  					maxlength: 6
 	        	  				},
 	        	  				antiWind: {
 	        	  				 	required: true,
 	        	  				 	maxlength: 10
 	        	  				}
-	        	  			
-	        	  			}
+		        	  			
+		        	  		}
 	        	    	});
 						if (form.valid()) {
 							var myJson = JSON.stringify($(formName).serializeObject());
 							$.ajax({
-								url : "/Drone/equipment/UpdateEquipmentProcess",
+								url : "/"+system_name +"/equipment/UpdateEquipmentProcess",
 								type : "POST",
 								data : {
-									"data" : myJson
+									data : myJson
 								},
 								success : function() {
 									alert('修改成功');
-									//reloadQueryEquipmentAction();
-								}
+									reloadQueryEquipmentAction();
+								},
+								beforeSend:function(){
+									$(form).find('#loading_msg').addClass('hide-false').removeClass('hide-true');
+					            },
+					            complete:function(){
+					            	$(form).find('#loading_msg').addClass('hide-true').removeClass('hide-false');
+					            }
 							})
 							
 							var fileData = new FormData();
@@ -104,7 +113,7 @@ var updateEquipmentDialog = React.createClass({
 							$.ajax({
 						         type: "POST",
 						         enctype: 'multipart/form-data',
-						         url: "/Drone/other/uploadMultipleFile",
+						         url: "/" +system_name +"/other/uploadMultipleFile",
 						         data: fileData,
 						         processData: false,
 						         contentType: false,
@@ -118,7 +127,7 @@ var updateEquipmentDialog = React.createClass({
 						          }
 						     });
 							//reloadQueryEquipmentAction();
-							$(this).dialog("close");
+							//$(this).dialog("close");
 							}
 						},
 						"關閉" : function() {

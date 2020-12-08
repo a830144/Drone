@@ -18,11 +18,15 @@ var modify_obj = {
 			
 			container = document.getElementById('modifyList_'+action);
 			modify_obj.modifyList = ReactDOM.render(React.createElement(modifyList, {domId:action}), container);
+			action_obj.modifyList_select_Action_subscribe(modify_obj.modifyList);
+			action_obj.modifyList_deselect_Action_subscribe(modify_obj.modifyList);
+			action_obj.updateButton_click_Action_subscribe(modify_obj.modifyList);
 			
 			container = document.getElementById('modifyForm_'+action);
 			modify_obj.modifyForm = ReactDOM.render(React.createElement(modifyForm, {domId:action}), container);
 			action_obj.modifyList_select_Action_subscribe(modify_obj.modifyForm);
 			action_obj.modifyList_deselect_Action_subscribe(modify_obj.modifyForm);
+			action_obj.updateButton_click_Action_subscribe(modify_obj.modifyForm);
 		},
 		removeReactComponent : function (action){
 			var container = document.getElementById('modifyForm_'+action);
@@ -40,6 +44,15 @@ var modify_obj = {
 			action_obj.checkButton_click_Action_handler = [];
 			action_obj.approveButton_click_Action_handler = [];
 			action_obj.rejectButton_click_Action_handler = [];
+			action_obj.updateButton_click_Action_handler = [];
+			
+			Object.keys(store_obj).forEach(function(index) {
+				if(typeof store_obj[index] !='object'){
+					store_obj[index] = '';
+				}else{
+					store_obj[index] = {};
+				}
+		    });
 		},		
 };
 
@@ -50,6 +63,6 @@ function modifyEquipment(id){
 </script>
 <div id="modifyDialog_modify" title="設備維護" style="display: none;">
 </div>
-<script src="/Drone/js/equipment/modify.js" charset="utf-8"></script>
+<script src="../../js/equipment/modify.js" charset="utf-8"></script>
 
 

@@ -12,19 +12,19 @@
 
 		//redirect user to login page if not logged in
 		if (login == null) {
-			response.sendRedirect("/Drone/index.jsp");
+			response.sendRedirect("./index.jsp");
 		}
 	%>
 
 
 
-<frameset rows="6%,88%,6%">
-<frame src="/Drone/jsp/header.jsp" name="header" id="header">
+<frameset rows="18%,82%">
+<frame src="./jsp/header.jsp" name="header" id="header">
 <frameset cols="10%,90%">
-<frame src="/Drone/jsp/menu.jsp" name="menu" id="menu">
-<frame src="/Drone/jsp/content.jsp" name="_content" id="_content">
+<frame src="./jsp/menu.jsp" name="menu" id="menu">
+<frame src="./jsp/content.jsp" name="_content" id="_content">
 </frameset>
-<frame src="/Drone/jsp/footer.jsp" name="footer" id="footer">
+
 </frameset> 
 
 </html>

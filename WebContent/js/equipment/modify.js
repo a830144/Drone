@@ -15,6 +15,7 @@ var modifyDialog = React.createClass({
     	var dialog = "#modifyDialog_"+this.props.domId+"_sub";
     	var formName = "#modifyForm_"+this.props.domId+"_sub";
     	var domId = this.props.domId;
+    	var typeId = this.props.domId;
     	$(dialog).dialog({
 			autoOpen : false,
 			height : 750,
@@ -47,14 +48,30 @@ var modifyDialog = React.createClass({
 				        		  obj.modificationPerson = $(form).find("#modificationPerson").val();
 				        		  var myJson = JSON.stringify(obj);
 				        		  $.ajax({
-				        			  url : "/Drone/equipment/UpdateModifyEquipmentProcess",
+				        			  url : "/"+ system_name +"/equipment/UpdateModifyEquipmentProcess",
 				        			  type : "POST",
 				        			  data : {
 				        				  data : myJson
 				        			  },
 				        			  success : function() {
 				        				  alert('修改改裝紀錄成功');
-				        			  }
+				        				  store_obj.modify["modificationDate"]=$(form).find("#modificationDate").val();
+										  store_obj.modify["modificationPerson"]=$(form).find("#modificationPerson").val();
+											
+										  store_obj.modify["airframe"]=$(form).find("input[name='airframe']").val();
+										  store_obj.modify["propulsion"]=$(form).find("input[name='propulsion']").val();
+										  store_obj.modify["battery"]=$(form).find("input[name='battery']").val();
+										  store_obj.modify["controller"]=$(form).find("input[name='controller']").val();
+										  store_obj.modify["payload"]=$(form).find("input[name='payload']").val();
+										  store_obj.modify["other"]=$(form).find("input[name='other']").val();
+				        				  action_obj.updateButton_click_Action(typeId);
+				        			  },
+				        			  beforeSend:function(){
+										  $(form).find('#loading_msg').addClass('hide-false').removeClass('hide-true');
+							          },
+							          complete:function(){
+							              $(form).find('#loading_msg').addClass('hide-true').removeClass('hide-false');
+							          }
 				        		  });
 				        		  
 				        		  window.fileValue(form);
@@ -64,7 +81,7 @@ var modifyDialog = React.createClass({
 								  $.ajax({
 								            type: "POST",
 								            enctype: 'multipart/form-data',
-								            url: "/Drone/other/uploadMultipleFile",
+								            url: "/" +system_name +"/other/uploadMultipleFile",
 								            data: fileData,
 								            processData: false,
 								            contentType: false,
@@ -106,14 +123,20 @@ var modifyDialog = React.createClass({
 				        		  obj.modificationPerson = $(form).find("#modificationPerson").val();
 				        		  var myJson = JSON.stringify(obj);
 				        		  $.ajax({
-				        			  url : "/Drone/equipment/ModifyEquipmentProcess",
+				        			  url : "/" + system_name +"/equipment/ModifyEquipmentProcess",
 				        			  type : "POST",
 				        			  data : {
 				        				  data : myJson
 				        			  },
 				        			  success : function() {
 				        				  alert('新增改裝紀錄成功');
-				        			  }
+				        			  },
+				        			  beforeSend:function(){
+										  $(form).find('#loading_msg').addClass('hide-false').removeClass('hide-true');
+							          },
+							          complete:function(){
+							              $(form).find('#loading_msg').addClass('hide-true').removeClass('hide-false');
+							          }
 				        		  })
 				        	  };
 				        	  
@@ -124,7 +147,7 @@ var modifyDialog = React.createClass({
 							  $.ajax({
 							            type: "POST",
 							            enctype: 'multipart/form-data',
-							            url: "/Drone/other/uploadMultipleFile",
+							            url: "/"+system_name +"/other/uploadMultipleFile",
 							            data: fileData,
 							            processData: false,
 							            contentType: false,
@@ -183,10 +206,28 @@ var modifyDialog = React.createClass({
 var modifyList = React.createClass({
 	getInitialState: function() {
         return {
+        	state:undefined,
+        	modificationDate:'',
+    		modificationPerson:'',
+    		airframe:'',
+    		propulsion:'',
+    		battery:'',
+    		controller:'',
+    		payload:'',
+    		other:''
         };
     },
-    notify: function(obj){
-    	this.setState({  
+    notify: function(obj){    	
+    	this.setState({ 
+    		state:obj.state["modify"],    		
+    		modificationDate:obj.modify["modificationDate"],
+    		modificationPerson:obj.modify["modificationPerson"],
+    		airframe:obj.modify["airframe"],
+    		propulsion:obj.modify["propulsion"],
+    		battery:obj.modify["battery"],
+    		controller:obj.modify["controller"],
+    		payload:obj.modify["payload"],
+    		other:obj.modify["other"]
     	});
     },
 	componentDidMount(){
@@ -203,7 +244,7 @@ var modifyList = React.createClass({
 	        scrollCollapse: true,		
 			ajax: {
 				type: "POST",
-			    url: "/Drone/equipment/ViewModification",  
+			    url: "/"+system_name +"/equipment/ViewModification",  
 			    data: {  
 			        id: store_obj.equipmentId 
 			    }, 
@@ -250,7 +291,50 @@ var modifyList = React.createClass({
 		});
 	},
 	componentDidUpdate(prevProps, prevState){
-	      
+		var tableName = "#modifyList_"+this.props.domId+"_sub";
+    	var table = $(tableName).DataTable();
+		if(this.state.state!==prevState.state){
+			if(this.state.state!=null && this.state.state!=undefined && this.state.state!=''){
+				var row = table.row('.selected');
+				var cell = table.cell( row ,0);
+				cell.data(this.state.state).draw();
+			}
+		}
+		if(this.state.state==='PROCESSING'){
+			
+			if(this.state.modificationDate!=null && this.state.modificationDate!=''){
+				var cell = table.cell( row ,2);				
+				cell.data(this.state.modificationDate).draw();
+			}			
+			if(this.state.modificationPerson!=null && this.state.modificationPerson!=''){
+				var cell = table.cell( row ,3);
+				cell.data(this.state.modificationPerson).draw();
+			}
+			if(this.state.airframe!=null && this.state.airframe!=''){
+				var cell = table.cell( row ,4);
+				cell.data(this.state.airframe).draw();
+			}
+			if(this.state.propulsion!=null && this.state.propulsion!=''){
+				var cell = table.cell( row ,5);
+				cell.data(this.state.propulsion).draw();
+			}
+			if(this.state.battery!=null && this.state.battery!=''){
+				var cell = table.cell( row ,6);
+				cell.data(this.state.battery).draw();
+			}
+			if(this.state.controller!=null && this.state.controller!=''){
+				var cell = table.cell( row ,7);
+				cell.data(this.state.controller).draw();
+			}
+			if(this.state.payload!=null && this.state.payload!=''){
+				var cell = table.cell( row ,8);
+				cell.data(this.state.payload).draw();
+			}
+			if(this.state.other!=null && this.state.other!=''){
+				var cell = table.cell( row ,9);
+				cell.data(this.state.other).draw();
+			}
+		}
 	},
     componentWillUnmount(){
 	        $("#modifyList_"+this.props.domId+"_sub").unbind( "select" );
@@ -262,9 +346,9 @@ var modifyList = React.createClass({
                     React.createElement("thead",  {},
                          React.createElement("tr",  {},
                              React.createElement('th', {}, '狀態'),
-                             React.createElement('th', {}, '維護編號'),
-                             React.createElement('th', {}, '維護種類'),
-                             React.createElement('th', {}, '日期'),
+                             React.createElement('th', {}, '改裝編號'),
+                             React.createElement('th', {}, '改裝日期'),
+                             React.createElement('th', {}, '改裝人員'),
                              React.createElement('th', {}, '結構系統'),
                              React.createElement('th', {}, '推進系統'),
                              React.createElement('th', {}, '動力系統'),
@@ -294,7 +378,7 @@ var modifyForm = React.createClass({
 	componentDidMount(){
     	var form = $("#modifyForm_"+this.props.domId+"_sub");    	
     	$.ajax({
-			  url:"/Drone/equipment/ViewEquipmentProcess",
+			  url:"/"+system_name +"/equipment/ViewEquipmentProcess",
 			  type:"POST",
 			  data:{
 				  id : store_obj.equipmentId
@@ -330,8 +414,9 @@ var modifyForm = React.createClass({
     			form.find("input[name*='radio']").button("enable").button("refresh");
     			form.find("input[name*='comment']").val("");	
     		}else{
+    			if(this.state.modificationId!=null && this.state.modificationId!=''){
     			$.ajax({
-    				url:"/Drone/equipment/ViewModificationByModificationId",
+    				url:"/"+system_name +"/equipment/ViewModificationByModificationId",
     				type:"POST",
     				data:{
     					id : this.state.modificationId
@@ -348,6 +433,7 @@ var modifyForm = React.createClass({
     					window.reverseRadioValue(form,"mo");
     				}
     			})
+    			}
 		   }
 	   }
 	},
@@ -357,7 +443,10 @@ var modifyForm = React.createClass({
     	form.find("input[name*='radio']").checkboxradio("destroy");  
 	},
 	render: function() {
-        return  React.createElement("form",{ id:"modifyForm_"+this.props.domId+"_sub" ,className:this.props.extraClass},               
+        return  React.createElement("form",{ id:"modifyForm_"+this.props.domId+"_sub" ,className:this.props.extraClass},
+        		React.createElement("div",  { id:"loading_msg",className:'hide-true'},
+        				React.createElement("img",  {src:"../../images/loading.gif", className:"center"}
+        		)),
         		React.createElement("table",  {},
                         React.createElement("tbody",  {},
                             React.createElement("tr",  {},

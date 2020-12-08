@@ -41,5 +41,5 @@ function updateProject(id){
 </script>
 <div id="updateProjectDialog_update" title="修改設備" style="display: none;">
 </div>
-<script src="/Drone/js/operation/updateProject.js" charset="utf-8"></script>
-<script src="/Drone/js/operation/viewProject.js" charset="utf-8"></script>
+<script src="../../js/operation/updateProject.js" charset="utf-8"></script>
+<script src="../../js/operation/viewProject.js" charset="utf-8"></script>

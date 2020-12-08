@@ -29,6 +29,7 @@ var equipmentDialog = React.createClass({
 		 		}],
 			close : function() {
 				view_obj.removeReactComponent(domId);
+				reloadQueryEquipmentAction();
 			}
 		});	
     	$(dialog).dialog("open");
@@ -124,7 +125,7 @@ var equipmentForm = React.createClass({
     	var form = $("#equipmentForm_"+this.props.domId+"_sub");
     	if(store_obj.equipmentId!==null && store_obj.equipmentId!==''){
     		$.ajax({
-    			url:"/Drone/equipment/ViewEquipmentProcess",
+    			url:"/" + system_name +"/equipment/ViewEquipmentProcess",
     			type:"POST",
     			data:{
     				id : store_obj.equipmentId
@@ -153,6 +154,9 @@ var equipmentForm = React.createClass({
    
     render: function() {
         return  React.createElement("form",{ id:"equipmentForm_"+this.props.domId+"_sub" , className : this.props.extraClass},
+        		React.createElement("div",  { id:"loading_msg",className:'hide-true'},
+        				React.createElement("img",  {src:store_obj.loading, className:"center"}
+        		)),
         		React.createElement("table",  {},
                         React.createElement("tbody",  {},
                             React.createElement("tr",  {},
@@ -185,7 +189,7 @@ var equipmentForm = React.createClass({
                                     ),
                                     React.createElement("td",  {},"最大起飛重量"),
                                     React.createElement("td",  {},
-                                    	React.createElement("input",  {type :"number",id:"maxWeight",name:"maxWeight"})
+                                    	React.createElement("input",  {type :"text",id:"maxWeight",name:"maxWeight",size:"6",maxLength:"6"}),"kg"
                                     )
                             ),
                             React.createElement("tr",  {},                                   
@@ -196,54 +200,71 @@ var equipmentForm = React.createClass({
                                     )
                             ),
                             React.createElement("tr",  {},
-                                    React.createElement("td",  {},"翼展"),
+                                    React.createElement("td",  {},"翼展(主旋翼直徑、軸距)"),
                                     React.createElement("td",  {},
-                                        React.createElement("input",  {type: "number" ,id:"wingWidth",name:"wingWidth"})
+                                        React.createElement("input",  {type: "text" ,id:"wingWidth",name:"wingWidth",size:"6",maxLength:"6"}),"m"
                                     ),
                                     React.createElement("td",  {},"長度"),
                                     React.createElement("td",  {},
-                                    	React.createElement("input",  {type: "number" ,id:"equipmentLength",name:"equipmentLength"})
+                                    	React.createElement("input",  {type: "text" ,id:"equipmentLength",name:"equipmentLength",size:"6",maxLength:"6"}),"m"
                                     )
                             ),
                             React.createElement("tr",  {},
                                     React.createElement("td",  {},"推進系統"),
                                     React.createElement("td",  {},
-                                        React.createElement("input",  {id:"propulsionSystem",name:"propulsionSystem"})
+                                        React.createElement("select",  {id:"propulsionSystem",name:"propulsionSystem"},
+                                        		React.createElement("option",  {value:"電池"},"電池"),
+                                        		React.createElement("option",  {value:"燃油"},"燃油"),
+                                        		React.createElement("option",  {value:"木精"},"木精"),
+                                        		React.createElement("option",  {value:"其他"},"其他")
+                                        )
                                     ),
                                     React.createElement("td",  {},"動力系統"),
                                     React.createElement("td",  {},
-                                    	React.createElement("input",  {id:"powerType",name:"powerType"})
+                                    	React.createElement("select",  {id:"powerType",name:"powerType"},
+                                        		React.createElement("option",  {value:"螺旋槳"},"螺旋槳"),
+                                        		React.createElement("option",  {value:"噴氣式"},"噴氣式")
+                                        )
                                     )
                             ),
                             React.createElement("tr",  {},
                                     React.createElement("td",  {},"有效荷載"),
                                     React.createElement("td",  {},
-                                        React.createElement("input",  {type: "number" ,id:"loading",name:"loading"})
+                                        React.createElement("input",  {type: "text" ,id:"loading",name:"loading",size:"6",maxLength:"6"}),"kg"
                                     ),
                                     React.createElement("td",  {},"巡航速度"),
                                     React.createElement("td",  {},
-                                    	React.createElement("input",  {type: "number" ,id:"speed",name:"speed"})
+                                    	React.createElement("input",  {type: "text" ,id:"speed",name:"speed",size:"6",maxLength:"6"}),"m/s"
                                     )
                             ),
                             React.createElement("tr",  {},
                                     React.createElement("td",  {},"最大航高"),
                                     React.createElement("td",  {},
-                                        React.createElement("input",  {type: "number" ,id:"maxHeight",name:"maxHeight"})
+                                        React.createElement("input",  {type: "text" ,id:"maxHeight",name:"maxHeight",size:"6",maxLength:"6"}),"m"
                                     ),
                                     React.createElement("td",  {},"滯空時間"),
                                     React.createElement("td",  {},
-                                    	React.createElement("input",  {type: "number" ,id:"airTime",name:"airTime"})
+                                    	React.createElement("input",  {type: "text" ,id:"airTime",name:"airTime",size:"6",maxLength:"6"}),"min"
                                     )
                             ),
                             React.createElement("tr",  {},
                                     React.createElement("td",  {},"最大航程"),
                                     React.createElement("td",  {},
-                                        React.createElement("input",  {type: "number" ,id:"maxDistance",name:"maxDistance"})
+                                        React.createElement("input",  {type: "text" ,id:"maxDistance",name:"maxDistance",size:"6",maxLength:"6"}),"km"
                                     ),
-                                    React.createElement("td",  {},"抗風能力"),
+                                    React.createElement("td",  {},"抗風能力"),                       
                                     React.createElement("td",  {},
-                                    	React.createElement("input",  {type: "number" ,id:"antiWind",name:"antiWind"})
+                                    React.createElement("select",  {id:"antiWind",name:"antiWind"},
+                                    		React.createElement("option",  {value:"1"},"1"),
+                                    		React.createElement("option",  {value:"2"},"2"),
+                                    		React.createElement("option",  {value:"3"},"3"),
+                                    		React.createElement("option",  {value:"4"},"4"),
+                                    		React.createElement("option",  {value:"5"},"5"),
+                                    		React.createElement("option",  {value:"6"},"6"),
+                                    		React.createElement("option",  {value:"7"},"7"),
+                                    		React.createElement("option",  {value:"8"},"8")
                                     )
+                                )
                             ),
                             React.createElement("tr",  {},
                             		React.createElement("td",  {},"其他附註"),

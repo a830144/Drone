@@ -19,7 +19,9 @@ var view_obj = {
 			view_obj.tabs = ReactDOM.render(React.createElement(projectTabs, {domId:action}), container);							
 			
 			container = document.getElementById('stateButtons_project');
-			view_obj.stateButtons_project = ReactDOM.render(React.createElement(stateButtons, {domId:action,typeId:"project",domIdCN:"專案"}), container);
+			var iamList = "<%=(String)session.getAttribute("作業管理")%>".split(",");
+			var iamObj = checkIAM(iamList);	
+			view_obj.stateButtons_project = ReactDOM.render(React.createElement(stateButtons, {domId:action,typeId:"project",domIdCN:"專案",canCheck:iamObj.canCheck,canApprove:iamObj.canApprove,canReject:iamObj.canReject}), container);
 			action_obj.projectForm_load_Action_subscribe(view_obj.stateButtons_project);
 			
 			container = document.getElementById('projectForm_'+action);
@@ -32,7 +34,9 @@ var view_obj = {
 			view_obj.aerialPlanList = ReactDOM.render(React.createElement(aerialPlanList, {domId:action}), container);
 			
 			container = document.getElementById('stateButtons_aerialPlan');
-			view_obj.stateButtons_aerialPlan = ReactDOM.render(React.createElement(stateButtons, {domId:action,typeId:"aerialPlan",domIdCN:"航拍計畫紀錄"}), container);
+			var iamList = "<%=(String)session.getAttribute("航拍計畫")%>".split(",");
+			var iamObj = checkIAM(iamList);
+			view_obj.stateButtons_aerialPlan = ReactDOM.render(React.createElement(stateButtons, {domId:action,typeId:"aerialPlan",domIdCN:"航拍計畫紀錄",canCheck:iamObj.canCheck,canApprove:iamObj.canApprove,canReject:iamObj.canReject}), container);
 			action_obj.aerialPlanList_select_Action_subscribe(view_obj.stateButtons_aerialPlan);
 			action_obj.aerialPlanList_deselect_Action_subscribe(view_obj.stateButtons_aerialPlan); 
 			
@@ -48,7 +52,9 @@ var view_obj = {
 			view_obj.aerailActivityList = ReactDOM.render(React.createElement(aerialActivityList, {domId:action}), container);
 						
 			container = document.getElementById('stateButtons_aerialActivity');
-			view_obj.stateButtons_aerialActivity = ReactDOM.render(React.createElement(stateButtons, {domId:action,typeId:"aerialActivity",domIdCN:"航拍活動紀錄"}), container);
+			var iamList = "<%=(String)session.getAttribute("航拍活動")%>".split(",");
+			var iamObj = checkIAM(iamList);
+			view_obj.stateButtons_aerialActivity = ReactDOM.render(React.createElement(stateButtons, {domId:action,typeId:"aerialActivity",domIdCN:"航拍活動紀錄",canCheck:iamObj.canCheck,canApprove:iamObj.canApprove,canReject:iamObj.canReject}), container);
 			action_obj.aerialActivityList_select_Action_subscribe(view_obj.stateButtons_aerialActivity);
 			action_obj.aerialActivityList_deselect_Action_subscribe(view_obj.stateButtons_aerialActivity); 
 			
@@ -121,11 +127,11 @@ function viewProject(id){
 </script>
 <div id="projectDialog_view" title="檢視專案" style="display: none;">
 </div>
-<script src="/Drone/js/operation/viewProject.js" charset="utf-8"></script>
-<script src="/Drone/js/operation/aerialPlan.main.js" charset="utf-8"></script>
-<script src="/Drone/js/operation/aerialPlan.form.js" charset="utf-8"></script>
-<script src="/Drone/js/operation/aerialPlan.steps.js" charset="utf-8"></script>
-<script src="/Drone/js/operation/aerialActivity.main.js" charset="utf-8"></script>
-<script src="/Drone/js/operation/aerialActivity.form.js" charset="utf-8"></script>
-<script src="/Drone/js/operation/aerialActivity.steps.js" charset="utf-8"></script>
-<script src="/Drone/js/common/stateButtons.js" charset="utf-8"></script>
+<script src="../../js/operation/viewProject.js" charset="utf-8"></script>
+<script src="../../js/operation/aerialPlan.main.js" charset="utf-8"></script>
+<script src="../../js/operation/aerialPlan.form.js" charset="utf-8"></script>
+<script src="../../js/operation/aerialPlan.steps.js" charset="utf-8"></script>
+<script src="../../js/operation/aerialActivity.main.js" charset="utf-8"></script>
+<script src="../../js/operation/aerialActivity.form.js" charset="utf-8"></script>
+<script src="../../js/operation/aerialActivity.steps.js" charset="utf-8"></script>
+<script src="../../js/common/stateButtons.js" charset="utf-8"></script>

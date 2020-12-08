@@ -5,32 +5,30 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>人員管理</title>
-<!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css"> -->
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<!-- <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css"> -->
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.css"/>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.0/css/select.dataTables.min.css"/>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css"/>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.1.4/css/fixedHeader.dataTables.css"/>
-<link rel="stylesheet" href="/Drone/css/normalize.css">
-<link rel="stylesheet" href="/Drone/css/main.css">
-<link rel="stylesheet" href="/Drone/css/jquery.steps.css">
+<link rel="stylesheet" href="../../css/normalize.css">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../css/jquery.steps.css">
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <script type="text/javascript"  src=" https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript"  src="https://cdn.datatables.net/select/1.3.0/js/dataTables.select.min.js"></script>
 <script type="text/javascript"  src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.1.4/js/dataTables.fixedHeader.js"></script>
-<script src="/Drone/js/jquery.steps.min.js"></script>
-<script src="/Drone/js/jquery.steps.js"></script>
-<script src="/Drone/js/modernizr-2.6.2.min.js"></script>
-<script src="/Drone/js/jquery.cookie-1.3.1.js"></script>
-<script src="/Drone/js/react.js"></script>
-<script src="/Drone/js/react-dom.js"></script>
-<script src="/Drone/js/common/action.js" charset="utf-8"></script>
-<script src="/Drone/js/common/store.js" charset="utf-8"></script>
-<script src="/Drone/js/jquery.validate.min.js"></script>
-<script src="/Drone/js/additional-methods.min.js"></script>
+<script src="../../js/jquery.steps.min.js"></script>
+<script src="../../js/jquery.steps.js"></script>
+<script src="../../js/modernizr-2.6.2.min.js"></script>
+<script src="../../js/jquery.cookie-1.3.1.js"></script>
+<script src="../../js/react.js"></script>
+<script src="../../js/react-dom.js"></script>
+<script src="../../js/common/action.js" charset="utf-8"></script>
+<script src="../../js/common/store.js" charset="utf-8"></script>
+<script src="../../js/jquery.validate.min.js"></script>
+<script src="../../js/additional-methods.min.js"></script>
 <style type="text/css">
 table.dataTable thead th {
 	  white-space: nowrap
@@ -47,9 +45,52 @@ table.dataTable thead th {
     overflow:auto;
 }
 
+pre{
+	display:block;
+	font:100% "Courier New", Courier, monospace;
+	padding:10px;
+	border:1px solid #bae2f0;
+	background:#e3f4f9;	
+	margin:.5em 0;
+	overflow:auto;
+	width:800px;
+}
+
+img{border:none;}
+ul,li{
+	margin:0;
+	padding:0;
+}
+li{
+	list-style:none;
+	float:left;
+	display:inline;
+	margin-right:10px;
+}
+
+
+
+/*  */
+
+#screenshot{
+	position:absolute;
+	border:1px solid #ccc;
+	background:#333;
+	padding:5px;
+	display:none;
+	color:#fff;
+	}
+
+/*  */
+
+
 </style>
 <script>
-
+	$(function () {
+		$("#help").tooltip({
+	       content: '<img src="../../images/state.jpg" />'
+	   	});
+	});
 	window.alert = function(message) {
 		$(document.createElement('div')).attr({
 			title : 'Alert',
@@ -84,6 +125,28 @@ table.dataTable thead th {
 		});
 		return o;
 	};
+	
+	function checkIAM(iamList){				
+		var obj = {
+			canCheck : false,
+			canApprove : false,
+			canReject : false,	
+		};
+		for(var i =0;i<iamList.length;i++){
+			if(iamList[i]==="CHECK"){
+				obj.canCheck = true;
+			};
+			if(iamList[i]==="APPROVE"){
+				obj.canApprove = true;
+			};
+			if(iamList[i]==="REJECT"){
+				obj.canReject = true;
+			};
+		}
+		return obj;
+	};
+	
+	
 
 	$(document).ready(function() {
 		$("#addDiv").load("./AddPerson.jsp");
@@ -120,12 +183,9 @@ table.dataTable thead th {
 </script>
 </head>
 <body>
+	
 	<button id="add" name="add" class="ui-button ui-corner-all ui-widget">新增人員</button>
-	<button id="query" name="query" class="ui-button ui-corner-all ui-widget">查詢人員</button>
-	<form id="query_form">
-		<input type="text" name="query_name" id="query_name"
-			class="text ui-widget-content ui-corner-all">
-	</form>
+	<a id="help" href="#" title=''>線上說明</a>
 	<div id="addDiv"></div>
 	<div id="queryDiv"></div>
 	<div id="viewDiv"></div>

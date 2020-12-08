@@ -12,7 +12,7 @@
 				$("#queryCodeDiv").show();
 				$.ajax({  
 					 "type": "POST",
-			   		 "url": "/Drone/other/QueryCodeProcess",
+			   		 "url": "/" + system_name +"/other/QueryCodeProcess",
 			   		 "success": function(json) {  
 	                    $("#single-query-code-table-1").empty();
 	                    $("#single-query-code-table-1").append('<thead><tr><th>CODE ID</th><th>NODE ID</th><th>TYPE</th><th>CODE</th><th>CONTENT</th><th>PARENT NODE ID</th><th>操作</th></tr></thead>');

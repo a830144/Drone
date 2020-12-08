@@ -55,7 +55,7 @@ var aerialActivity_obj = {
 			  console.log(myJson);
 			  $.ajax({
 				 type : "POST", 
-				 url : action==='update'?"/Drone/operation/UpdateAerialActivityProcess":"/Drone/operation/AddAerialActivityProcess",
+				 url : action==='update'? "/" + system_name +"/operation/UpdateAerialActivityProcess": "/" + system_name +"/operation/AddAerialActivityProcess",
 				 data : {
 						data : myJson
 				 },
@@ -83,6 +83,9 @@ var aerialActivity_obj = {
 			
 			container = document.getElementById('aerialActivityList_'+action);
 			aerialActivity_obj.aerialActivityList = ReactDOM.render(React.createElement(aerialActivityList, {domId:action}), container);
+			action_obj.aerialActivityList_select_Action_subscribe(aerialActivity_obj.aerialActivityList);
+			action_obj.aerialActivityList_deselect_Action_subscribe(aerialActivity_obj.aerialActivityList);
+			action_obj.updateButton_click_Action_subscribe(aerialActivity_obj.aerialActivityList);
 			
 			container = document.getElementById('aerialActivityTabs_'+action);
 			aerialActivity_obj.tabs = ReactDOM.render(React.createElement(aerialActivityTabs, {domId:action}), container);				
@@ -99,6 +102,7 @@ var aerialActivity_obj = {
 			aerialActivity_obj.aerialActivityForm = ReactDOM.render(React.createElement(aerialActivityForm, {domId:action,projectId:store_obj.projectId}), container); 
 			action_obj.aerialActivityList_select_Action_subscribe(aerialActivity_obj.aerialActivityForm);
 			action_obj.aerialActivityList_deselect_Action_subscribe(aerialActivity_obj.aerialActivityForm);
+			action_obj.updateButton_click_Action_subscribe(aerialActivity_obj.aerialActivityForm);
 			
 			container = document.getElementById('aerialActivitySteps_'+action);
 			aerialActivity_obj.steps = ReactDOM.render(React.createElement(aerialActivitySteps, {domId:action}), container);
@@ -156,7 +160,9 @@ var aerialActivity_obj = {
 			
 			Object.keys(store_obj).forEach(function(index) {
 				if(typeof store_obj[index] !='object'){
-					store_obj[index] = null
+					store_obj[index] = '';
+				}else{
+					store_obj[index] = {};
 				}
 		    });
 
@@ -170,6 +176,6 @@ function aerialActivity(id){
 </script>
 <div id="aerialActivityDialog_aerialActivity" title="檢視航拍活動資料" style="display: none;">
 </div>
-<script src="/Drone/js/operation/aerialActivity.main.js" charset="utf-8"></script>
-<script src="/Drone/js/operation/aerialActivity.form.js" charset="utf-8"></script>
-<script src="/Drone/js/operation/aerialActivity.steps.js" charset="utf-8"></script>
+<script src="../../js/operation/aerialActivity.main.js" charset="utf-8"></script>
+<script src="../../js/operation/aerialActivity.form.js" charset="utf-8"></script>
+<script src="../../js/operation/aerialActivity.steps.js" charset="utf-8"></script>

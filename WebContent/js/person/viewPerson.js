@@ -29,6 +29,7 @@ var personDialog = React.createClass({
 		 		}],
 			close : function() {
 				view_obj.removeReactComponent(domId);
+				reloadQueryPersonAction();
 			}
 		});	
     	$(dialog).dialog("open");
@@ -132,7 +133,7 @@ var personForm = React.createClass({
     	var form = $("#personForm_"+this.props.domId+"_sub");
     	if(store_obj.personId!==null && store_obj.personId!==''){
     		$.ajax({
-    			url:"/Drone/person/ViewPersonProcess",
+    			url:"/"+system_name +"/person/ViewPersonProcess",
     			type:"POST",
     			data:{
     				id : store_obj.personId
@@ -173,11 +174,11 @@ var personForm = React.createClass({
                                 )                               
                             ),
                             React.createElement("tr",  {},
-                                React.createElement("td",  {},"姓名"),
+                                React.createElement("td",  {},"*姓名"),
                                 React.createElement("td",  {},
-                                    React.createElement("input",  {id:"name",name:"name"})
+                                    React.createElement("input",  {id:"name",name:"name",size:"30",maxLength:"30"})
                                 ),
-                                React.createElement("td",  {},"性別"),
+                                React.createElement("td",  {},"*性別"),
                                 React.createElement("td",  {},
                                     React.createElement("select",  {id:"sex",name:"sex"},
                                     		React.createElement("option",  {value:"1"},"男"),
@@ -187,23 +188,23 @@ var personForm = React.createClass({
                                 )
                             ),
                             React.createElement("tr",  {},
-                                    React.createElement("td",  {},"國籍"),
+                                    React.createElement("td",  {},"*國籍"),
                                     React.createElement("td",  {},
-                                        React.createElement("input",  {id:"nationality",name:"nationality"})
+                                        React.createElement("input",  {id:"nationality",name:"nationality",size:"30",maxLength:"30"})
                                     ),
-                                    React.createElement("td",  {},"身分證號碼"),
+                                    React.createElement("td",  {},"*身分證號碼"),
                                     React.createElement("td",  {},
                                     	React.createElement("input",  {type :"text",id:"idNumber",name:"idNumber"})
                                     )
                             ),
                             React.createElement("tr",  {},
-                                    React.createElement("td",  {},"出身日期"),
+                                    React.createElement("td",  {},"*出身日期"),
                                     React.createElement("td",  {},
                                         React.createElement("input",  {id:"dateOfBirth",name:"dateOfBirth"})
                                     ),
-                                    React.createElement("td",  {},"辦公電話"),
+                                    React.createElement("td",  {},"*聯絡電話"),
                                     React.createElement("td",  {},
-                                    	React.createElement("input",  {type :"text",id:"telephone",name:"telephone"})
+                                    	React.createElement("input",  {type :"text",id:"telephone",name:"telephone",defaultValue:"886-"})
                                     )
                             ),
                             React.createElement("tr",  {},
@@ -213,13 +214,13 @@ var personForm = React.createClass({
                                     ),
                                     React.createElement("td",  {},"通訊處"),
                                     React.createElement("td",  {},
-                                    	React.createElement("input",  {type :"text",id:"address",name:"address"})
+                                    	React.createElement("input",  {type :"text",id:"address",name:"address",size:"40",maxLength:"40"})
                                     )
                             ),
                             React.createElement("tr",  {},
-                                    React.createElement("td",  {},"電子郵件"),
+                                    React.createElement("td",  {},"*電子郵件"),
                                     React.createElement("td",  {},
-                                        React.createElement("input",  {id:"email",name:"email"})
+                                        React.createElement("input",  {id:"email",name:"email",size:"40",maxLength:"40"})
                                     )
                                    
                             ),

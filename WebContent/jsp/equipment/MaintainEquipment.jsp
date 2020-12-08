@@ -19,11 +19,15 @@ var maintain_obj = {
 			
 			container = document.getElementById('maintainList_'+action);
 			maintain_obj.maintainList = ReactDOM.render(React.createElement(maintainList, {domId:action}), container);
+			action_obj.maintainList_select_Action_subscribe(maintain_obj.maintainList);
+			action_obj.maintainList_deselect_Action_subscribe(maintain_obj.maintainList);
+			action_obj.updateButton_click_Action_subscribe(maintain_obj.maintainList);
 			
 			container = document.getElementById('maintainForm_'+action);
 			maintain_obj.maintainForm = ReactDOM.render(React.createElement(maintainForm, {domId:action}), container);
 			action_obj.maintainList_select_Action_subscribe(maintain_obj.maintainForm);
 			action_obj.maintainList_deselect_Action_subscribe(maintain_obj.maintainForm);
+			action_obj.updateButton_click_Action_subscribe(maintain_obj.maintainForm);
 		},
 		removeReactComponent : function (action){
 			var container = document.getElementById('maintainForm_'+action);
@@ -41,7 +45,15 @@ var maintain_obj = {
 			action_obj.checkButton_click_Action_handler = [];
 			action_obj.approveButton_click_Action_handler = [];
 			action_obj.rejectButton_click_Action_handler = [];
+			action_obj.updateButton_click_Action_handler = [];
 
+			Object.keys(store_obj).forEach(function(index) {
+				if(typeof store_obj[index] !='object'){
+					store_obj[index] = '';
+				}else{
+					store_obj[index] = {};
+				}
+		    });
 		},		
 };
 
@@ -52,6 +64,6 @@ function maintainEquipment(id){
 </script>
 <div id="maintainDialog_maintain" title="設備維護" style="display: none;">
 </div>
-<script src="/Drone/js/equipment/maintain.js" charset="utf-8"></script>
+<script src="../../js/equipment/maintain.js" charset="utf-8"></script>
 
 

@@ -7,6 +7,7 @@ var aerialPlan_obj = {
 		addOrUpdate : function (action){
 			  var form = $("#aerialPlanForm_aerialPlan_sub");
 			  var form_other = $("#otherForm_aerialPlan_sub");
+			  //var typeId = this.props.domId;
 			  var validator =form.validate({
       	  			rules: {
       	  				aerialPlanStartDate: {
@@ -27,8 +28,7 @@ var aerialPlan_obj = {
     	  				}      	  			      	  			
     	  			}
     	      });	
-			  if (form.valid() && form_other.valid()) {
-			  
+			  if (form.valid() && form_other.valid()) {			  
 			  	var jsonObject = {};
 			  	jsonObject.projectId =$(form).find("#projectId").val();
 			  	jsonObject.name = $(form).find("#name").val();
@@ -80,12 +80,15 @@ var aerialPlan_obj = {
 			  	console.log(myJson);
 			  	$.ajax({
 				 	type : "POST", 
-				 	url : action==='update'?"/Drone/operation/UpdateAerialPlanProcess":"/Drone/operation/AddAerialPlanProcess",
+				 	url : action==='update'?"/" + system_name +"/operation/UpdateAerialPlanProcess":"/" + system_name +"/operation/AddAerialPlanProcess",
 				 	data : {
 						data : myJson
 				 	},
 				 	success : function() {
 						alert(action==='update'?'修改航拍活動紀錄成功':'新增航拍活動紀錄成功');
+						if(action==='update'){
+							action_obj.updateButton_click_Action(typeId);
+						}
 				 	}
 			  	});
 			  	
@@ -96,7 +99,7 @@ var aerialPlan_obj = {
 			    $.ajax({
 					   type: "POST",
 					   enctype: 'multipart/form-data',
-					   url: "/Drone/other/uploadMultipleFile",
+					   url: "/" + system_name +"/other/uploadMultipleFile",
 					   data: fileData,
 					   processData: false,
 					   contentType: false,
@@ -127,6 +130,9 @@ var aerialPlan_obj = {
 			
 			container = document.getElementById('aerialPlanList_'+action);
 			aerialPlan_obj.aerialPlanList = ReactDOM.render(React.createElement(aerialPlanList, {domId:action}), container);
+			action_obj.aerialPlanList_select_Action_subscribe(aerialPlan_obj.aerialPlanList);
+			action_obj.aerialPlanList_deselect_Action_subscribe(aerialPlan_obj.aerialPlanList); 
+			action_obj.updateButton_click_Action_subscribe(aerialPlan_obj.aerialPlanList);
 			
 			container = document.getElementById('aerialPlanTabs_'+action);
 			aerialPlan_obj.tabs = ReactDOM.render(React.createElement(aerialPlanTabs, {domId:action}), container);
@@ -142,6 +148,7 @@ var aerialPlan_obj = {
 			aerialPlan_obj.aerialPlanForm = ReactDOM.render(React.createElement(aerialPlanForm, {domId:action,projectId:store_obj.projectId}), container); 
 			action_obj.aerialPlanList_select_Action_subscribe(aerialPlan_obj.aerialPlanForm);
 			action_obj.aerialPlanList_deselect_Action_subscribe(aerialPlan_obj.aerialPlanForm); 
+			action_obj.updateButton_click_Action_subscribe(aerialPlan_obj.aerialPlanForm);
 			
 			container = document.getElementById('otherForm_'+action);
 			aerialPlan_obj.otherForm = ReactDOM.render(React.createElement(otherForm, {domId:action,projectId:store_obj.projectId}), container);
@@ -152,6 +159,10 @@ var aerialPlan_obj = {
 			aerialPlan_obj.steps = ReactDOM.render(React.createElement(aerialPlanSteps, {domId:action}), container);
 			action_obj.aerialPlanEPList_add_Action_subscribe(aerialPlan_obj.steps);
 			action_obj.aerialPlanSteps_clickFinish_Action_subscribe(aerialPlan_obj.steps);
+			action_obj.equipmentAPList_select_Action_subscribe(aerialPlan_obj.steps);
+			action_obj.equipmentAPList_deselect_Action_subscribe(aerialPlan_obj.steps);
+			action_obj.personAPList_select_Action_subscribe(aerialPlan_obj.steps);
+			action_obj.personAPList_deselect_Action_subscribe(aerialPlan_obj.steps);
 			
 			container = document.getElementById('p_firstStep_'+action);
 			aerialPlan_obj.firstStep = ReactDOM.render(React.createElement(p_firstStep, {domId:action}), container);
@@ -161,8 +172,7 @@ var aerialPlan_obj = {
 			
 			container = document.getElementById('p_thirdStep_'+action);
 			aerialPlan_obj.thirdStep = ReactDOM.render(React.createElement(p_thirdStep, {domId:action}), container);
-			action_obj.equipmentAPList_select_Action_subscribe(aerialPlan_obj.thirdStep);
-			action_obj.equipmentAPList_deselect_Action_subscribe(aerialPlan_obj.thirdStep);
+			action_obj.selectConstruction_change_Action_subscribe(aerialPlan_obj.thirdStep);
 			action_obj.operationLimit_check_Action_subscribe(aerialPlan_obj.thirdStep);
 			
 			container = document.getElementById('p_fourthStep_'+action);
@@ -208,7 +218,9 @@ var aerialPlan_obj = {
 			
 			Object.keys(store_obj).forEach(function(index) {
 				if(typeof store_obj[index] !='object'){
-					store_obj[index] = null
+					store_obj[index] = '';
+				}else{
+					store_obj[index] = {};
 				}
 		    });
 
@@ -223,6 +235,6 @@ function aerialPlan(id){
 </script>
 <div id="aerialPlanDialog_aerialPlan" title="檢視航拍計畫資料" style="display: none;">
 </div>
-<script src="/Drone/js/operation/aerialPlan.main.js" charset="utf-8"></script>
-<script src="/Drone/js/operation/aerialPlan.form.js" charset="utf-8"></script>
-<script src="/Drone/js/operation/aerialPlan.steps.js" charset="utf-8"></script>
+<script src="../../js/operation/aerialPlan.main.js" charset="utf-8"></script>
+<script src="../../js/operation/aerialPlan.form.js" charset="utf-8"></script>
+<script src="../../js/operation/aerialPlan.steps.js" charset="utf-8"></script>

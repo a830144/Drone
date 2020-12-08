@@ -2,11 +2,17 @@ var aerialPlanSteps = React.createClass({
 	getInitialState: function() {
         return {
         	stepHide:'true', 
+        	equipmentId:'',
+        	personId_1:'',
+        	personId_2:''
         };
     },
     notify: function(obj){
     	this.setState({ 
-    		stepHide:obj.stepHide
+    		stepHide:obj.stepHide,
+    		equipmentId:obj.equipmentId,
+    		personId_1:obj.personId_1,
+    		personId_2:obj.personId_2
     	});
     },
     componentWillUnmount(){
@@ -14,12 +20,19 @@ var aerialPlanSteps = React.createClass({
 
     componentDidMount() {
     	var stepsName = "#aerialPlanSteps_"+this.props.domId+"_sub";
+    	var equipmentId =this.state.equipmentId;
+    	var self = this;
         var wizard = $(stepsName).steps({
         	onFinished: function (event, currentIndex)
             {
-        		action_obj.aerialPlanSteps_clickFinish_Action();
-                alert('您設定了一筆設備資料'); 
-                $(stepsName).addClass('hide-true').removeClass('hide-false');
+        		if(self.state.equipmentId ==""||self.state.personId_1 ==""){
+        			alert('您未完整設定資料,未選取一筆設備和至少一筆對應的人員,請重新選取');
+        		}else{
+        			action_obj.aerialPlanSteps_clickFinish_Action();
+        			alert('您設定了一筆設備資料'); 
+        			$(stepsName).addClass('hide-true').removeClass('hide-false');
+        			wizard.steps("reset");
+        		}
             }
         });
         wizard.steps("add", {
@@ -41,8 +54,7 @@ var aerialPlanSteps = React.createClass({
     },
     componentDidUpdate(prevProps, prevState){
     	if(this.state.stepHide!==prevState.stepHide && this.state.stepHide==='false'){
-    		$("#aerialPlanSteps_"+this.props.domId+"_sub").addClass('hide-false').removeClass('hide-true');
-    		
+    		$("#aerialPlanSteps_"+this.props.domId+"_sub").addClass('hide-false').removeClass('hide-true');    		
     	};
     },    
     render: function() {
@@ -70,9 +82,6 @@ var p_firstStep = React.createClass({
                 );
     }
 
-    
-
-
 });
 
 
@@ -85,7 +94,8 @@ var selectConstruction = React.createClass({
     handleChange: function(event){
     	this.setState({ type: event.target.value },function(){
     		this.props.onConstructionChange({ type: this.state.type })     		
-    	});   	
+    	});
+    	action_obj.selectConstruction_change_Action(event.target.value);
     },
     render: function() {
         return  React.createElement("select",  {name:"constructionType",onChange: this.handleChange},
@@ -112,7 +122,7 @@ var p_equipmentList = React.createClass({
     },
     componentDidUpdate(prevProps, prevState){
     	var tableName = "#p_equipmentList";
-    	if(this.props.type!==prevProps.type){
+    	if(this.props.type!==prevProps.type && this.props.type!=''){
     		$(tableName).unbind( "select" );
     		var table = $(tableName).DataTable();
     		table.destroy();
@@ -137,7 +147,7 @@ var p_equipmentList = React.createClass({
     			ordering: false,
     			ajax: {
     				type: "POST",
-    				url: "/Drone/equipment/QueryEquipmentProcess",   
+    				url: "/"+system_name +"/equipment/QueryEquipmentProcess",   
     				data: {  
     					type: this.props.type 
     				}, 
@@ -182,6 +192,7 @@ var p_equipmentList = React.createClass({
 			                action_obj.equipmentAPList_select_Action(equipmentId,constructionType);
     					});
     					t.on( 'deselect', function ( e, dt, type, indexes ) {
+    						
     						if ( type === 'row' ) {				
     							var cell =t.cell( indexes ,1);
     							var equipmentId = cell.data();
@@ -350,10 +361,14 @@ var p_personList = React.createClass({
     },
     componentDidUpdate(prevProps, prevState){
     	var tableName = "#p_personList";
-        if((this.props.constructionType!==prevProps.constructionType)||(this.props.operationLimit!==prevProps.operationLimit)){
+        if((this.props.constructionType!==prevProps.constructionType||this.props.operationLimit!==prevProps.operationLimit) 
+           && (this.props.constructionType!=='')){
             $(tableName).unbind( "select" );
-            var table = $(tableName).DataTable();
-            table.destroy();
+            
+            if ( $.fn.DataTable.isDataTable( tableName ) ) {
+            	var table = $(tableName).DataTable();
+                table.destroy();
+            }
             $(tableName).DataTable({
                 columnDefs: [{	
 				    orderable: false,
@@ -370,7 +385,7 @@ var p_personList = React.createClass({
                 ordering: false,
                 ajax: {
 				    type: "POST",
-			        url: "/Drone/person/QueryPersonProcess",   
+			        url: "/"+system_name +"/person/QueryPersonProcess",   
 			        data: {
 			        	constructionType : this.props.constructionType,
 			        	operationLimit : this.props.operationLimit
@@ -394,14 +409,37 @@ var p_personList = React.createClass({
 
                         var t = $(tableName).DataTable();
 		                t.on( 'select', function ( e, dt, type, indexes ) {
-			                var cell =t.cell( indexes ,1);
-                            var personId = cell.data();
-                            action_obj.personAPList_select_Action(personId);                            
+		                	var selected = dt.rows({selected: true});
+		                	var temp = ["", ""];
+		                	if ( selected.count() > 2 ) {
+		                	   dt.rows(indexes).deselect();
+		                	}else{
+			                	var i = 0;
+			                	selected.every(function() {
+			                        var row = this.node();
+			                        var personId = this.data()[1];
+			                        temp[i] = personId;
+			                        i++;
+			                    });
+		                	}
+		                			                			            
+                            action_obj.personAPList_select_Action(temp);                            
                         });
                         t.on( 'deselect', function ( e, dt, type, indexes ) {
-			                var cell =t.cell( indexes ,1);
-			                var personId = cell.data();
-			                action_obj.personAPList_deselect_Action(personId);
+                        	var selected = dt.rows({selected: true});
+                        	var temp = ["", ""];
+		                	if ( selected.count() > 2 ) {
+		                	   dt.rows(indexes).deselect();
+		                	}else{
+			                	var i = 0;
+			                	selected.every(function() {
+			                        var row = this.node();
+			                        var personId = this.data()[1];
+			                        temp[i] = personId;
+			                        i++;
+			                    });
+		                	}
+			                action_obj.personAPList_deselect_Action(temp);
 		                });
 
 			        return myarray;
@@ -484,20 +522,18 @@ var p_equipmentForm = React.createClass({
         	equipmentId:''
         };
     },
-    getInitialState: function() {
-         return {
-             equipmentId:store_obj.equipmentId
-         };
-    },
     componentWillUnmount(){   
     },
     componentDidMount() {
     },
     componentDidUpdate(prevProps, prevState){
     	var form = "#p_equipmentForm";
-        if((this.props.equipmentId!==prevProps.equipmentId)&&(this.props.equipmentId!=='-')&&(this.props.equipmentId!==null)){
+    	if(this.props.equipmentId==""){
+    		$(form).trigger("reset");
+    	}
+        if((this.props.equipmentId!==prevProps.equipmentId)&&(this.props.equipmentId!=='-')&&(this.props.equipmentId!==null)&&(this.props.equipmentId!=="")){
             $.ajax({
-			    url:"/Drone/equipment/ViewEquipmentProcess",
+			    url:"/"+system_name +"/equipment/ViewEquipmentProcess",
 			    type:"POST",
 			    data:{
 			    	id:this.props.equipmentId
@@ -514,9 +550,7 @@ var p_equipmentForm = React.createClass({
 			        store_obj.aerialPlanEPList.productName = $(form).find("#productName").val();
 			        store_obj.aerialPlanEPList.airTime = $(form).find("#airTime").val();
 			    }
-		    })
-		    
-        	
+		    })        	
         }
     },    
    
@@ -527,7 +561,7 @@ var p_equipmentForm = React.createClass({
                             React.createElement("tr",  {},
                                 React.createElement("td",  {},"設備ID"),
                                 React.createElement("td",  {},
-                                    React.createElement("input",  {type:"text",id:"equipmentId",readOnly:"readOnly"})
+                                    React.createElement("input",  {type:"text",id:"equipmentId",readOnly:"readOnly",className: 'required'})
                                 )
                             ),
                             React.createElement("tr",  {},
@@ -566,11 +600,6 @@ var p_personForm_1 = React.createClass({
         	personId_1:''
         };
     },
-    getInitialState: function() {
-         return {
-             personId_1:store_obj.personId_1 
-         };
-    },
     componentWillUnmount(){   
     },
     componentDidMount() {
@@ -578,9 +607,12 @@ var p_personForm_1 = React.createClass({
     componentDidUpdate(prevProps, prevState){
     	var form = "#p_personForm_1";
     	//debugger;
-        if((this.props.personId_1!==prevProps.personId_1)&&((this.props.personId_1!=='-')&&(this.props.personId_1!==null))){
+    	if((this.props.personId_1!==prevProps.personId_1) && (this.props.personId_1=="")){
+    		$(form).trigger("reset");
+    	}
+        if((this.props.personId_1!==prevProps.personId_1)&&((this.props.personId_1!=='-')&&(this.props.personId_1!==null)&&(this.props.personId_1!==""))){
             $.ajax({
-			    url:"/Drone/person/ViewPersonProcess",
+			    url:"/"+system_name +"/person/ViewPersonProcess",
 			    type:"POST",
 			    data:{
 			    	id : this.props.personId_1
@@ -610,7 +642,7 @@ var p_personForm_1 = React.createClass({
                             React.createElement("tr",  {},
                                 React.createElement("td",  {},"人員ID"),
                                 React.createElement("td",  {},
-                                    React.createElement("input",  {type:"text",id:"personId",readOnly:"readOnly"})
+                                    React.createElement("input",  {type:"text",id:"personId",readOnly:"readOnly",className: 'required'})
                                 )
                             ),
                             React.createElement("tr",  {},
@@ -643,11 +675,6 @@ var p_personForm_2 = React.createClass({
         	personId_2:''
         };
     },
-    getInitialState: function() {
-         return {
-             personId_2:store_obj.personId_2, 
-         };
-    },
     componentWillUnmount(){  
     },
     componentDidMount() {
@@ -655,10 +682,13 @@ var p_personForm_2 = React.createClass({
     componentDidUpdate(prevProps, prevState){
     	var form = "#p_personForm_2";
     	//debugger;
-        if((this.props.personId_2!==prevProps.personId_2)&&(this.props.personId_2!=='-')&&(this.props.personId_2!==null)){
+    	if(this.props.personId_2==""){
+    		$(form).trigger("reset");
+    	}
+        if((this.props.personId_2!==prevProps.personId_2)&&(this.props.personId_2!=='-')&&(this.props.personId_2!==null)&&(this.props.personId_2!=="")){
             $.ajax({
             	type:"POST",
-			    url:"/Drone/person/ViewPersonProcess",			    
+			    url:"/"+system_name +"/person/ViewPersonProcess",			    
 			    data:{
 			    	id : this.props.personId_2
 			    },

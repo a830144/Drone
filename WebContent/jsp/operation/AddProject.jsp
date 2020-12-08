@@ -41,5 +41,5 @@ function addProject(){
 </script>
 <div id="addProjectDialog_add" title="新增專案" style="display: none;">
 </div>
-<script src="/Drone/js/operation/addProject.js" charset="utf-8"></script>
-<script src="/Drone/js/operation/viewProject.js" charset="utf-8"></script>
+<script src="../../js/operation/addProject.js" charset="utf-8"></script>
+<script src="../../js/operation/viewProject.js" charset="utf-8"></script>

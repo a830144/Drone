@@ -14,13 +14,13 @@ function transferQueryListAction(){
 			    className: 'dt-center',
 			    targets: '_all'
 			}],
-		"ajax": {  					
-			 "type": "POST",
-	   		 "url": "/Drone/equipment/QueryEquipmentProcess",  
-	   		 "data": {  
-	       		 "name": window.queryString  
+		ajax: {  					
+			 type: "POST",
+	   		 url: "/" +system_name +"/equipment/QueryEquipmentProcess",  
+	   		 data: {  
+	       		 name: window.queryString  
 	   		 }, 
-    		 "dataSrc": function ( json ) {
+    		 dataSrc: function ( json ) {
     				var myarray=new Array(json.length);
 	    			for (i=0; i <json.length; i++){
 	    	   			 myarray[i]=new Array(5);
@@ -60,7 +60,7 @@ function transferQueryListAction(){
         			}
 	       			 return myarray;
 	      		},
-        	 "dataType": 'json'
+        	 dataType: 'json'
 		}
 
 });

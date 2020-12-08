@@ -15,11 +15,12 @@ function deleteProject(id) {
 	      buttons: {
 	        "刪除專案": function() {
 	        	$.ajax({
-					  url:"/Drone/project/DeleteProjectProcess",
+					  url:"/" + system_name +"/project/DeleteProjectProcess",
 					  type:"POST",
 					  data:{"id" : id},
 					  success : function() {
 							alert('刪除成功');
+							reloadQueryProjectAction();
 					  }
 				})
 	          $( this ).dialog( "close" );

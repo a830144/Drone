@@ -14,12 +14,18 @@ var aerialActivitySteps = React.createClass({
 
     componentDidMount() {
     	var stepsName = "#aerialActivitySteps_"+this.props.domId+"_sub";
+    	var equipmentId =this.props.equipmentId;
         var stepsWizard = $(stepsName).steps({
         	onFinished: function (event, currentIndex)
             {
-        		action_obj.aerialActivitySteps_clickFinish_Action();
-                alert('您設定了一筆設備資料'); 
-                $(stepsName).addClass('hide-true').removeClass('hide-false');
+        		if(equipmentId ==""){
+        			alert('您未完整設定資料,請重新選取');
+        		}else{
+        			action_obj.aerialActivitySteps_clickFinish_Action();
+                    alert('您設定了一筆設備資料'); 
+                    $(stepsName).addClass('hide-true').removeClass('hide-false');
+        		}
+        		
             }
         });
 
@@ -106,7 +112,7 @@ var equipmentList = React.createClass({
                 ordering: false,
                 ajax: {
                 	type: "POST",
-                	url: "/Drone/equipment/QueryEquipmentProcess",   
+                	url: "/"+system_name +"/equipment/QueryEquipmentProcess",   
                 	data: {  
                 		aerialPlanId: this.props.aerialPlanId 
                 	}, 
@@ -259,7 +265,7 @@ var personList = React.createClass({
                 ordering: false,
                 ajax: {
 				    type: "POST",
-			        url: "/Drone/person/QueryPersonProcess",   
+			        url: "/"+system_name +"/person/QueryPersonProcess",   
 			        data: {
 			        	aerialPlanId : this.props.aerialPlanId,
 			            equipmentId: this.props.equipmentId
@@ -382,7 +388,7 @@ var equipmentForm = React.createClass({
     	var form = "#equipmentForm";
         if((this.props.equipmentId!==prevProps.equipmentId)&&(this.props.equipmentId!=='-')&&(this.props.equipmentId!==null)){
             $.ajax({
-			    url:"/Drone/equipment/ViewEquipmentProcess",
+			    url:"/"+system_name +"/equipment/ViewEquipmentProcess",
 			    type:"POST",
 			    data:{
 			    	id:this.props.equipmentId
@@ -465,7 +471,7 @@ var personForm_1 = React.createClass({
         if(this.props.personId_1!==prevProps.personId_1){
         	if((this.props.personId_1!=='-')&&(this.props.personId_1!==null)){
             	$.ajax({
-            		url:"/Drone/person/ViewPersonProcess",
+            		url:"/"+system_name +"/person/ViewPersonProcess",
             		type:"POST",
             		data:{
             			id : this.props.personId_1
@@ -545,7 +551,7 @@ var personForm_2 = React.createClass({
         	if((this.props.personId_2!=='-')&&(this.props.personId_2!==null)){
         		$.ajax({
         			type:"POST",
-        			url:"/Drone/person/ViewPersonProcess",			    
+        			url:"/"+system_name +"/person/ViewPersonProcess",			    
         			data:{
         				id : this.props.personId_2
         			},

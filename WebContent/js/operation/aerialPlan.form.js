@@ -20,7 +20,7 @@ var aerialPlanForm = React.createClass({
     componentDidMount() {
          var form = $("#aerialPlanForm_"+this.props.domId+"_sub");
          $.ajax({
- 			url:"/Drone/operation/ViewProjectProcess",
+ 			url:"/"+system_name +"/operation/ViewProjectProcess",
  			type:"POST",
  			data:{
  				id : store_obj.projectId
@@ -50,9 +50,10 @@ var aerialPlanForm = React.createClass({
     			form.find("#aerialPlanStartDate").val("").removeClass("ui-state-disabled").addClass("ui-state-enabled");
     			form.find("#aerialPlanEndDate").val("").removeClass("ui-state-disabled").addClass("ui-state-enabled");
     		}else{
+    			if(this.state.aerialPlanId!=null && this.state.aerialPlanId!=''){
     			$.ajax({
   				  type:"POST",
-  				  url:"/Drone/operation/ViewAerialPlanByAerialPlanId",				  
+  				  url:"/" +system_name +"/operation/ViewAerialPlanByAerialPlanId",				  
   				  data:{
   					  id : this.state.aerialPlanId
   				  },
@@ -70,6 +71,7 @@ var aerialPlanForm = React.createClass({
   					  form.find("#aerialPlanStartDate").removeClass("ui-state-enabled").addClass("ui-state-disabled");
   					  form.find("#aerialPlanEndDate").removeClass("ui-state-enabled").addClass("ui-state-disabled");
   				  }})
+    			}
     		}
     		
     	};
@@ -145,7 +147,7 @@ var otherForm = React.createClass({
     componentDidMount() {
     	 var form = $("otherForm_"+this.props.domId+"_sub");
     	 $.ajax({
-  			url:"/Drone/operation/ViewProjectProcess",
+  			url:"/"+system_name +"/operation/ViewProjectProcess",
   			type:"POST",
   			data:{
   				id : store_obj.projectId
@@ -168,9 +170,10 @@ var otherForm = React.createClass({
     			form.find("#agl").val("").removeClass("ui-state-disabled").addClass("ui-state-enabled");
     			form.find("#takeOffLocationName").val("").removeClass("ui-state-disabled").addClass("ui-state-enabled");    			
     		}else{
+    			if(this.state.aerialPlanId!=null && this.state.aerialPlanId!=''){
     			$.ajax({
   				  type:"POST",
-  				  url:"/Drone/operation/ViewAerialPlanByAerialPlanId",				  
+  				  url:"/"+system_name +"/operation/ViewAerialPlanByAerialPlanId",				  
   				  data:{
   					  id : this.state.aerialPlanId
   				  },
@@ -182,6 +185,7 @@ var otherForm = React.createClass({
   						  form.find("input[name='" + key +"']").val(value);
   					  });  					  
   				  }})
+    			}
     		}
     		
     	};
@@ -406,7 +410,7 @@ var aerialPlanEPList = React.createClass({
 			        scrollCollapse: true,
 			        ajax: {
 						type: "POST",
-					    url: "/Drone/operation/ViewAerialPlanByAerialPlanId",  
+					    url: "/"+system_name +"/operation/ViewAerialPlanByAerialPlanId",  
 					    data: {  
 					    	id : this.state.aerialPlanId 
 					    }, 

@@ -15,7 +15,7 @@ function deleteEquipment(id) {
 	      buttons: {
 	        "刪除設備": function() {
 	        	$.ajax({
-					  url:"/Drone/equipment/DeleteEquipmentProcess",
+					  url:"/" + system_name +"/equipment/DeleteEquipmentProcess",
 					  type:"POST",
 					  data:{"id" : id},
 					  success : function() {

@@ -15,6 +15,7 @@ var trainingDialog = React.createClass({
     	var dialog = "#trainingDialog_"+this.props.domId+"_sub";
     	var formName = "#trainingForm_"+this.props.domId+"_sub";
     	var domId = this.props.domId;
+    	var typeId = this.props.domId;
     	$(dialog).dialog({
 			autoOpen : false,
 			height : 600,
@@ -56,23 +57,30 @@ var trainingDialog = React.createClass({
 							  
 				        	  		var myJson = JSON.stringify(jsonObject);
 				        	  		$.ajax({
-				        	  			url : "/Drone/person/UpdateTrainingInPersonProcess",
+				        	  			url : "/"+ system_name +"/person/UpdateTrainingInPersonProcess",
 				        	  			type : "POST",
 				        	  			data : {
 				        	  				data : myJson
 				        	  			},
 				        	  			success : function() {
 				        	  				alert('修改訓練紀錄成功');
+				        	  				store_obj.training["trainingId"] =form.find("#trainingId option:selected").text();
+				        	  				store_obj.training["trainingName"] = form.find("#trainingName").val();
+				        	  				store_obj.training["unit"] = form.find("#unit").val();
+				        	  				store_obj.training["trainingDate"] =form.find("#startDate").val()+"~"+form.find("#endDate").val();
+				        	  				store_obj.training["hours"] =form.find("#hours").val();
+				        	  				store_obj.training["trainingType"] = form.find("#trainingType option:selected").text();  	
+				        	  				action_obj.updateButton_click_Action(typeId);
 				        	  			}
 				        	  		});
 				        	  		
 				        	  		var fileData = new FormData(document.getElementById("trainingForm_training_sub"));				 
-								    fileData.append("action","trainging");
+								    fileData.append("action","training");
 										 
 								    $.ajax({
 										            type: "POST",
 										            enctype: 'multipart/form-data',
-										            url: "/Drone/other/uploadMultipleFile",
+										            url: "/"+ system_name +"/other/uploadMultipleFile",
 										            data: fileData,
 										            processData: false,
 										            contentType: false,
@@ -121,7 +129,7 @@ var trainingDialog = React.createClass({
 				        	  		
 				        	  		var myJson = JSON.stringify(jsonObject);
 				        	  		$.ajax({
-				        	  			url : "/Drone/person/TrainingInPersonProcess",
+				        	  			url : "/"+ system_name +"/person/TrainingInPersonProcess",
 				        	  			type : "POST",
 				        	  			data : {
 				        	  				data : myJson
@@ -132,12 +140,12 @@ var trainingDialog = React.createClass({
 				        	  		});
 				        	  		
 				        	  		var fileData = new FormData(document.getElementById("trainingForm_training_sub"));				 
-								    fileData.append("action","trainging");
+								    fileData.append("action","training");
 										 
 								    $.ajax({
 										            type: "POST",
 										            enctype: 'multipart/form-data',
-										            url: "/Drone/other/uploadMultipleFile",
+										            url: "/"+ system_name +"/other/uploadMultipleFile",
 										            data: fileData,
 										            processData: false,
 										            contentType: false,
@@ -197,10 +205,24 @@ var trainingDialog = React.createClass({
 var trainingList = React.createClass({
 	getInitialState: function() {
         return {
+        	state:undefined,
+        	trainingId:'',
+        	trainingName:'',
+        	unit:'',
+        	trainingDate:'',
+        	hours:'',
+        	trainingType:''
         };
     },
     notify: function(obj){
-    	this.setState({  
+    	this.setState({ 
+    		state:obj.state["training"],
+    		trainingId:obj.training["trainingId"],
+    		trainingName:obj.training["trainingName"],
+    		unit:obj.training["unit"],
+    		trainingDate:obj.training["trainingDate"],
+    		hours:obj.training["hours"],
+    		trainingType:obj.training["trainingType"]
     	});
     },
 	componentDidMount(){
@@ -221,7 +243,7 @@ var trainingList = React.createClass({
 	        scrollCollapse: true,		
 			ajax: {
 				type: "POST",
-			    url: "/Drone/person/QueryTrainings",  
+			    url: "/"+ system_name +"/person/QueryTrainings",  
 			    data: {  
 			        id: store_obj.personId 
 			    }, 
@@ -268,7 +290,41 @@ var trainingList = React.createClass({
 		});
 	},
 	componentDidUpdate(prevProps, prevState){
-	      
+		var tableName = "#trainingList_"+this.props.domId+"_sub";
+    	var table = $(tableName).DataTable();
+		if(this.state.state!==prevState.state){
+			if(this.state.state!=null && this.state.state!=undefined && this.state.state!=''){
+				var row = table.row('.selected');
+				var cell = table.cell( row ,0);
+				cell.data(this.state.state).draw();
+			}
+		}
+		if(this.state.state==='PROCESSING'){
+			if(this.state.trainingId!=null && this.state.trainingId!=''){
+				var cell = table.cell( row ,1);
+				cell.data(this.state.trainingId).draw();
+			}
+			if(this.state.trainingName!=null && this.state.trainingName!=''){
+				var cell = table.cell( row ,2);				
+				cell.data(this.state.trainingName).draw();
+			}			
+			if(this.state.unit!=null && this.state.unit!=''){
+				var cell = table.cell( row ,3);
+				cell.data(this.state.unit).draw();
+			}
+			if(this.state.trainingDate!=null && this.state.trainingDate!=''){
+				var cell = table.cell( row ,4);
+				cell.data(this.state.trainingDate).draw();
+			}
+			if(this.state.hours!=null && this.state.hours!=''){
+				var cell = table.cell( row ,5);
+				cell.data(this.state.hours).draw();
+			}
+			if(this.state.trainingType!=null && this.state.trainingType!=''){
+				var cell = table.cell( row ,6);
+				cell.data(this.state.trainingType).draw();
+			}
+		}
 	},
     componentWillUnmount(){
 	        $("#trainingList_"+this.props.domId+"_sub").unbind( "select" );
@@ -308,7 +364,7 @@ var trainingForm = React.createClass({
     handleTrainingIdChange : function(event){
     	var form = $("#trainingForm_"+this.props.domId+"_sub");
     	$.ajax({
-			url : "/Drone/other/ViewTrainingProcess",
+			url : "/"+ system_name +"/other/ViewTrainingProcess",
 			type : "POST",	
 			data : {
 				id : event.target.value
@@ -324,7 +380,7 @@ var trainingForm = React.createClass({
 	componentDidMount(){
     	var form = $("#trainingForm_"+this.props.domId+"_sub");    	
     	$.ajax({
-			  url:"/Drone/person/ViewPersonProcess",
+			  url:"/"+ system_name +"/person/ViewPersonProcess",
 			  type:"POST",
 			  data:{
 				  id : store_obj.personId
@@ -339,7 +395,7 @@ var trainingForm = React.createClass({
 		});  
     	
     	$.ajax({
-    		url : "/Drone/other/QueryTrainingIDs",
+    		url : "/"+ system_name +"/other/QueryTrainingIDs",
     		type : "POST",
     		success : function(tag) {  
     			form.find("#trainingId").append(tag);
@@ -370,7 +426,7 @@ var trainingForm = React.createClass({
     			form.find("#certificateId").val("");
     		}else{
     			$.ajax({
-    				url:"/Drone/person/ViewTrainingInfo",
+    				url:"/"+ system_name +"/person/ViewTrainingInfo",
     				type:"POST",
     				data:{
     					targetId : this.state.targetId

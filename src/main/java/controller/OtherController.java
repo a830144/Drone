@@ -1,7 +1,6 @@
 package controller;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +29,7 @@ import util.DFS;
 import util.TreeNode;
 import vo.EventInPerson;
 import vo.TrainingInPerson;
+import vo.User;
 
 @Controller
 public class OtherController {
@@ -209,16 +209,7 @@ public class OtherController {
 	 * Upload multiple file using Spring Controller
 	 */
 	@RequestMapping(value = "/other/uploadMultipleFile", method = RequestMethod.POST)
-	public @ResponseBody
-	String uploadMultipleFileHandler(MultipartHttpServletRequest request, HttpServletResponse response) {
-		/*Iterator<String> itr =  request.getFileNames();
-		System.out.println("name::"+request.getParameter("equipmentPhoto"));
-		System.out.println("file::"+request.getFileNames().next());*/
-	    /*String[] names = new String[1] ;
-	    names[0] = request.getParameter("equipmentPhoto");
-	    MultipartFile[] files = new MultipartFile[1];
-	    files[0] = request.getFile(request.getFileNames().next());*/
-		
+	public @ResponseBody String uploadMultipleFileHandler(MultipartHttpServletRequest request, HttpServletResponse response) {	
 		String[] names = request.getParameterValues("photo");
 		System.out.println("names:"+names.length);
 		List<MultipartFile> fileList = request.getFiles("file");		
@@ -235,9 +226,23 @@ public class OtherController {
 		}else{
 			action = request.getParameter("action");
 		}
-		
-	    
+			    
 		return util.FileUploader.multiFiles(names, files,action);
 
+	}
+	
+	/**
+	 * request authorization
+	 * @param name
+	 * @return
+	 */
+	@RequestMapping(value="/other/IAM" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public String requestIAM(String id,String password) {
+		User user = otherService.accessIAM(Integer.parseInt(id), password);
+		String jsonString = gson.toJson(user);
+
+		System.out.println("jsonString::"+jsonString);
+		return jsonString;
 	}
 }

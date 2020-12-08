@@ -17,6 +17,7 @@ var aerialActivityDialog = React.createClass({
     	var dialog = "#aerialActivityDialog_"+this.props.domId+"_sub";
     	var formName = "#aerialActivityForm_"+this.props.domId+"_sub";
     	var domId = this.props.domId;
+    	var typeId = this.props.domId;
     	$(dialog).dialog({
 			autoOpen : false,
 			height : 700,
@@ -27,7 +28,69 @@ var aerialActivityDialog = React.createClass({
 				  text: "修改航拍活動資料",
 		          icon: "ui-icon-pencil",
 		          id: "updateAerialActivityBtn_"+domId,
-		          click: function (){ aerialActivity_obj.addOrUpdate('update') }
+		          click: function (){ 
+		        	  var form = $("#aerialActivityForm_aerialActivity_sub");
+		  			  var validator =form.validate({
+		    	  			rules: {
+		    	  				aerialActivityStartDate: {
+		    	  				 	required: true,
+		    	  				 	maxlength: 10
+		    	  				},
+		    	  				aerialActivityEndDate: {
+		    	  				 	required: true,
+		    	  				 	maxlength: 10
+		    	  				},      	  			      	  			
+		    	  			}
+		    	      	});
+		  	
+		  		  if (form.valid()) {
+		  			  var form = $("#aerialActivityForm_aerialActivity_sub");
+		  			  var jsonObject = {};
+		  			  jsonObject.projectId =$(form).find("#projectId").val();
+		  			  jsonObject.name = $(form).find("#name").val();
+		  			  jsonObject.aerialPlanId = $(form).find("#aerialPlanId").val();
+		  			  jsonObject.usage = $(form).find("#usage").val();
+		  			  jsonObject.aerialPlanStartDate = $(form).find("#aerialPlanStartDate").val();
+		  			  jsonObject.aerialPlanEndDate = $(form).find("#aerialPlanEndDate").val();
+		  			  jsonObject.aerialActivityStartDate = $(form).find("#aerialActivityStartDate").val();
+		  			  jsonObject.aerialActivityEndDate = $(form).find("#aerialActivityEndDate").val();
+		  			  jsonObject.aerialActivityId = $(form).find("#aerialActivityId").val();
+		  			  jsonObject.state = $(form).find("#state").val();
+		  			  
+		  			  var tableName = "#aerialActivityEPList_aerialActivity_sub";
+		  			  var arr = new Array();
+		  			  jsonObject.equipmentPersonArray = arr;
+		  			  var table = $(tableName).DataTable();
+		  			  
+		  			  table.rows().eq(0).each( function ( index ) {
+		  				  var row = table.row( index );
+		  			    	var cell = table.cell( index ,3);
+		  					var equipmentId = cell.data();									
+		  					var personId_1 = $("#EProw"+index+"col"+6).val();					
+		  					var personId_2 = $("#EProw"+index+"col"+7).val(); 
+		  					
+		  					jsonObject.equipmentPersonArray.push({
+		  						"equipmentId":equipmentId,
+		  						"personId_1":personId_1,
+		  						"personId_2":personId_2
+		  					});
+		  			  } );
+		  			  myJson = JSON.stringify(jsonObject);
+		  			  console.log(myJson);
+		  			  $.ajax({
+		  				 type : "POST", 
+		  				 url : "/"+system_name +"/operation/UpdateAerialActivityProcess",
+		  				 data : {
+		  						data : myJson
+		  				 },
+		  				 success : function() {
+		  					alert('修改航拍活動紀錄成功');
+		  					action_obj.updateButton_click_Action(typeId);
+		  				 }
+		  			  })
+		  			  
+		  		} 
+		          }
 	 		    },
 	    		{
 	      		  text: "新增航拍活動資料",
@@ -74,10 +137,12 @@ var aerialActivityDialog = React.createClass({
 var aerialActivityList = React.createClass({
 	getInitialState: function() {
         return {
+        	state:undefined
         };
     },
     notify: function(obj){
-    	this.setState({  
+    	this.setState({ 
+    		state:obj.state["aerialActivity"]
     	});
     },
     componentDidMount() {
@@ -94,7 +159,7 @@ var aerialActivityList = React.createClass({
 	        scrollCollapse: true,		
 			ajax: {
 				type: "POST",
-			    url: "/Drone/operation/QueryAerailActivitiesProcess",  
+			    url: "/"+ system_name +"/operation/QueryAerailActivitiesProcess",  
 			    data: {  
 			    	projectId : store_obj.projectId 
 			    }, 
@@ -140,7 +205,15 @@ var aerialActivityList = React.createClass({
     	$(' .dataTables_scrollBody').height(100);
     },
     componentDidUpdate(prevProps, prevState){
-        
+    	var tableName = "#aerialActivityList_"+this.props.domId+"_sub";
+    	var table = $(tableName).DataTable();
+		if(this.state.state!==prevState.state){
+			if(this.state.state!=null && this.state.state!=undefined && this.state.state!=''){
+				var row = table.row('.selected');
+				var cell = table.cell( row ,0);
+				cell.data(this.state.state).draw();
+			}
+		}
     },    
     componentWillUnmount(){
     	$("#aerialActivityList_"+this.props.domId+"_sub").unbind( "select" );

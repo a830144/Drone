@@ -1,7 +1,10 @@
 package service.impl;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +17,15 @@ import dao.CodeDao;
 import dao.EventDao;
 import dao.LicenseDao;
 import dao.TrainingDao;
+import dao.UserDao;
 import entity.Code;
 import entity.Events;
 import entity.Trainings;
 import service.OtherService;
+import vo.AerialActivity;
 import vo.EventInPerson;
 import vo.TrainingInPerson;
+import vo.User;
 
 @Service
 public class OtherServiceImpl implements OtherService {
@@ -37,6 +43,9 @@ public class OtherServiceImpl implements OtherService {
 	
 	@Autowired
 	private CodeDao codeDao;
+	
+	@Autowired
+	private UserDao userDao;
 	
 	@Override
 	public void persistEvent(String jsonString) {		
@@ -131,6 +140,26 @@ public class OtherServiceImpl implements OtherService {
 			eventsList = codeDao.findByType(type);
 		}
 		return eventsList;
+	}
+
+	@Override
+	public User accessIAM(Integer id, String password) {
+		List<Object[]> resultlist = userDao.findByIdAndPassword(id, password);
+		Map<String,HashSet<String>> functionOperations = new HashMap<String,HashSet<String>>();
+		for(Object[] result : resultlist) {
+			String functionName = (String) result[0];
+			String[] types = (String[]) result[1];
+			HashSet<String> typesSet = new HashSet<String>();
+			
+			for(int i=0;i<types.length;i++){
+				typesSet.add(types[i]);
+			}
+			functionOperations.put(functionName, typesSet);
+		}
+		User vo = new User();
+		vo.setUserId(id);
+		vo.setFunctionOperations(functionOperations);
+		return vo;
 	}
 
 	

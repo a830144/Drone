@@ -41,5 +41,5 @@ function addEquipment(){
 </script>
 <div id="addEquipmentDialog_add" title="新增設備" style="display: none;">
 </div>
-<script src="/Drone/js/equipment/addEquipment.js" charset="utf-8"></script>
-<script src="/Drone/js/equipment/viewEquipment.js" charset="utf-8"></script>
+<script src="../../js/equipment/addEquipment.js" charset="utf-8"></script>
+<script src="../../js/equipment/viewEquipment.js" charset="utf-8"></script>

@@ -13,7 +13,7 @@
 									
 								var myJson = JSON.stringify($("#add-code-form").serializeObject());
 								$.ajax({
-									url : "/Drone/other/AddCodeProcess",
+									url : "/" + system_name +"/other/AddCodeProcess",
 									type : "POST",
 									data : {
 										"data" : myJson

@@ -72,7 +72,7 @@ public class AerialActivityDaoImpl implements AerialActivityDao{
 	public List<Object[]> findRealMission(Integer aerialActivityId) {
 		String sql = 
 				"SELECT rm.Equipment_ID,rm.Person_ID,GROUP_CONCAT(mi.person_id)"
-				+ " FROM drone.real_missions rm ,drone.aerial_activities ac ,drone.aerial_plans ap, drone.missions mi"
+				+ " FROM real_missions rm ,aerial_activities ac ,aerial_plans ap, missions mi"
 				+ " WHERE rm.Aerial_Activity_ID = ac.Aerial_Activity_ID"
 				+ " AND ac.Aerial_Plan_ID = ap.Aerial_Plan_ID"
 				+ " AND  mi.Aerial_Plan_ID = ap.Aerial_Plan_ID"

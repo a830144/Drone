@@ -15,6 +15,7 @@ var eventDialog = React.createClass({
     	var dialog = "#eventDialog_"+this.props.domId+"_sub";
     	var formName = "#eventForm_"+this.props.domId+"_sub";
     	var domId = this.props.domId;
+    	var typeId = this.props.domId;
     	$(dialog).dialog({
 			autoOpen : false,
 			height : 600,
@@ -47,13 +48,19 @@ var eventDialog = React.createClass({
 							  
 				        	  		var myJson = JSON.stringify(jsonObject);
 				        	  		$.ajax({
-				        	  			url : "/Drone/person/UpdateEventInPersonProcess",
+				        	  			url : "/"+ system_name +"/person/UpdateEventInPersonProcess",
 				        	  			type : "POST",
 				        	  			data : {
 				        	  				data : myJson
 				        	  			},
 				        	  			success : function() {
 				        	  				alert('修改特殊事蹟紀錄成功');
+				        	  				store_obj.event["eventId"] =form.find("#eventId option:selected").text();
+				        	  				store_obj.event["eventName"] = form.find("#eventName").val();
+				        	  				store_obj.event["unit"] = form.find("#unit").val();
+				        	  				store_obj.event["eventDate"] =form.find("#startDate").val()+"~"+form.find("#endDate").val();
+				        	  				store_obj.event["description"] =form.find("#description").val();  	
+				        	  				action_obj.updateButton_click_Action(typeId);
 				        	  			}
 				        	  		});
 				        	  		
@@ -63,7 +70,7 @@ var eventDialog = React.createClass({
 								    $.ajax({
 										            type: "POST",
 										            enctype: 'multipart/form-data',
-										            url: "/Drone/other/uploadMultipleFile",
+										            url: "/"+ system_name +"/other/uploadMultipleFile",
 										            data: fileData,
 										            processData: false,
 										            contentType: false,
@@ -110,13 +117,19 @@ var eventDialog = React.createClass({
 							  
 				        	  		var myJson = JSON.stringify(jsonObject);
 				        	  		$.ajax({
-				        	  			url : "/Drone/person/EventInPersonProcess",
+				        	  			url : "/"+ system_name +"/person/EventInPersonProcess",
 				        	  			type : "POST",
 				        	  			data : {
 				        	  				data : myJson
 				        	  			},
 				        	  			success : function() {
 				        	  				alert('新增特殊事蹟紀錄成功');
+				        	  				store_obj.event["eventId"] =form.find("#eventId option:selected").text();
+				        	  				store_obj.event["eventName"] = form.find("#eventName").val();
+				        	  				store_obj.event["unit"] = form.find("#unit").val();
+				        	  				store_obj.event["eventDate"] =form.find("#startDate").val()+"~"+form.find("#endDate").val();
+				        	  				store_obj.event["description"] =form.find("#description").val();  	
+				        	  				action_obj.addButton_click_Action(typeId);
 				        	  			}
 				        	  		});
 				        	  		
@@ -126,7 +139,7 @@ var eventDialog = React.createClass({
 								    $.ajax({
 										            type: "POST",
 										            enctype: 'multipart/form-data',
-										            url: "/Drone/other/uploadMultipleFile",
+										            url: "/"+ system_name +"/other/uploadMultipleFile",
 										            data: fileData,
 										            processData: false,
 										            contentType: false,
@@ -186,10 +199,22 @@ var eventDialog = React.createClass({
 var eventList = React.createClass({
 	getInitialState: function() {
         return {
+        	state:undefined,
+        	eventID:'',
+        	eventName:'',
+        	unit:'',
+        	eventDate:'',
+        	description:''
         };
     },
     notify: function(obj){
-    	this.setState({  
+    	this.setState({ 
+    		state:obj.state["event"],
+    		eventID:obj.event["eventID"],
+        	eventName:obj.event["eventName"],
+        	unit:obj.event["unit"],
+        	eventDate:obj.event["eventDate"],
+        	description:obj.event["description"]
     	});
     },
 	componentDidMount(){
@@ -210,7 +235,7 @@ var eventList = React.createClass({
 	        scrollCollapse: true,		
 			ajax: {
 				type: "POST",
-			    url: "/Drone/person/QueryEvents",  
+			    url: "/"+system_name +"/person/QueryEvents",  
 			    data: {  
 			        id: store_obj.personId 
 			    }, 
@@ -256,7 +281,40 @@ var eventList = React.createClass({
 		});
 	},
 	componentDidUpdate(prevProps, prevState){
-	      
+		var tableName = "#eventList_"+this.props.domId+"_sub";
+    	var table = $(tableName).DataTable();
+		if(this.state.state!==prevState.state){
+			if(this.state.state!=null && this.state.state!=undefined && this.state.state!=''&& this.state.state!='ADD'){
+				var row = table.row('.selected');
+				var cell = table.cell( row ,0);
+				cell.data(this.state.state).draw();
+			}
+		}
+		
+		if(this.state.state==='PROCESSING'){
+			if(this.state.eventId!=null && this.state.eventId!=''){
+				var cell = table.cell( row ,1);
+				cell.data(this.state.eventId).draw();
+			}
+			if(this.state.eventName!=null && this.state.eventName!=''){
+				var cell = table.cell( row ,2);				
+				cell.data(this.state.eventName).draw();
+			}			
+			if(this.state.unit!=null && this.state.unit!=''){
+				var cell = table.cell( row ,3);
+				cell.data(this.state.unit).draw();
+			}
+			if(this.state.eventDate!=null && this.state.eventDate!=''){
+				var cell = table.cell( row ,4);
+				cell.data(this.state.eventDate).draw();
+			}
+			if(this.state.description!=null && this.state.description!=''){
+				var cell = table.cell( row ,5);
+				cell.data(this.state.description).draw();
+			}
+			
+		}
+		
 	},
     componentWillUnmount(){
 	        $("#eventList_"+this.props.domId+"_sub").unbind( "select" );
@@ -295,7 +353,7 @@ var eventForm = React.createClass({
     handleEventIdChange : function(event){
     	var form = $("#eventForm_"+this.props.domId+"_sub");
     	$.ajax({
-			url : "/Drone/other/ViewEventProcess",
+			url : "/"+ system_name +"/other/ViewEventProcess",
 			type : "POST",	
 			data : {
 				id : event.target.value
@@ -312,7 +370,7 @@ var eventForm = React.createClass({
 	componentDidMount(){
     	var form = $("#eventForm_"+this.props.domId+"_sub");    	
     	$.ajax({
-			  url:"/Drone/person/ViewPersonProcess",
+			  url:"/"+ system_name +"/person/ViewPersonProcess",
 			  type:"POST",
 			  data:{
 				  id : store_obj.personId
@@ -327,7 +385,7 @@ var eventForm = React.createClass({
 		});  
     	
     	$.ajax({
-    		url : "/Drone/other/QueryEventIDs",
+    		url : "/"+ system_name +"/other/QueryEventIDs",
     		type : "POST",
     		success : function(tag) {  
     			form.find("#eventId").append(tag);
@@ -356,7 +414,7 @@ var eventForm = React.createClass({
     			form.find("#participationId").val("");
     		}else{
     			$.ajax({
-    				url:"/Drone/person/ViewEventInfo",
+    				url:"/"+ system_name +"/person/ViewEventInfo",
     				type:"POST",
     				data:{
     					targetId : this.state.targetId
