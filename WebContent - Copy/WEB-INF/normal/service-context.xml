@@ -1,0 +1,57 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/tx 
+    http://www.springframework.org/schema/tx/spring-tx.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop.xsd">
+	<context:component-scan base-package="service">
+	</context:component-scan>
+	<context:component-scan base-package="stateMachine">
+	</context:component-scan>
+   	
+	<bean id="txManager"
+		class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+		<!-- the transactional semantics... -->
+		<tx:attributes>
+			<!-- all methods starting with 'get' are read-only -->
+			<tx:method name="get*" read-only="true" />
+			<!-- other methods use the default transaction settings (see below) -->
+			<tx:method name="*" />
+		</tx:attributes>
+	</tx:advice>
+
+	<!-- ensure that the above transactional advice runs for any execution of 
+		an operation defined by the FooService interface -->
+	<aop:config>
+		<aop:pointcut id="equipmentServiceOperation"
+			expression="execution(* service.EquipmentService.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="equipmentServiceOperation" />
+	</aop:config>
+	<aop:config>
+		<aop:pointcut id="personServiceOperation"
+			expression="execution(* service.PersonService.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="personServiceOperation" />
+	</aop:config>
+	<aop:config>
+		<aop:pointcut id="operationServiceOperation"
+			expression="execution(* service.OperationService.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="operationServiceOperation" />
+	</aop:config>
+	<aop:config>
+		<aop:pointcut id="otherServiceOperation"
+			expression="execution(* service.OtherService.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="otherServiceOperation" />
+	</aop:config>
+	
+</beans>
