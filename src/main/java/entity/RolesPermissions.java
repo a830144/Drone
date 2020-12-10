@@ -2,9 +2,12 @@ package entity;
 // default package
 // Generated Dec 7, 2020 9:16:49 PM by Hibernate Tools 5.2.3.Final
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -39,6 +42,7 @@ public class RolesPermissions implements java.io.Serializable {
 	}
 
 	@Id
+	@GeneratedValue(strategy = IDENTITY)
 
 	@Column(name = "Roles_Permissions_ID", unique = true, nullable = false)
 	public int getRolesPermissionsId() {

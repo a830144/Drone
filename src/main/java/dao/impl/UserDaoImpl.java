@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import dao.UserDao;
+import entity.Roles;
+import entity.Users;
 
 @Repository
 public class UserDaoImpl implements UserDao {
@@ -38,6 +40,17 @@ public class UserDaoImpl implements UserDao {
 		query.setParameter("password", password);
 		List<Object[]> results = query.list();
 		return results;
+	}
+
+	@Override
+	public List<Users> findAll() {
+		Session session = this.sessionFactory.getCurrentSession();
+        List<Users> users = (List<Users>) session.createQuery("from Users").list();
+        for(int i=0;i<users.size();i++){
+        	Users entity = users.get(i);
+        	session.detach(entity);
+        }
+        return users;
 	}
 
 }

@@ -3,6 +3,8 @@ package entity;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -71,7 +73,7 @@ public class Roles implements java.io.Serializable {
 		this.roleType = roleType;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "roles")
+	@OneToMany(fetch = FetchType.LAZY,cascade=CascadeType.ALL, mappedBy = "roles")
 	public Set<RolesFunctions> getRolesFunctionses() {
 		return this.rolesFunctionses;
 	}
@@ -80,7 +82,7 @@ public class Roles implements java.io.Serializable {
 		this.rolesFunctionses = rolesFunctionses;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "roles")
+	@OneToMany(fetch = FetchType.LAZY,cascade=CascadeType.ALL, mappedBy = "roles")
 	public Set<UsersRoles> getUsersRoleses() {
 		return this.usersRoleses;
 	}
@@ -89,7 +91,7 @@ public class Roles implements java.io.Serializable {
 		this.usersRoleses = usersRoleses;
 	}
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "roles")
+	@OneToMany(fetch = FetchType.LAZY, cascade=CascadeType.ALL, mappedBy = "roles")
 	public Set<RolesPermissions> getRolesPermissionses() {
 		return this.rolesPermissionses;
 	}

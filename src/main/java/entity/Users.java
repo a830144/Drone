@@ -71,7 +71,7 @@ public class Users implements java.io.Serializable {
 		this.password = password;
 	}
 
-	@Column(name = "E-mail", length = 20)
+	@Column(name = "Email", length = 20)
 	public String getEMail() {
 		return this.EMail;
 	}

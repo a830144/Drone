@@ -22,6 +22,8 @@ var store_obj = {
 	personId_1 : '',
 	personId_2 : '',
 	
+	roleId : '',
+	
 	license : {
 		constructionType :'',
 		type :'',

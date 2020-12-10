@@ -57,6 +57,7 @@ body {
 							     " u.user_id="+session.getAttribute("id")+
 							     " GROUP BY f.function_name"+
 							     " ORDER BY f.function_id";
+					
 					Statement stmt = conn.createStatement();
 					ResultSet rs = stmt.executeQuery(sql);
 					

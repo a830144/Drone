@@ -53,5 +53,15 @@
 			expression="execution(* service.OtherService.*(..))" />
 		<aop:advisor advice-ref="txAdvice" pointcut-ref="otherServiceOperation" />
 	</aop:config>
+	<aop:config>
+		<aop:pointcut id="roleServiceOperation"
+			expression="execution(* service.RoleService.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="roleServiceOperation" />
+	</aop:config>
+	<aop:config>
+		<aop:pointcut id="userServiceOperation"
+			expression="execution(* service.UserService.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="userServiceOperation" />
+	</aop:config>
 	
 </beans>
