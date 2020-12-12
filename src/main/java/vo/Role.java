@@ -10,7 +10,20 @@ public class Role {
 	private String roleName;
 	private Set<Integer> permissionsSet = new HashSet<Integer>();
 	private Set<OwnPermission> ownPermissionSet = new HashSet<OwnPermission>();
+	private List<String[]> ownPermissionTruthMap = new LinkedList<String[]>();
 	
+	
+
+	
+
+	public List<String[]> getOwnPermissionTruthMap() {
+		return ownPermissionTruthMap;
+	}
+
+	public void setOwnPermissionTruthMap(List<String[]> ownPermissionTruthMap) {
+		this.ownPermissionTruthMap = ownPermissionTruthMap;
+	}
+
 	public void setPermissionsSet(Set<Integer> permissionsSet) {
 		this.permissionsSet = permissionsSet;
 	}

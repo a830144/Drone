@@ -25,8 +25,8 @@
 	        				content = content + "<td>" + col_3 +"</td>";
 	        				var col_4=obj.hasOwnProperty("trainingType")?obj.trainingType:'';
 	        				content = content + "<td>" + col_4 +"</td>";
-	        				var view_btn = "<button name='view"+ obj.trainingId +"' id='" + obj.trainingId +"' class='view ui-button ui-corner-all ui-widget' value='view'>檢視</button>";
-	        				var update_btn = "<button name='update"+ obj.trainingId +"' id='" + obj.trainingId +"' class='update ui-button ui-corner-all ui-widget' value='update'>修改</button>";
+	        				var view_btn = "<button name='view"+ obj.trainingId +"' id='" + obj.trainingId +"' class='view ui-button ui-corner-all ui-widget ui-state-disabled' value='view'>檢視</button>";
+	        				var update_btn = "<button name='update"+ obj.trainingId +"' id='" + obj.trainingId +"' class='update ui-button ui-corner-all ui-widget ui-state-disabled' value='update'>修改</button>";
 	        				var delete_btn = "<button name='delete"+ obj.trainingId +"' id='" + obj.trainingId+"' class='delete ui-button ui-corner-all ui-widget' value='delete'>刪除</button>";		        		
 	        				var col_5="<td>" + view_btn + update_btn + delete_btn+"</td>";
 	        				content = content + col_5 + "</tr>";

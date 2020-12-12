@@ -9,6 +9,8 @@ public interface UserService {
 	
 	public String queryUserById(Integer id);	
 	
+	public String queryUserWithRolesById(Integer id);
+	
 	public JsonArray queryUsers();
 	
 	public void delete(Integer id);

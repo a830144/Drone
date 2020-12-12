@@ -19,7 +19,7 @@ var view_obj = {
 			add_obj.roleForm = ReactDOM.render(React.createElement(roleForm, {domId:action}), container);
 			
 			container = document.getElementById('permissionTable_'+action);
-			add_obj.roleTable = ReactDOM.render(React.createElement(permissionTable, {domId:action}), container);
+			add_obj.permissionTable = ReactDOM.render(React.createElement(permissionTable, {domId:action}), container);
 			
 		},
 		removeReactComponent : function (action){
@@ -48,4 +48,4 @@ function viewRole(id){
 </script>
 <div id="roleDialog_view" title="檢視人員" style="display: none;">
 </div>
-<script src="../../js/Role/viewRole.js" charset="utf-8"></script>
+<script src="../../js/role/viewRole.js" charset="utf-8"></script>

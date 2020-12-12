@@ -1,4 +1,4 @@
-var addRoleDialog = React.createClass({
+var updateRoleDialog = React.createClass({
 	getInitialState: function() {
         return {
         	 
@@ -12,9 +12,10 @@ var addRoleDialog = React.createClass({
     componentWillUnmount(){   	
     },
     componentDidMount() {
-    	var dialog = "#addRoleDialog_"+this.props.domId+"_sub";
+    	var dialog = "#updateRoleDialog_"+this.props.domId+"_sub";
     	var formName = "#roleForm_"+this.props.domId+"_sub";
-    	var tableName = "#permissionTable_"+this.props.domId+"_sub";
+    	var listBoxName = "#permissionListBox_"+this.props.domId+"_sub";
+
     	var domId = this.props.domId;
     	$(dialog).dialog({
 			autoOpen : false,
@@ -22,10 +23,10 @@ var addRoleDialog = React.createClass({
 			width : 1200,
 			modal : true,
 			buttons : {
-				"新增角色" : function() {
+				"修改角色" : function() {
 					var form = $(formName);
 					var validator =form.validate({
-	        	  		rules: {
+						rules: {
 	        	  			roleName: {
 	        	  				 required: true,
 	        	  				 maxlength: 30
@@ -33,41 +34,42 @@ var addRoleDialog = React.createClass({
 	        	  		}
 	        	    });
 					if (form.valid()) {
-						
-						var table = $(tableName).DataTable();
-						
-						var selected = table.rows({ selected: true });
-						var temp = Array(selected.count);
+						var temp = Array(store_obj.tempPermission);
 						var i = 0;
-	                	selected.every(function() {
-	                        var row = this.node();
-	                        var permissionId = this.data()[1];
-	                        temp[i] = permissionId;
-	                        i++;
-	                    });
+						function putValue(values) 
+						{ 
+							temp[i] = values;
+							i++;
+						} ;
+						store_obj.tempPermission.forEach(putValue); 			
 						var jsonObject = $(formName).serializeObject();						
-						jsonObject.permissionsSet = temp;
+						jsonObject.permissionsSet = temp;	
+						//debugger;
+						store_obj.tempPermission.clear();						
 						var myJson = JSON.stringify(jsonObject);
-						$.ajax({
-									url : "/"+ system_name +"/role/AddRoleProcess",
-									type : "POST",
-									data : {
-										"data" : myJson
-									},
-									success : function() {
-										alert('新增成功');
-										reloadQueryRoleAction();
-									}
-						})
-						$(this).dialog("close");
+							$.ajax({
+								url : "/"+system_name +"/role/UpdateRoleProcess",
+								type : "POST",
+								data : {
+									"data" : myJson
+								},
+								success : function() {
+									alert('修改成功');
+									reloadQueryRoleAction();
+								}
+							})
+							
+							$(this).dialog("close");
+
 					}
 				},
-				"取消" : function() {
-					$(this).dialog("close");
-				}
+
+					"關閉" : function() {
+						$(this).dialog("close");
+					}
 			},
 			close : function() {
-				add_obj.removeReactComponent(domId);
+						update_obj.removeReactComponent(domId);
 			}
 		});
     	$(dialog).dialog("open");
@@ -77,13 +79,13 @@ var addRoleDialog = React.createClass({
     },    
    
     render: function() {
-        return  React.createElement("div",  {id:"addRoleDialog_"+this.props.domId+"_sub"},
+    	return  React.createElement("div",  {id:"updateRoleDialog_"+this.props.domId+"_sub"},
         		React.createElement("div",  {id:"roleForm_"+this.props.domId}),
         		React.createElement("div",  {style:{color: "red", backgroundColor: "#DCDCDC"}},
         				React.createElement("img",  {src: "../../images/exclamation-mark.png"}),
         				React.createElement("p",  {style:{color: "red"}},'某些權限具備特殊性,所對應的功能跟功能樹有關,請謹慎選擇。選取適合的permission加入此角色')
         		),		
-        		React.createElement("div",  {id:"permissionTable_"+this.props.domId})
+        		React.createElement("div",  {id:"permissionListBox_"+this.props.domId})
         );
     }
 

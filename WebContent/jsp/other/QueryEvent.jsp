@@ -27,8 +27,8 @@
 	        				content = content + "<td>" + col_4 +"</td>";
 	        				var col_5=obj.hasOwnProperty("description")?obj.description:'';
 	        				content = content + "<td>" + col_5 +"</td>";
-	        				var view_btn = "<button name='view"+ obj.eventId +"' id='" + obj.eventId +"' class='view ui-button ui-corner-all ui-widget' value='view'>檢視</button>";
-	        				var update_btn = "<button name='update"+ obj.eventId +"' id='" + obj.eventId +"' class='update ui-button ui-corner-all ui-widget' value='update'>修改</button>";
+	        				var view_btn = "<button name='view"+ obj.eventId +"' id='" + obj.eventId +"' class='view ui-button ui-corner-all ui-widget ui-state-disabled' value='view' >檢視</button>";
+	        				var update_btn = "<button name='update"+ obj.eventId +"' id='" + obj.eventId +"' class='update ui-button ui-corner-all ui-widget ui-state-disabled' value='update' >修改</button>";
 	        				var delete_btn = "<button name='delete"+ obj.eventId +"' id='" + obj.eventId+"' class='delete ui-button ui-corner-all ui-widget' value='delete'>刪除</button>";		        		
 	        				var col_6="<td>" + view_btn + update_btn + delete_btn+"</td>";
 	        				content = content + col_6 + "</tr>";

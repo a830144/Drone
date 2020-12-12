@@ -3,6 +3,8 @@ package entity;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -24,7 +26,7 @@ public class Users implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = 8817924421340415137L;
 	private Integer userId;
-	private String username;
+	private String userName;
 	private String password;
 	private String EMail;
 	private String phone;
@@ -33,8 +35,8 @@ public class Users implements java.io.Serializable {
 	public Users() {
 	}
 
-	public Users(String username, String password, String EMail, String phone, Set<UsersRoles> usersRoleses) {
-		this.username = username;
+	public Users(String userName, String password, String EMail, String phone, Set<UsersRoles> usersRoleses) {
+		this.userName = userName;
 		this.password = password;
 		this.EMail = EMail;
 		this.phone = phone;
@@ -54,12 +56,12 @@ public class Users implements java.io.Serializable {
 	}
 
 	@Column(name = "Username", length = 10)
-	public String getUsername() {
-		return this.username;
+	public String getUserName() {
+		return this.userName;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	@Column(name = "Password", length = 10)
@@ -89,7 +91,7 @@ public class Users implements java.io.Serializable {
 		this.phone = phone;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "users")
+	@OneToMany(fetch = FetchType.LAZY,cascade=CascadeType.ALL, mappedBy = "users")
 	public Set<UsersRoles> getUsersRoleses() {
 		return this.usersRoleses;
 	}

@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.NativeQuery;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -52,5 +53,68 @@ public class UserDaoImpl implements UserDao {
         }
         return users;
 	}
+	
+	@Override
+	public Users findById(Integer id) {
+		Session session = this.sessionFactory.getCurrentSession();
+		Users users = session.get(Users.class, id);
+        return users;
+	}
+	
+	@Override
+	public void persist(Users entity) {
+    	Session session = this.sessionFactory.getCurrentSession();
+    	session.save(entity);		
+	}
+	
+	@Override
+	public void update(Users entity) {
+		// TODO Auto-generated method stub
+		Session session = this.sessionFactory.getCurrentSession();
+    	session.save(entity);
+	}
 
+	@Override
+	public void deleteById(Integer id) {
+		Session session = this.sessionFactory.getCurrentSession();
+        Users users = session.get(Users.class, id);
+    	session.delete(users);
+	}
+
+	@Override
+	public List<Object[]> findRolesTruthTableByUserId(Integer id) {
+		String sql = 
+				"select r.role_id,r.role_name,"
+				+"CASE"
+				+"	WHEN temp.role_id is null THEN 'N'"
+				+"  ELSE 'Y'"
+				+"END as truth"
+				+ " FROM"
+				+ " (select ur.role_id "
+				+ " 	from users u inner join users_roles ur"
+				+ " 	on u.user_id = ur.user_id"
+				+ " 	where u.user_id= :id) temp"
+				+ " right outer join roles r"
+				+ " on temp.role_id = r.role_id  "
+				+ " order by r.role_id ";				
+				
+		Session session = this.sessionFactory.getCurrentSession();
+		NativeQuery<Object[]> query = session.createNativeQuery(sql);
+		query.setParameter("id", id);
+		List<Object[]> results = query.list();
+		return results;
+	}
+
+	@Override
+	public int deleteAllUsersRolesByUserId(Integer id) {
+		String hql = "Delete from UsersRoles where users.userId = :searchField";
+		Session session = this.sessionFactory.getCurrentSession();
+		Query query = session.createQuery(hql);
+		query.setParameter("searchField", id );
+		int rowCount = query.executeUpdate();
+		return rowCount;
+	}
+
+	
+	
 }

@@ -7,7 +7,9 @@ public interface RoleService {
 
 	public void updateRole(String jsonString);
 	
-	public String queryRoleById(Integer id);	
+	public String queryRoleById(Integer id);
+	
+	public String queryRoleWithPermissionsById(Integer id);
 	
 	public JsonArray queryRoles();
 	

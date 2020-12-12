@@ -21,5 +21,9 @@ public interface RoleDao {
 	public void delete(Roles entity);
 
 	public void deleteById(Integer id);
+	
+	public List<Object[]> findPermissionsTruthTableByRoleId(Integer id);
+	
+	public int deleteAllRolesPermissionsByRoleId(Integer id);
 
 }

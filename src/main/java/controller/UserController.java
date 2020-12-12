@@ -44,6 +44,13 @@ public class UserController {
 		return jsonString;
 	}
 	
+	@RequestMapping(value="/user/ViewUserWithRolesProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public String viewUserWithRoles(String id) {
+		String jsonString = userService.queryUserWithRolesById(new Integer(Integer.parseInt(id)));			
+		return jsonString;
+	}
+	
 	/**
 	 *
 	 * @return

@@ -1,6 +1,5 @@
 const system_name	= 'Drone';
 var store_obj = {
-		
 	
 	crud : '',
 	equipmentId : '',

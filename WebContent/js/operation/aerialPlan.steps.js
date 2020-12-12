@@ -556,7 +556,8 @@ var p_equipmentForm = React.createClass({
    
     render: function() {
         return  React.createElement("form",  {id:"p_equipmentForm"},
-                    React.createElement("table",  {},
+        		    
+                    React.createElement("table",  {style:{border: "2px solid black"}},
                         React.createElement("tbody",  {},
                             React.createElement("tr",  {},
                                 React.createElement("td",  {},"設備ID"),
@@ -590,7 +591,8 @@ var p_equipmentForm = React.createClass({
                             )
                         )
                     )
-        );
+             )
+
     }
 });
 
@@ -637,7 +639,7 @@ var p_personForm_1 = React.createClass({
    
     render: function() {
         return  React.createElement("form",  {id:"p_personForm_1"},
-                    React.createElement("table",  {},
+                    React.createElement("table",  {style:{border: "2px solid black"}},
                         React.createElement("tbody",  {},
                             React.createElement("tr",  {},
                                 React.createElement("td",  {},"人員ID"),
@@ -712,7 +714,7 @@ var p_personForm_2 = React.createClass({
    
     render: function() {
         return  React.createElement("form",  {id:"p_personForm_2"},
-                    React.createElement("table",  {},
+                    React.createElement("table",  {style:{border: "2px solid black"}},
                         React.createElement("tbody",  {},
                             React.createElement("tr",  {},
                                 React.createElement("td",  {},"人員ID"),

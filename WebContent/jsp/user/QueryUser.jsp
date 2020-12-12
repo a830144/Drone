@@ -27,7 +27,7 @@ function transferQueryListAction(){
 	    			for(i=0;i<json.length;i++){
         				var obj = $.parseJSON(json[i]);
         				myarray[i][0]=obj.hasOwnProperty("userId")?obj.userId:'';
-        				myarray[i][1]=obj.hasOwnProperty("username")?obj.username:'';		        			
+        				myarray[i][1]=obj.hasOwnProperty("userName")?obj.userName:'';		        			
         				
         				var view_btn = "<button name='view"+ obj.userId +"' id='" + obj.userId +"' class='view ui-button ui-corner-all ui-widget' value='view'>檢視</button>";
         				var update_btn = "<button name='update"+ obj.userId +"' id='" + obj.userId +"' class='update ui-button ui-corner-all ui-widget' value='update'>修改</button>";        				

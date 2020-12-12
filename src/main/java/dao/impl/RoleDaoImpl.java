@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.NativeQuery;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -35,7 +37,18 @@ public class RoleDaoImpl implements RoleDao {
 	@Override
 	public void update(Roles entity) {
 		// TODO Auto-generated method stub
-		
+		Session session = this.sessionFactory.getCurrentSession();
+    	session.save(entity);
+	}
+	
+	@Override
+	public int deleteAllRolesPermissionsByRoleId(Integer id) {
+		String hql = "Delete from RolesPermissions where roles.roleId = :searchField";
+		Session session = this.sessionFactory.getCurrentSession();
+		Query query = session.createQuery(hql);
+		query.setParameter("searchField", id );
+		int rowCount = query.executeUpdate();
+		return rowCount;
 	}
 
 	@Override
@@ -76,5 +89,28 @@ public class RoleDaoImpl implements RoleDao {
     	session.delete(roles);
 	}
 
+	@Override
+	public List<Object[]> findPermissionsTruthTableByRoleId(Integer id) {
+		String sql = 
+				"select p.permission_id,p.permission_name,"
+				+"CASE"
+				+"	WHEN temp.permission_id is null THEN 'N'"
+				+"  ELSE 'Y'"
+				+"END as truth"
+				+ " FROM"
+				+ " (select rp.permission_id "
+				+ " 	from roles r inner join roles_permissions rp"
+				+ " 	on r.role_id = rp.role_id"
+				+ " 	where r.role_id= :id) temp"
+				+ " right outer join permissions p"
+				+ " on temp.permission_id = p.permission_id  "
+				+ " order by p.permission_id ";				
+				
+		Session session = this.sessionFactory.getCurrentSession();
+		NativeQuery<Object[]> query = session.createNativeQuery(sql);
+		query.setParameter("id", id);
+		List<Object[]> results = query.list();
+		return results;
+	}
 
 }

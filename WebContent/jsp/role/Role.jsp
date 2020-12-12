@@ -13,6 +13,8 @@
 <link rel="stylesheet" href="../../css/normalize.css">
 <link rel="stylesheet" href="../../css/main.css">
 <link rel="stylesheet" href="../../css/jquery.steps.css">
+<link rel="stylesheet" href="../../css/dual-listbox.css" >
+
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <script type="text/javascript"  src=" https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
@@ -29,6 +31,7 @@
 <script src="../../js/common/store.js" charset="utf-8"></script>
 <script src="../../js/jquery.validate.min.js"></script>
 <script src="../../js/additional-methods.min.js"></script>
+<script src="../../js/dual-listbox.js"></script>
 <style type="text/css">
 table.dataTable thead th {
 	  white-space: nowrap

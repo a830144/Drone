@@ -39,8 +39,14 @@ public class RoleController {
 	@RequestMapping(value="/role/ViewRoleProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
 	@ResponseBody
 	public String viewRole(String id) {
-		String jsonString = roleService.queryRoleById(new Integer(Integer.parseInt(id)));	
-		
+		String jsonString = roleService.queryRoleById(new Integer(Integer.parseInt(id)));			
+		return jsonString;
+	}
+	
+	@RequestMapping(value="/role/ViewRoleWithPermissionsProcess" , method = {RequestMethod.POST},produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public String viewRoleWithPermissions(String id) {
+		String jsonString = roleService.queryRoleWithPermissionsById(new Integer(Integer.parseInt(id)));			
 		return jsonString;
 	}
 	

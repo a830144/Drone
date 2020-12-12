@@ -1,4 +1,4 @@
-var roleDialog = React.createClass({
+var userDialog = React.createClass({
 	getInitialState: function() {
         return {
         	 
@@ -12,7 +12,7 @@ var roleDialog = React.createClass({
     componentWillUnmount(){   	
     },
     componentDidMount() {
-    	var dialog = "#roleDialog_"+this.props.domId+"_sub";
+    	var dialog = "#userDialog_"+this.props.domId+"_sub";
     	var domId = this.props.domId;
     	$(dialog).dialog({
 			autoOpen : false,
@@ -29,7 +29,7 @@ var roleDialog = React.createClass({
 		 		}],
 			close : function() {
 				view_obj.removeReactComponent(domId);
-				reloadQueryRoleAction();
+				reloadQueryUserAction();
 			}
 		});	
     	$(dialog).dialog("open");
@@ -39,18 +39,18 @@ var roleDialog = React.createClass({
     },    
    
     render: function() {
-    	 return  React.createElement("div",  {id:"roleDialog_"+this.props.domId+"_sub"},
-         		React.createElement("div",  {id:"roleForm_"+this.props.domId}),
+    	 return  React.createElement("div",  {id:"userDialog_"+this.props.domId+"_sub"},
+         		React.createElement("div",  {id:"userForm_"+this.props.domId}),
          		React.createElement("div",  {style:{color: "red", backgroundColor: "#DCDCDC"}},
          				React.createElement("img",  {src: "../../images/exclamation-mark.png"}),
          				React.createElement("p",  {style:{color: "red"}},'某些權限具備特殊性,所對應的功能跟功能樹有關,請謹慎選擇。選取適合的permission加入此角色')
          		),		
-         		React.createElement("div",  {id:"permissionTable_"+this.props.domId})
+         		React.createElement("div",  {id:"roleTable_"+this.props.domId})
          );
     }
 
 });
-var roleForm = React.createClass({	
+var userForm = React.createClass({	
 	getInitialState: function() {
         return {
         	state:'', 
@@ -59,7 +59,7 @@ var roleForm = React.createClass({
     },
     notify: function(obj){
     	this.setState({ 
-    		state:obj.state["role"],
+    		state:obj.state["user"],
     		domId:obj.domId
     	});
     },
@@ -68,18 +68,18 @@ var roleForm = React.createClass({
     	
     },
     componentDidMount() {
-    	var form = $("#roleForm_"+this.props.domId+"_sub");
-    	if(store_obj.roleId!==null && store_obj.roleId!==''){
+    	var form = $("#userForm_"+this.props.domId+"_sub");
+    	if(store_obj.userId!==null && store_obj.userId!==''){
     		$.ajax({
-    			url:"/"+system_name +"/role/ViewRoleProcess",
+    			url:"/"+system_name +"/user/ViewUserProcess",
     			type:"POST",
     			data:{
-    				id : store_obj.roleId
+    				id : store_obj.userId
     			},
     			dataType: "json",
     			success: function(data){
     				var obj = data;
-    				form.find("#roleIdTD").empty().append("<input type='text' name='roleId' id='roleId' class='text ui-widget-content ui-corner-all ui-state-disabled'>");
+    				form.find("#userIdTD").empty().append("<input type='text' name='userId' id='userId' class='text ui-widget-content ui-corner-all ui-state-disabled'>");
     				
     				$.each(obj, function(key, value) {
     					form.find("#" + key).val(value).addClass("ui-state-disabled");
@@ -89,7 +89,7 @@ var roleForm = React.createClass({
     	};
     },
     componentDidUpdate(prevProps, prevState){
-    	var form = $("#roleForm_"+this.props.domId+"_sub");
+    	var form = $("#userForm_"+this.props.domId+"_sub");
     	if(this.state.state!==prevState.state){
     		if(this.state.domId===this.props.domId){
     			form.find("#state").val(this.state.state);
@@ -98,22 +98,34 @@ var roleForm = React.createClass({
     },    
    
     render: function() {
-        return  React.createElement("form",{ id:"roleForm_"+this.props.domId+"_sub" , className : this.props.extraClass},
+        return  React.createElement("form",{ id:"userForm_"+this.props.domId+"_sub" , className : this.props.extraClass},
         		React.createElement("table",  {},
                         React.createElement("tbody",  {},
                             React.createElement("tr",  {},
                             	React.createElement("td",  {},                                      
-                                      "角色內部ID"
+                                      "用戶內部ID"
                                 ),
-                                React.createElement("td",  {id:"roleIdTD"},
+                                React.createElement("td",  {id:"userIdTD"},
                                   	  React.createElement("u",  {} ,"系統自動產生") 
                                 )                               
                             ),
                             React.createElement("tr",  {},
-                                React.createElement("td",  {},"角色名稱"),
+                                React.createElement("td",  {},"用戶名稱"),
                                 React.createElement("td",  {},
-                                    React.createElement("input",  {id:"roleName",name:"roleName",size:"30",maxLength:"30"})
+                                    React.createElement("input",  {id:"userName",name:"userName",size:"30",maxLength:"30"})
                                 )
+                            ),
+                            React.createElement("tr",  {},
+                                    React.createElement("td",  {},"電子郵件信箱"),
+                                    React.createElement("td",  {},
+                                        React.createElement("input",  {id:"EMail",name:"EMail",size:"30",maxLength:"30"})
+                                    )
+                            ),
+                            React.createElement("tr",  {},
+                                    React.createElement("td",  {},"電話"),
+                                    React.createElement("td",  {},
+                                        React.createElement("input",  {id:"phone",name:"phone",size:"30",maxLength:"30"})
+                                    )
                             )
                         )
                     )
@@ -124,7 +136,7 @@ var roleForm = React.createClass({
 });
 
 
-var permissionTable = React.createClass({
+var roleTable = React.createClass({
 	getInitialState: function() {
         return {
         	
@@ -136,10 +148,10 @@ var permissionTable = React.createClass({
     	});
     },
 	componentDidMount(){    	
-    	var tableName = "#permissionTable_"+this.props.domId+"_sub";
+    	var tableName = "#roleTable_"+this.props.domId+"_sub";
         var table = $(tableName).DataTable();
         table.destroy();
-        if(store_obj.roleId!==null && store_obj.roleId!==''){
+        if(store_obj.userId!==null && store_obj.userId!==''){
         	$(tableName).DataTable({
                 columnDefs: [ {	
 				    className: 'dt-center',
@@ -151,12 +163,12 @@ var permissionTable = React.createClass({
                 ordering: false,
                 ajax: {
                 	type: "POST",
-                	url: "/"+system_name +"/role/ViewRoleProcess",   
+                	url: "/"+system_name +"/user/ViewUserProcess",   
                 	data: {  
-                		id : store_obj.roleId
+                		id : store_obj.userId
                 	},   
                 	dataSrc: function ( data ) {
-                		var json = data.ownPermissionSet;
+                		var json = data.ownRoleSet;
 
                 		var myarray=new Array(json.length);
                 		for(i=0; i <json.length; i++){
@@ -164,11 +176,10 @@ var permissionTable = React.createClass({
                 		}
                 		
                 		for(i=0;i<json.length;i++){
-                			//var obj = JSON.parse(json[i]); 
                 			var obj = json[i];
                 			myarray[i][0]='---';
-                			myarray[i][1]=obj.hasOwnProperty("permissionId")?obj.permissionId:'';
-                			myarray[i][2]=obj.hasOwnProperty("permissionName")?obj.permissionName:'';
+                			myarray[i][1]=obj.hasOwnProperty("roleId")?obj.roleId:'';
+                			myarray[i][2]=obj.hasOwnProperty("roleName")?obj.roleName:'';
                 		}
                 		
                 		return myarray;
@@ -196,7 +207,7 @@ var permissionTable = React.createClass({
                 ordering: false,
                 ajax: {
                 	type: "POST",
-                	url: "/"+system_name +"/other/QueryPermissionProcess",   
+                	url: "/"+system_name +"/role/QueryRoleProcess",   
                 	data: {  
          
                 	}, 
@@ -208,8 +219,8 @@ var permissionTable = React.createClass({
                 		for(i=0;i<json.length;i++){
                 			var obj = $.parseJSON(json[i]);
                 			myarray[i][0]='';
-                			myarray[i][1]=obj.hasOwnProperty("permissionId")?obj.permissionId:'';
-                			myarray[i][2]=obj.hasOwnProperty("permissionName")?obj.permissionName:'';
+                			myarray[i][1]=obj.hasOwnProperty("roleId")?obj.roleId:'';
+                			myarray[i][2]=obj.hasOwnProperty("roleName")?obj.roleName:'';
                 		}
                 		
                 		return myarray;
@@ -225,25 +236,24 @@ var permissionTable = React.createClass({
 		
 	},
     componentWillUnmount(){
-	        $("#permissionTable_"+this.props.domId+"_sub").unbind( "select" );
-	        var table = $("#permissionTable_"+this.props.domId+"_sub").DataTable();
+	        $("#roleTable_"+this.props.domId+"_sub").unbind( "select" );
+	        var table = $("#roleTable_"+this.props.domId+"_sub").DataTable();
 	        table.destroy();
 	},
 	render: function() {
-        return  React.createElement("table",  {id:"permissionTable_"+this.props.domId+"_sub" ,className: "display" },
+        return  React.createElement("table",  {id:"roleTable_"+this.props.domId+"_sub" },
                     React.createElement("thead",  {},
                          React.createElement("tr",  {},
                              React.createElement('th', {}, ''),
-                             React.createElement('th', {}, 'permission編號'),
-                             React.createElement('th', {}, 'permission名稱')
+                             React.createElement('th', {}, '角色編號'),
+                             React.createElement('th', {}, '角色名稱')
                              
             )));
    }
 });
 
 
-
-var permissionListBox = React.createClass({
+var roleListBox = React.createClass({
 	getInitialState: function() {
         return {
         	
@@ -255,28 +265,28 @@ var permissionListBox = React.createClass({
     	});
     },
 	componentDidMount(){    	
-    	var listBoxName = "#permissionListBox_"+this.props.domId+"_sub";
+    	var listBoxName = "#roleListBox_"+this.props.domId+"_sub";
     	$.ajax({
-    		url: "/"+system_name +"/role/ViewRoleWithPermissionsProcess",   
+    		url: "/"+system_name +"/user/ViewUserWithRolesProcess",   
         	data: {  
-        		id : store_obj.roleId
+        		id : store_obj.userId
         	},   
   			type : "POST",
   			dataType: 'json',
   			success : function(json) {  
   				
   				var myarray=new Array(json.length);
-  				var tempPermission = new Set();
+  				var tempRole = new Set();
   				for(i=0; i <json.length; i++){  					
         			if(json[i][2]=='N'){
         				var obj ={text:json[i][1], value:json[i][0]};
         			}else{
         				var obj ={text:json[i][1], value:json[i][0], selected:true};
-        				tempPermission.add(json[i][0]);
+        				tempRole.add(json[i][0]);
         			};
         			myarray[i]= obj;        			
         		}
-  				store_obj.tempPermission = tempPermission;
+  				store_obj.tempRole = tempRole;
 
   				//console.log(myarray);
   				//var json = data.ownPermissionSet;
@@ -287,22 +297,21 @@ var permissionListBox = React.createClass({
   	    		      console.log(value);
   	    		    console.log(dualListbox.selectedList);
   	    		      //debugger;
-  	    		    store_obj.tempPermission.add(value);
+  	    		    store_obj.tempRole.add(value);
   	    		      //store_obj.addPermission.add(value);
   	    		  },
   	    		  removeEvent: function(value) {
   	    		      console.log(value);
-  	    		    store_obj.tempPermission.delete(value);
+  	    		    store_obj.tempRole.delete(value);
   	    		      //store_obj.addPermission.delete(value);
   	    		  },
-  	    		  availableTitle: '未選擇權限',
-  	    		  selectedTitle: '已選擇權限',
+  	    		  availableTitle: '未選擇角色',
+  	    		  selectedTitle: '已選擇角色',
   	    		  addButtonText: '>',
   	    		  removeButtonText: '<', addAllButtonText: '>>',
   	    		  removeAllButtonText: '<<',
   	    		  options: myarray
   	    		});
-  				dualListbox.remove_all_button.remove();
   				
         		
   			}
@@ -317,7 +326,7 @@ var permissionListBox = React.createClass({
 	        
 	},
 	render: function() {
-        return  React.createElement("select",  {id:"permissionListBox_"+this.props.domId+"_sub" ,className: "display" }
+        return  React.createElement("select",  {id:"roleListBox_"+this.props.domId+"_sub" ,className: "display" }
                     
                              
             );

@@ -2,6 +2,7 @@ package service.impl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -18,6 +19,7 @@ import entity.Permissions;
 import entity.Roles;
 import entity.RolesPermissions;
 import service.RoleService;
+import vo.Permission;
 import vo.Role;
 
 
@@ -73,11 +75,26 @@ public class RoleServiceImpl implements RoleService {
 		Roles entity_roles = roleDao.findById(vo.getRoleId());
 		try {
 			BeanUtils.copyProperties(entity_roles, vo);
+			Iterator<Integer> iterator = vo.getPermissionsSet().iterator();
+			roleDao.deleteAllRolesPermissionsByRoleId(vo.getRoleId());
+			while(iterator.hasNext()){
+				int permissionId = Integer.parseInt(iterator.next().toString());
+				RolesPermissions entity_rolePermissions = new RolesPermissions();
+				//BeanUtils.copyProperties(entity_rolePermissions, vo);
+				Permissions entity_permissions = roleDao.findPermissionById(permissionId);
+				
+				entity_rolePermissions.setRoles(entity_roles);
+				entity_rolePermissions.setPermissions(entity_permissions);
+				entity_roles.getRolesPermissionses().add(entity_rolePermissions);
+				entity_permissions.getRolesPermissionses().add(entity_rolePermissions);		
+			}
 		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	
+		}
 		roleDao.update(entity_roles);
 	}
 
@@ -136,6 +153,30 @@ public class RoleServiceImpl implements RoleService {
 	@Override
 	public void delete(Integer id){
 		roleDao.deleteById(id);
+	}
+
+	@Override
+	public String queryRoleWithPermissionsById(Integer id) {
+		// TODO Auto-generated method stub
+		List<Object[]> resultlist= roleDao.findPermissionsTruthTableByRoleId(id);
+		
+		List<String[]> ownPermissionTruth = new LinkedList<String[]>();
+		for(Object[] result : resultlist) {
+			String[] temp = new String[3];
+			
+			Permission permission = new Permission();
+			Integer permission_id = (Integer)result[0];
+			String permission_name = (String) result[1];
+			String truth = (String) result[2];
+			temp[0] = permission_id.toString();
+			temp[1] = permission_name;
+			temp[2] = truth;
+			
+			ownPermissionTruth.add(temp);
+		}
+		
+		return  gson.toJson(ownPermissionTruth);
+
 	}	
 		
 	

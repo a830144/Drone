@@ -1,4 +1,4 @@
-var addRoleDialog = React.createClass({
+var addUserDialog = React.createClass({
 	getInitialState: function() {
         return {
         	 
@@ -12,9 +12,9 @@ var addRoleDialog = React.createClass({
     componentWillUnmount(){   	
     },
     componentDidMount() {
-    	var dialog = "#addRoleDialog_"+this.props.domId+"_sub";
-    	var formName = "#roleForm_"+this.props.domId+"_sub";
-    	var tableName = "#permissionTable_"+this.props.domId+"_sub";
+    	var dialog = "#addUserDialog_"+this.props.domId+"_sub";
+    	var formName = "#userForm_"+this.props.domId+"_sub";
+    	var tableName = "#roleTable_"+this.props.domId+"_sub";
     	var domId = this.props.domId;
     	$(dialog).dialog({
 			autoOpen : false,
@@ -22,11 +22,11 @@ var addRoleDialog = React.createClass({
 			width : 1200,
 			modal : true,
 			buttons : {
-				"新增角色" : function() {
+				"新增用戶" : function() {
 					var form = $(formName);
 					var validator =form.validate({
 	        	  		rules: {
-	        	  			roleName: {
+	        	  			userName: {
 	        	  				 required: true,
 	        	  				 maxlength: 30
 	        	  			}	        	  			
@@ -41,22 +41,25 @@ var addRoleDialog = React.createClass({
 						var i = 0;
 	                	selected.every(function() {
 	                        var row = this.node();
-	                        var permissionId = this.data()[1];
-	                        temp[i] = permissionId;
+	                        var roleId = this.data()[1];
+	                        temp[i] = roleId;
 	                        i++;
 	                    });
-						var jsonObject = $(formName).serializeObject();						
-						jsonObject.permissionsSet = temp;
+
+
+						var jsonObject = $(formName).serializeObject();
+						
+						jsonObject.rolesSet = temp;
 						var myJson = JSON.stringify(jsonObject);
 						$.ajax({
-									url : "/"+ system_name +"/role/AddRoleProcess",
+									url : "/"+ system_name +"/user/AddUserProcess",
 									type : "POST",
 									data : {
 										"data" : myJson
 									},
 									success : function() {
 										alert('新增成功');
-										reloadQueryRoleAction();
+										reloadQueryUserAction();
 									}
 						})
 						$(this).dialog("close");
@@ -77,13 +80,13 @@ var addRoleDialog = React.createClass({
     },    
    
     render: function() {
-        return  React.createElement("div",  {id:"addRoleDialog_"+this.props.domId+"_sub"},
-        		React.createElement("div",  {id:"roleForm_"+this.props.domId}),
+        return  React.createElement("div",  {id:"addUserDialog_"+this.props.domId+"_sub"},
+        		React.createElement("div",  {id:"userForm_"+this.props.domId}),
         		React.createElement("div",  {style:{color: "red", backgroundColor: "#DCDCDC"}},
         				React.createElement("img",  {src: "../../images/exclamation-mark.png"}),
-        				React.createElement("p",  {style:{color: "red"}},'某些權限具備特殊性,所對應的功能跟功能樹有關,請謹慎選擇。選取適合的permission加入此角色')
+        				React.createElement("p",  {style:{color: "red"}},'某些角色具備特殊性,所對應的權限跟功能樹有關,請謹慎選擇。選取適合的角色加入此用戶')
         		),		
-        		React.createElement("div",  {id:"permissionTable_"+this.props.domId})
+        		React.createElement("div",  {id:"roleTable_"+this.props.domId})
         );
     }
 
