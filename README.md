@@ -40,7 +40,7 @@ Build id: 20170314-1500
 4. Docker desktop
 
 recommend use web container
-Apache Tomcat : 8.5.37 (Docker)
+Apache Tomcat : 9.0 (Docker)
 
 recommend Java
 1.8.0-191
